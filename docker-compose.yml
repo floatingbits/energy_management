@@ -114,10 +114,12 @@ services:
       - rabbitmq
 
     environment:
-
       DATABASE_URL: postgresql+psycopg://asset:asset@asset-db:5432/assetdb
-
+      EVENT_BACKEND: ${EVENT_BACKEND}
       RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
 
     ports:
       - "8000:8000"

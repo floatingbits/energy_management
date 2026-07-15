@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.models.asset import Asset
-from app.schemas.asset import AssetCreate
-
+from app.schemas.asset import AssetCreate, AssetUpdate
 
 def get_assets(
     db: Session
@@ -44,3 +43,53 @@ def create_asset(
     db.refresh(db_asset)
 
     return db_asset
+
+def update_asset(
+    db: Session,
+    asset_id: int,
+    asset: AssetUpdate
+) -> Asset | None:
+
+    db_asset = get_asset_by_id(
+        db,
+        asset_id
+    )
+
+    if db_asset is None:
+        return None
+
+    update_data = asset.model_dump(
+        exclude_unset=True
+    )
+
+    for key, value in update_data.items():
+        setattr(
+            db_asset,
+            key,
+            value
+        )
+
+    db.commit()
+
+    db.refresh(db_asset)
+
+    return db_asset
+
+def delete_asset(
+    db: Session,
+    asset_id: int
+) -> bool:
+
+    db_asset = get_asset_by_id(
+        db,
+        asset_id
+    )
+
+    if db_asset is None:
+        return False
+
+    db.delete(db_asset)
+
+    db.commit()
+
+    return True

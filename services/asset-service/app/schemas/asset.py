@@ -30,3 +30,24 @@ class AssetResponse(AssetBase):
     model_config = ConfigDict(
         from_attributes=True
     )
+
+
+class AssetUpdate(BaseModel):
+    name: str | None = Field(
+        default=None,
+        min_length=3,
+        max_length=255
+    )
+
+    asset_type: str | None = None
+
+    installed_power_kw: float | None = Field(
+        default=None,
+        gt=0
+    )
+
+    latitude: float | None = None
+
+    longitude: float | None = None
+
+    status: str | None = None
