@@ -1,0 +1,293 @@
+version: "3.9"
+
+services:
+
+  #######################################################
+  # RabbitMQ
+  #######################################################
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+    restart: unless-stopped
+
+    networks:
+      - energy-net
+
+
+  #######################################################
+  # Asset Database
+  #######################################################
+
+  asset-db:
+    image: postgres:16
+
+    environment:
+      POSTGRES_DB: assetdb
+      POSTGRES_USER: asset
+      POSTGRES_PASSWORD: asset
+
+    volumes:
+      - asset-db:/var/lib/postgresql/data
+
+    networks:
+      - energy-net
+
+
+  #######################################################
+  # Forecast Database
+  #######################################################
+
+  forecast-db:
+    image: postgres:16
+
+    environment:
+      POSTGRES_DB: forecastdb
+      POSTGRES_USER: forecast
+      POSTGRES_PASSWORD: forecast
+
+    volumes:
+      - forecast-db:/var/lib/postgresql/data
+
+    networks:
+      - energy-net
+
+
+  #######################################################
+  # Trading Database
+  #######################################################
+
+  trading-db:
+    image: postgres:16
+
+    environment:
+      POSTGRES_DB: tradingdb
+      POSTGRES_USER: trading
+      POSTGRES_PASSWORD: trading
+
+    volumes:
+      - trading-db:/var/lib/postgresql/data
+
+    networks:
+      - energy-net
+
+  #######################################################
+  # Trading Database
+  #######################################################
+
+  exchange-db:
+    image: postgres:16
+
+    environment:
+      POSTGRES_DB: exchangedb
+      POSTGRES_USER: exchange
+      POSTGRES_PASSWORD: exchange
+
+    volumes:
+      - exchange-db:/var/lib/postgresql/data
+
+    networks:
+      - energy-net
+
+
+  #######################################################
+  # Asset Service
+  #######################################################
+
+  asset-service:
+
+    build:
+      context: ./services/asset-service
+
+    depends_on:
+      - asset-db
+      - rabbitmq
+
+    environment:
+
+      DATABASE_URL: postgresql+psycopg://asset:asset@asset-db:5432/assetdb
+
+      RABBITMQ_HOST: rabbitmq
+
+    ports:
+      - "8000:8000"
+
+    networks:
+      - energy-net
+
+    # NOT IN PRODUCTION
+    volumes:
+      - ./services/asset-service:/app
+
+
+  #######################################################
+  # Forecast Service
+  #######################################################
+
+  forecast-service:
+
+    build:
+      context: ./services/forecast-service
+
+    depends_on:
+      - forecast-db
+      - rabbitmq
+
+    environment:
+      DATABASE_URL: postgresql://forecast:forecast@forecast-db:5432/forecastdb
+      RABBITMQ_HOST: rabbitmq
+
+    ports:
+      - "8001:8000"
+
+    volumes:
+      - ./services/forecast-service:/app
+
+    networks:
+      - energy-net
+
+
+  #######################################################
+  # Trading Service
+  #######################################################
+
+  trading-service:
+
+    build:
+      context: ./services/trading-service
+
+    depends_on:
+      - trading-db
+      - rabbitmq
+
+    environment:
+      DATABASE_URL: postgresql://trading:trading@trading-db:5432/tradingdb
+      RABBITMQ_HOST: rabbitmq
+
+    volumes:
+      - ./services/trading-service:/app
+    ports:
+      - "8002:8000"
+
+    networks:
+      - energy-net
+
+  #######################################################
+  # Exchange Service
+  #######################################################
+
+  exchange-service:
+    build:
+      context: ./services/exchange-service
+
+    depends_on:
+      - exchange-db
+      - rabbitmq
+
+    environment:
+      RABBITMQ_HOST: rabbitmq
+
+    ports:
+      - "8004:8000"
+
+    volumes:
+      - ./services/exchange-service:/app
+
+    networks:
+      - energy-net
+
+
+  #######################################################
+  # Dashboard API (BFF)
+  #######################################################
+
+  dashboard-api:
+    build:
+      context: ./services/dashboard-api
+
+    depends_on:
+      - asset-service
+      - forecast-service
+      - trading-service
+
+    environment:
+      ASSET_API: http://asset-service:8000
+      FORECAST_API: http://forecast-service:8000
+      TRADING_API: http://trading-service:8000
+
+    ports:
+      - "8004:8000"
+
+    networks:
+      - energy-net
+  #######################################################
+  # Dashboard UI
+  #######################################################
+
+  dashboard-ui:
+    build:
+      context: ./frontend/dashboard-ui
+    depends_on:
+      - asset-service
+      - forecast-service
+      - trading-service
+    environment:
+      ASSET_API: http://asset-service:8000
+      FORECAST_API: http://forecast-service:8000
+      TRADING_API: http://trading-service:8000
+      EXCHANGE_SERVICE: http://exchange-service:8000
+    ports:
+      - "5173:5173"
+    networks:
+      - energy-net
+    volumes:
+      - ./frontend/dashboard-ui:/app
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - asset-db
+      - forecast-db
+      - trading-db
+      - exchange-db
+
+    networks:
+      - energy-net
+
+
+#########################################################
+# Networks
+#########################################################
+
+networks:
+  energy-net:
+
+
+#########################################################
+# Volumes
+#########################################################
+
+volumes:
+
+  asset-db:
+
+  forecast-db:
+
+  trading-db:
+
+  exchange-db:
