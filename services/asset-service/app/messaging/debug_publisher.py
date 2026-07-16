@@ -1,4 +1,4 @@
-from app.events.base import BaseEvent
+from event_contracts.base import BaseEvent
 from app.messaging.publisher import EventPublisher
 
 

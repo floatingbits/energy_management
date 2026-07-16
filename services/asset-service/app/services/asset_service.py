@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.repositories import asset_repository
 from app.models.asset import Asset
 from app.schemas.asset import AssetCreate, AssetUpdate
-from app.events.asset_events import AssetCreatedEvent
+from event_contracts.asset_events import AssetCreatedEvent
 from app.messaging.publisher import EventPublisher
 
 def get_assets(

@@ -1,6 +1,6 @@
 import pika
 
-from app.events.base import BaseEvent
+from event_contracts.base import BaseEvent
 from app.messaging.publisher import EventPublisher
 
 from app.messaging.rabbitmq.connection import create_connection

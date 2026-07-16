@@ -25,6 +25,13 @@ services:
       - energy-net
 
 
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
   #######################################################
   # Asset Database
   #######################################################
@@ -107,7 +114,10 @@ services:
   asset-service:
 
     build:
-      context: ./services/asset-service
+      context: .
+      dockerfile: services/asset-service/Dockerfile
+      args:
+        SERVICE_PATH: services/asset-service
 
     depends_on:
       - asset-db
@@ -139,7 +149,10 @@ services:
   forecast-service:
 
     build:
-      context: ./services/forecast-service
+      context: .
+      dockerfile: services/forecast-service/Dockerfile
+      args:
+        SERVICE_PATH: services/forecast-service
 
     depends_on:
       - forecast-db
@@ -166,7 +179,10 @@ services:
   trading-service:
 
     build:
-      context: ./services/trading-service
+      context: .
+      dockerfile: services/trading-service/Dockerfile
+      args:
+        SERVICE_PATH: services/trading-service
 
     depends_on:
       - trading-db
@@ -190,7 +206,10 @@ services:
 
   exchange-service:
     build:
-      context: ./services/exchange-service
+      context: .
+      dockerfile: services/exchange-service/Dockerfile
+      args:
+        SERVICE_PATH: services/exchange-service
 
     depends_on:
       - exchange-db
@@ -204,6 +223,29 @@ services:
 
     volumes:
       - ./services/exchange-service:/app
+
+    networks:
+      - energy-net
+  #######################################################
+  # Event Consumer Service
+  #######################################################
+
+  event-consumer:
+    build:
+      context: .
+      dockerfile: services/event-consumer/Dockerfile
+      args:
+        SERVICE_PATH: services/event-consumer
+
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+    environment:
+      RABBITMQ_HOST: rabbitmq
+
+    volumes:
+      - ./services/event-consumer:/app
 
     networks:
       - energy-net
