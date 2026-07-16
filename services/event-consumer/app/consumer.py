@@ -35,14 +35,26 @@ def start_consumer():
 
     channel = connection.channel()
 
-    channel.queue_declare(
-        queue="asset-events",
+    channel.exchange_declare(
+        exchange="energy.events",
+        exchange_type="topic",
         durable=True
+    )
+
+    channel.queue_declare(
+        queue="forecast.asset.created",
+        durable=True
+    )
+
+    channel.queue_bind(
+        exchange="energy.events",
+        queue="forecast.asset.created",
+        routing_key="asset.created"
     )
 
 
     channel.basic_consume(
-        queue="asset-events",
+        queue="forecast.asset.created",
         on_message_callback=callback
     )
 

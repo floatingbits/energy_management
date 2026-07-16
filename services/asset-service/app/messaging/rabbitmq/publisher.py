@@ -8,7 +8,7 @@ from app.messaging.rabbitmq.connection import create_connection
 
 class RabbitMQPublisher(EventPublisher):
 
-    QUEUE_NAME = "asset-events"
+    EXCHANGE_NAME = "energy.events"
 
 
     def publish(
@@ -21,14 +21,15 @@ class RabbitMQPublisher(EventPublisher):
         try:
             channel = connection.channel()
 
-            channel.queue_declare(
-                queue=self.QUEUE_NAME,
+            channel.exchange_declare(
+                exchange=self.EXCHANGE_NAME,
+                exchange_type="topic",
                 durable=True
             )
 
             channel.basic_publish(
-                exchange="",
-                routing_key=self.QUEUE_NAME,
+                exchange=self.EXCHANGE_NAME,
+                routing_key=event.event_type,
                 body=event.model_dump_json(),
                 properties=pika.BasicProperties(
                     delivery_mode=2
