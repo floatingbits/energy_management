@@ -3,6 +3,7 @@ import pika
 
 from event_contracts.asset_events import AssetCreatedEvent
 
+from app.services import forecast_service
 
 def callback(
     channel,
@@ -18,6 +19,9 @@ def callback(
     print(
         "Received:",
         event
+    )
+    forecast_service.create_forecast_for_asset(
+        event.asset_id
     )
 
     channel.basic_ack(
@@ -42,19 +46,19 @@ def start_consumer():
     )
 
     channel.queue_declare(
-        queue="dummy_consumer.asset.created",
+        queue="forecast.asset.created",
         durable=True
     )
 
     channel.queue_bind(
         exchange="energy.events",
-        queue="dummy_consumer.asset.created",
+        queue="forecast.asset.created",
         routing_key="asset.created"
     )
 
 
     channel.basic_consume(
-        queue="dummy_consumer.asset.created",
+        queue="forecast.asset.created",
         on_message_callback=callback
     )
 
