@@ -7,3 +7,4 @@ pydantic-settings
 aio-pika
 alembic
 httpx
+pika

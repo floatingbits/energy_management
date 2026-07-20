@@ -1,7 +1,7 @@
 import threading
 
 from app.messaging.consumer import start_consumer
-from app.api import app
+from app.api.app import app
 
 
 def start_message_consumer():

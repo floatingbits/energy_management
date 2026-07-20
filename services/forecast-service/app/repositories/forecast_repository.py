@@ -27,3 +27,17 @@ def get_forecasts_by_asset(
         )
         .all()
     )
+
+def create_forecasts(
+    db: Session,
+    forecasts: list[Forecast]
+):
+
+    db.add_all(forecasts)
+
+    db.commit()
+
+    for forecast in forecasts:
+        db.refresh(forecast)
+
+    return forecasts

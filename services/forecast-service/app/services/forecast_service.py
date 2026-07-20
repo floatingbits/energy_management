@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-
+from app.services import forecast_generator
 from app.repositories import forecast_repository
 
 
@@ -19,6 +19,19 @@ def get_asset_forecasts(
     )
 
 def create_forecast_for_asset(
-        asset_id: int
+    db: Session,
+    asset_id: int
 ):
-    pass
+
+    forecasts = (
+        forecast_generator.generate_forecasts(
+            asset_id
+        )
+    )
+
+    return (
+        forecast_repository.create_forecasts(
+            db,
+            forecasts
+        )
+    )

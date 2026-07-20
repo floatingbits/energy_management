@@ -155,12 +155,17 @@ services:
         SERVICE_PATH: services/forecast-service
 
     depends_on:
-      - forecast-db
-      - rabbitmq
+      forecast-db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
 
     environment:
-      DATABASE_URL: postgresql://forecast:forecast@forecast-db:5432/forecastdb
+      DATABASE_URL: postgresql+psycopg://forecast:forecast@forecast-db:5432/forecastdb
       RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
 
     ports:
       - "8001:8000"
@@ -189,7 +194,7 @@ services:
       - rabbitmq
 
     environment:
-      DATABASE_URL: postgresql://trading:trading@trading-db:5432/tradingdb
+      DATABASE_URL: postgresql+psycopg://trading:trading@trading-db:5432/tradingdb
       RABBITMQ_HOST: rabbitmq
 
     volumes:

@@ -3,6 +3,7 @@ import pika
 
 from event_contracts.asset_events import AssetCreatedEvent
 
+from app.database import SessionLocal
 from app.services import forecast_service
 
 def callback(
@@ -12,17 +13,28 @@ def callback(
     body
 ):
 
-    data = json.loads(body)
-
-    event = AssetCreatedEvent(**data)
-
-    print(
-        "Received:",
-        event
+    event = AssetCreatedEvent.model_validate_json(
+        body
     )
-    forecast_service.create_forecast_for_asset(
-        event.asset_id
-    )
+
+    db = SessionLocal()
+
+    try:
+
+        forecast_service.create_forecast_for_asset(
+            db,
+            event.asset_id
+        )
+
+        print(
+            f"Created forecast for asset {event.asset_id}"
+        )
+
+
+    finally:
+
+        db.close()
+
 
     channel.basic_ack(
         delivery_tag=method.delivery_tag
