@@ -1,8 +1,8 @@
 from datetime import datetime, timezone
 
 from sqlalchemy import String, Float, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
-
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.models.portfolio import portfolio_assets
 from app.database import Base
 
 
@@ -64,4 +64,10 @@ class Asset(Base):
         DateTime,
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc)
+    )
+
+    portfolios = relationship(
+        "Portfolio",
+        secondary=portfolio_assets,
+        back_populates="assets"
     )

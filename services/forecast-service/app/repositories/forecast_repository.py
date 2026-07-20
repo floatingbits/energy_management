@@ -14,6 +14,19 @@ def get_forecasts(
         .all()
     )
 
+def get_forecast(
+    id: int,
+    db: Session
+):
+
+    return (
+        db.query(Forecast)
+        .filter(
+            Forecast.id == id
+        )
+        .first()
+    )
+
 
 def get_forecasts_by_asset(
     db: Session,

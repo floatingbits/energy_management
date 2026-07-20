@@ -4,6 +4,7 @@ from sqlalchemy import text
 from app.database import engine
 
 from app.api.assets import router as asset_router
+from app.api.portfolios import router as portfolio_router
 
 
 app = FastAPI(
@@ -14,6 +15,11 @@ app = FastAPI(
 
 app.include_router(
     asset_router,
+    prefix="/api/v1"
+)
+
+app.include_router(
+    portfolio_router,
     prefix="/api/v1"
 )
 

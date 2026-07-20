@@ -1,6 +1,7 @@
 import json
 import pika
 
+from app.infrastructure.messaging import get_event_publisher
 from event_contracts.asset_events import AssetCreatedEvent
 
 from app.database import SessionLocal
@@ -23,7 +24,8 @@ def callback(
 
         forecast_service.create_forecast_for_asset(
             db,
-            event.asset_id
+            event.asset_id,
+            get_event_publisher()
         )
 
         print(

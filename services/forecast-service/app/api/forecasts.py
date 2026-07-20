@@ -23,6 +23,16 @@ def get_forecasts(
 
     return forecast_service.get_forecasts(db)
 
+@router.get(
+    "/{id}",
+    response_model=ForecastResponse
+)
+def get_forecast(
+        id: int,
+    db: Session = Depends(get_db)
+):
+
+    return forecast_service.get_forecast(id, db)
 
 
 @router.get(
