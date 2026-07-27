@@ -89,7 +89,7 @@ services:
       - energy-net
 
   #######################################################
-  # Trading Database
+  # Exchange Database
   #######################################################
 
   exchange-db:

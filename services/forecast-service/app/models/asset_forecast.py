@@ -25,12 +25,12 @@ class AssetForecast(Base):
     )
 
     period_start: Mapped[datetime] = mapped_column(
-        DateTime,
+        DateTime(timezone=True),
         nullable=False
     )
 
     period_end: Mapped[datetime] = mapped_column(
-        DateTime,
+        DateTime(timezone=True),
         nullable=False
     )
 

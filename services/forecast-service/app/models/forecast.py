@@ -22,7 +22,7 @@ class Forecast(Base):
     )
 
     forecast_time: Mapped[datetime] = mapped_column(
-        DateTime,
+        DateTime(timezone=True),
         index=True
     )
 

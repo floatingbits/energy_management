@@ -8,3 +8,4 @@ aio-pika
 alembic
 httpx
 pika
+pytest
