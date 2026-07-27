@@ -1,7 +1,7 @@
 from app.infrastructure.weather import create_weather_service
 from app.database import SessionLocal
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from app.weather.open_meteo import OpenMeteoProvider
 from app.services.weather_service import WeatherService
@@ -22,7 +22,7 @@ def run_weather_forecast_job(
 
 
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     horizon_end = now + timedelta(days=2)
 

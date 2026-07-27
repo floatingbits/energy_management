@@ -45,8 +45,8 @@ class WeatherForecast(Base):
     latitude: Mapped[float] = mapped_column(Float)
     longitude: Mapped[float] = mapped_column(Float)
 
-    period_start: Mapped[datetime] = mapped_column(DateTime)
-    period_end: Mapped[datetime] = mapped_column(DateTime)
+    period_start: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    period_end: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
     forecast_run = relationship(
         "WeatherForecastRun",

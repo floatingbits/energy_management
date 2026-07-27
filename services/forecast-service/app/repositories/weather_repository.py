@@ -42,7 +42,7 @@ def create_weather_forecast_run(
         for variable in point.variables:
 
             weather_variable = WeatherVariable(
-                weather_forecast_id=forecast.id,
+                forecast_id=forecast.id,
                 variable=variable.variable,
                 p05=variable.p05,
                 p50=variable.p50,
