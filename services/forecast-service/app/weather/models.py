@@ -54,12 +54,12 @@ class WeatherForecast(Base):
     )
 
     variables = relationship(
-        "WeatherVariable",
+        "WeatherForecastValue",
         back_populates="forecast",
         cascade="all, delete-orphan"
     )
 
-class WeatherVariable(Base):
+class WeatherForecastValue(Base):
 
     __tablename__ = "weather_variables"
 

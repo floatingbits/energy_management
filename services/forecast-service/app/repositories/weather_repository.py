@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.weather.models import (
     WeatherForecastRun,
     WeatherForecast,
-    WeatherVariable
+    WeatherForecastValue
 )
 
 from app.schemas.weather import WeatherForecastResult
@@ -41,7 +41,7 @@ def create_weather_forecast_run(
 
         for variable in point.variables:
 
-            weather_variable = WeatherVariable(
+            weather_variable = WeatherForecastValue(
                 forecast_id=forecast.id,
                 variable=variable.variable,
                 p05=variable.p05,
