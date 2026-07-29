@@ -1,4 +1,4 @@
-from app.weather.value_objects import WeatherLocation
+from app.weather.location import WeatherLocation
 
 
 class WeatherLocationResolver:

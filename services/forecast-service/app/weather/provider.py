@@ -1,8 +1,11 @@
 from abc import ABC, abstractmethod
 
-from app.weather.value_objects import WeatherLocation
-
-from app.schemas.weather import WeatherForecastResult
+from app.weather.location import WeatherLocation
+from app.weather.provider_result import ProviderForecastResult
+from app.weather.request import WeatherForecastRequest
+from app.weather.result import WeatherLocationForecast
+from app.forecasting.domain.forecast_run import ForecastRun
+from app.forecasting.domain.metric import ForecastMetric
 
 
 class WeatherProvider(ABC):
@@ -10,9 +13,6 @@ class WeatherProvider(ABC):
     @abstractmethod
     def get_forecast(
         self,
-        locations: list[WeatherLocation],
-        horizon_start,
-        horizon_end,
-        resolution_minutes: int,
-    ) -> WeatherForecastResult:
+        request: WeatherForecastRequest
+    ) -> ProviderForecastResult:
         raise NotImplementedError

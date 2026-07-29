@@ -1,26 +1,31 @@
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
+from app.weather.adapters.default import DefaultWeatherAdapter
+from app.weather.request import WeatherForecastRequest
 from app.weather.resolver import WeatherLocationResolver
 from app.schemas.weather import (
-    WeatherForecastResult,
     WeatherForecastPoint,
     WeatherVariableValue
 )
 
+from app.weather.result import WeatherForecastResult
+
 from app.services.weather_service import WeatherService
 
 from app.weather.fake_provider import FakeWeatherProvider
-
+from app.forecasting.domain.forecast_run import ForecastRun
+from app.forecasting.domain.metric import ForecastMetric
 
 def test_weather_service_calls_provider():
 
     resolver = WeatherLocationResolver()
 
     provider = FakeWeatherProvider()
-
+    adapter = DefaultWeatherAdapter()
     service = WeatherService(
-        resolver,
-        provider
+        provider,
+        adapter,
+        resolver
     )
 
 
@@ -30,14 +35,31 @@ def test_weather_service_calls_provider():
         ]
     )
 
-
-    result = provider.get_forecast(
-        locations,
-        datetime.now(),
-        datetime.now(),
-        60
+    run = ForecastRun(
+        start=datetime.now(timezone.utc),
+        resolution=timedelta(minutes=15),
+        slots=1
     )
+
+    result = service.get_forecast(WeatherForecastRequest(
+            start=run.start,
+            end=run.end,
+            locations=locations,
+            variables=[
+                ForecastMetric.TEMPERATURE,
+                ForecastMetric.WIND_SPEED,
+                ForecastMetric.CLOUD_COVER
+            ]
+
+        )
+    )
+    print(result)
 
 
     assert result.provider == "fake"
-    assert len(result.forecasts) == 1
+    assert len(result.forecasts[0].series) == 1
+    assert len(
+        result.forecasts[0]
+        .series[0]
+        .values
+    ) == result.forecasts[0].run.slots

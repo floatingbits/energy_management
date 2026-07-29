@@ -1,5 +1,5 @@
 from app.weather.resolver import WeatherLocationResolver
-from app.weather.value_objects import WeatherLocation
+from app.weather.location import WeatherLocation
 
 
 def test_resolve_location():

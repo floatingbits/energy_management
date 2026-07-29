@@ -1,0 +1,1 @@
+from .asset_forecast import AssetForecast

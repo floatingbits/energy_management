@@ -5,8 +5,10 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from app.models import *
+from app.forecasting.models  import *
 from app.weather.models import *
+from app.asset_forecast.models import *
+from app.portfolio_forecast.models import *
 from app.database import Base, engine
 
 # this is the Alembic Config object, which provides

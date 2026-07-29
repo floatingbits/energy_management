@@ -1,18 +1,41 @@
 from sqlalchemy.orm import Session
 
-from app.repositories import weather_repository
+
+from app.weather.adapter import WeatherAdapter
 from app.weather.provider import WeatherProvider
+from app.weather.request import WeatherForecastRequest
 from app.weather.resolver import WeatherLocationResolver
-from app.weather.value_objects import WeatherLocation
+from app.weather.location import WeatherLocation
+from app.weather.result import WeatherForecastResult
+
+
+
 class WeatherService:
 
     def __init__(
-        self,
-        resolver: WeatherLocationResolver,
-        provider: WeatherProvider
+            self,
+            provider: WeatherProvider,
+            adapter: WeatherAdapter,
+            resolver: WeatherLocationResolver
     ):
-        self.resolver = resolver
         self.provider = provider
+        self.adapter = adapter
+        self.resolver = resolver
+
+    def get_forecast(
+            self,
+            request: WeatherForecastRequest
+    ) -> WeatherForecastResult:
+        provider_result = (
+            self.provider.get_forecast(
+                request
+            )
+        )
+
+        return self.adapter.adapt(
+            provider_result,
+            request
+        )
 
     def resolve_locations(
             self,
@@ -25,24 +48,3 @@ class WeatherService:
             )
             for lat, lon in coordinates
         ]
-
-    def create_forecast(
-        self,
-        db,
-        locations,
-        horizon_start,
-        horizon_end,
-        resolution_minutes
-    ):
-
-        result = self.provider.get_forecast(
-            locations,
-            horizon_start,
-            horizon_end,
-            resolution_minutes
-        )
-
-        return weather_repository.create_weather_forecast_run(
-            db,
-            result
-        )

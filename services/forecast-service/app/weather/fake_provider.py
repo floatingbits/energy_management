@@ -1,40 +1,36 @@
-from datetime import datetime
+from datetime import timezone, datetime, timedelta
 
-from app.schemas.weather import (
-    WeatherForecastResult,
-    WeatherForecastPoint,
-    WeatherVariableValue
-)
+from app.weather.provider import WeatherProvider
+from app.weather.provider_result import ProviderForecastResult, ProviderSeries, ProviderLocationForecast
+from app.weather.request import WeatherForecastRequest
 
 
-class FakeWeatherProvider:
 
+class FakeWeatherProvider(WeatherProvider):
 
     def get_forecast(
-        self,
-        locations,
-        horizon_start,
-        horizon_end,
-        resolution_minutes
-    ):
+            self,
+            request: WeatherForecastRequest
+    ) -> ProviderForecastResult:
 
-        return WeatherForecastResult(
+        series = [
+            ProviderSeries(
+                variable_name="temperature_2m",
+                start=datetime.now(timezone.utc),
+                resolution=timedelta(hours=1),
+                values=[1.]
+            )
+        ]
+        forecasts = [
+            ProviderLocationForecast(
+                longitude=request.locations[0].longitude,
+                latitude=request.locations[0].latitude,
+                series=series,
+            )
+        ]
+
+        return ProviderForecastResult(
             provider="fake",
-            model="test",
-            forecasts=[
-                WeatherForecastPoint(
-                    latitude=locations[0].latitude,
-                    longitude=locations[0].longitude,
-                    period_start=horizon_start,
-                    period_end=horizon_end,
-                    variables=[
-                        WeatherVariableValue(
-                            variable="wind_speed",
-                            p05=5,
-                            p50=10,
-                            p95=15
-                        )
-                    ]
-                )
-            ]
+            model='unknown',
+            forecasts=forecasts
         )
