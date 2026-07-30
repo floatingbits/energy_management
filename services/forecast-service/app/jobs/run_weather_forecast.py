@@ -1,3 +1,4 @@
+from app.forecasting.enums import ForecastMetric
 from app.infrastructure.weather import create_weather_service, create_weather_forecast_repository
 from app.database import SessionLocal
 
@@ -30,7 +31,9 @@ def run_weather_forecast_job(
     horizon_end = now + timedelta(days=2)
 
     variables = [
-
+        ForecastMetric.WIND_SPEED,
+        ForecastMetric.CLOUD_COVER,
+        ForecastMetric.TEMPERATURE,
     ]
 
     request = WeatherForecastRequest(

@@ -19,7 +19,7 @@ def create_weather_forecast_run(
     run = ForecastRun(
         start=result_run.start,
         slots=result_run.slots,
-        resolution_seconds=result_run.resolution.seconds,
+        resolution_seconds=result_run.resolution.total_seconds(),
 
 
     )

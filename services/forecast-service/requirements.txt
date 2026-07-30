@@ -9,3 +9,7 @@ alembic
 httpx
 pika
 pytest
+openmeteo-requests
+requests-cache
+retry-requests
+numpy

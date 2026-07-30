@@ -3,6 +3,7 @@ from datetime import timedelta
 from app.weather.adapter import WeatherAdapter
 from app.weather.provider_result import ProviderForecastResult
 from app.weather.request import WeatherForecastRequest
+from app.weather.resolver import WeatherLocationResolver
 from app.weather.result import (
     WeatherForecastResult,
     WeatherLocationForecast
@@ -16,8 +17,9 @@ from app.forecasting.domain.forecast_run import ForecastRun
 
 class DefaultWeatherAdapter(WeatherAdapter):
 
-    def __init__(self, variable_mapping: dict[str, ForecastMetric]):
+    def __init__(self, variable_mapping: dict[str, ForecastMetric], location_resolver: WeatherLocationResolver):
         self.variable_mapping = variable_mapping
+        self.location_resolver = location_resolver
 
     def adapt(
         self,
@@ -48,21 +50,12 @@ class DefaultWeatherAdapter(WeatherAdapter):
                         ]
                     )
                 )
-
+            # API might respond with slightly different locations, so resolve to requested grid
+            forecast_location = self.location_resolver.resolve(location_forecast.latitude, location_forecast.longitude)
 
             forecasts.append(
                 WeatherLocationForecast(
-                    location=next(
-                        location
-                        for location in request.locations
-                        if (
-                            location.latitude
-                            == location_forecast.latitude
-                            and
-                            location.longitude
-                            == location_forecast.longitude
-                        )
-                    ),
+                    location=forecast_location,
                     run=self.create_run(
                         provider_result,
                         location_forecast
@@ -70,6 +63,19 @@ class DefaultWeatherAdapter(WeatherAdapter):
                     series=series
                 )
             )
+
+            # Check if location has been requested?
+            # next(
+            #     location
+            #     for location in request.locations
+            #     if (
+            #             location.latitude
+            #             == forecast_location.latitude
+            #             and
+            #             location.longitude
+            #             == forecast_location.longitude
+            #     )
+            # )
 
 
         return WeatherForecastResult(
