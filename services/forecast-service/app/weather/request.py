@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from app.weather.location import WeatherLocation
-from app.forecasting.domain.metric import ForecastMetric
+from app.forecasting.enums import ForecastMetric
 
 
 @dataclass(frozen=True)

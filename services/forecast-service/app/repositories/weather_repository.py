@@ -14,6 +14,7 @@ def create_weather_forecast_run(
     db: Session,
     result: WeatherForecastResult
 ):
+    # TODO: Data Structure
     result_run = result.forecasts[0].run
     run = ForecastRun(
         start=result_run.start,

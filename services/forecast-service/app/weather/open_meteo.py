@@ -10,7 +10,7 @@ from app.weather.result import (
 
 from app.forecasting.domain.forecast_series import ForecastSeries
 from app.forecasting.domain.forecast_value import ForecastValue
-from app.forecasting.domain.metric import ForecastMetric
+from app.forecasting.enums import ForecastMetric
 from app.forecasting.domain.forecast_run import ForecastRun
 
 class OpenMeteoProvider(WeatherProvider):

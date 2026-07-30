@@ -5,7 +5,7 @@ from app.weather.provider_result import ProviderForecastResult
 from app.weather.request import WeatherForecastRequest
 from app.weather.result import WeatherLocationForecast
 from app.forecasting.domain.forecast_run import ForecastRun
-from app.forecasting.domain.metric import ForecastMetric
+from app.forecasting.enums import ForecastMetric
 
 
 class WeatherProvider(ABC):

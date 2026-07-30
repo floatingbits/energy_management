@@ -1,12 +1,6 @@
 from dataclasses import dataclass
-from enum import StrEnum
+from app.forecasting.enums import ForecastValueType
 
-
-class ForecastValueType(StrEnum):
-
-    FORECAST = "forecast"
-
-    MEASURED = "measured"
 
 
 @dataclass(frozen=True)

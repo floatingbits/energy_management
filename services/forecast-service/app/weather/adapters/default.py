@@ -10,12 +10,14 @@ from app.weather.result import (
 
 from app.forecasting.domain.forecast_series import ForecastSeries
 from app.forecasting.domain.forecast_value import ForecastValue
-from app.forecasting.domain.metric import ForecastMetric
+from app.forecasting.enums import ForecastMetric
 from app.forecasting.domain.forecast_run import ForecastRun
 
 
 class DefaultWeatherAdapter(WeatherAdapter):
 
+    def __init__(self, variable_mapping: dict[str, ForecastMetric]):
+        self.variable_mapping = variable_mapping
 
     def adapt(
         self,
@@ -102,15 +104,4 @@ class DefaultWeatherAdapter(WeatherAdapter):
         variable: str
     ) -> ForecastMetric:
 
-        mapping = {
-            "temperature_2m":
-                ForecastMetric.TEMPERATURE,
-
-            "wind_speed_10m":
-                ForecastMetric.WIND_SPEED,
-
-            "cloud_cover":
-                ForecastMetric.CLOUD_COVER,
-        }
-
-        return mapping[variable]
+        return self.variable_mapping[variable]

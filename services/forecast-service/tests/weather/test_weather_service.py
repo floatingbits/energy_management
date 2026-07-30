@@ -1,6 +1,7 @@
 from datetime import datetime, timezone, timedelta
 
 from app.weather.adapters.default import DefaultWeatherAdapter
+from app.weather.open_meteo_mapping import OPEN_METEO_VARIABLES
 from app.weather.request import WeatherForecastRequest
 from app.weather.resolver import WeatherLocationResolver
 from app.schemas.weather import (
@@ -14,14 +15,14 @@ from app.services.weather_service import WeatherService
 
 from app.weather.fake_provider import FakeWeatherProvider
 from app.forecasting.domain.forecast_run import ForecastRun
-from app.forecasting.domain.metric import ForecastMetric
+from app.forecasting.enums import ForecastMetric
 
 def test_weather_service_calls_provider():
 
     resolver = WeatherLocationResolver()
 
     provider = FakeWeatherProvider()
-    adapter = DefaultWeatherAdapter()
+    adapter = DefaultWeatherAdapter(OPEN_METEO_VARIABLES)
     service = WeatherService(
         provider,
         adapter,

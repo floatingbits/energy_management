@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from .metric import ForecastMetric
+from app.forecasting.enums import ForecastMetric
 from .forecast_value import ForecastValue
 
 
