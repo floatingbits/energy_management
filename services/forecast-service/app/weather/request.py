@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from app.weather.location import WeatherLocation
 from app.forecasting.enums import ForecastMetric
@@ -11,6 +11,8 @@ class WeatherForecastRequest:
     start: datetime
 
     end: datetime
+
+    resolution: timedelta
 
     locations: list[WeatherLocation]
 

@@ -4,6 +4,7 @@ from app.database import SessionLocal
 
 from datetime import datetime, timedelta, timezone
 
+from app.repositories.weather_repository import WeatherRepository
 from app.weather.open_meteo import OpenMeteoProvider
 from app.services.weather_service import WeatherService
 from sqlalchemy.orm import Session
@@ -12,15 +13,15 @@ from app.weather.request import WeatherForecastRequest
 
 
 def run_weather_forecast_job(
-    db: Session,
     weather_service: WeatherService,
-    weather_repository
+    weather_repository: WeatherRepository
 ):
 
     locations = weather_service.resolve_locations(
         [
             (53.55, 10.0),
             (53.56, 10.01),
+            (52.52, 13.41),
         ]
     )
 
@@ -34,11 +35,13 @@ def run_weather_forecast_job(
         ForecastMetric.WIND_SPEED,
         ForecastMetric.CLOUD_COVER,
         ForecastMetric.TEMPERATURE,
+        ForecastMetric.GLOBAL_SOLAR_IRRADIANCE
     ]
 
     request = WeatherForecastRequest(
         start=now,
         end=horizon_end,
+        resolution=timedelta(minutes=15),
         locations=locations,
         variables=variables
     )
@@ -48,7 +51,6 @@ def run_weather_forecast_job(
     )
 
     weather_repository.create_weather_forecast_run(
-        db,
         result
     )
 
@@ -59,7 +61,6 @@ def main():
     service = create_weather_service()
     weather_repository = create_weather_forecast_repository()
     run_weather_forecast_job(
-        db,
         service,
         weather_repository
     )

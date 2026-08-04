@@ -5,6 +5,7 @@ class ForecastMetric(StrEnum):
     WIND_SPEED = "wind_speed"
     TEMPERATURE = "temperature"
     CLOUD_COVER = "cloud_cover"
+    GLOBAL_SOLAR_IRRADIANCE = "global_solar_irradiance"
 
     ACTIVE_POWER = "active_power"
 

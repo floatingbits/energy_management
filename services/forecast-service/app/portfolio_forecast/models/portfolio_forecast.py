@@ -20,7 +20,7 @@ class PortfolioForecast(Base):
     )
 
 
-    forecast_run_id = Column(
+    forecast_id = Column(
         Integer,
         ForeignKey(
             "forecast_runs.id"
@@ -46,6 +46,6 @@ class PortfolioForecast(Base):
         nullable=False
     )
 
-    forecast_run = relationship(
-        "ForecastRun"
+    forecast = relationship(
+        "Forecast"
     )

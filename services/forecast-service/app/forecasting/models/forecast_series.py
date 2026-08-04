@@ -27,15 +27,20 @@ class ForecastSeries(Base):
         nullable=False
     )
 
-    forecast_run_id = Column(
+    forecast_id = Column(
         Integer,
         ForeignKey(
-            "forecast_runs.id"
+            "forecasts.id"
         ),
         nullable=False
     )
 
-    forecast_run = relationship(
-        "ForecastRun",
+    forecast = relationship(
+        "Forecast",
         back_populates="series"
+    )
+    values = relationship(
+        "ForecastValue",
+        back_populates="series",
+        cascade="all, delete-orphan"
     )

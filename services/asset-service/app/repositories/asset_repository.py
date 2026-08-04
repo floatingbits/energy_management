@@ -1,25 +1,39 @@
-from sqlalchemy.orm import Session
-
+from sqlalchemy.orm import Session, selectinload
+from sqlalchemy import select
 from app.models.asset import Asset
 from app.schemas.asset import AssetCreate, AssetUpdate
 
 def get_assets(
     db: Session
 ) -> list[Asset]:
-
-    return db.query(Asset).all()
+    stmt = (
+        select(Asset)
+        .options(
+            selectinload(Asset.pv_configuration),
+            selectinload(Asset.wind_configuration),
+            selectinload(Asset.battery_configuration),
+        )
+    )
+    return list(
+        db.scalars(stmt)
+    )
 
 
 def get_asset_by_id(
     db: Session,
     asset_id: int
 ) -> Asset | None:
-
-    return (
-        db.query(Asset)
-        .filter(Asset.id == asset_id)
-        .first()
+    stmt = (
+        select(Asset)
+        .options(
+            selectinload(Asset.pv_configuration),
+            selectinload(Asset.wind_configuration),
+            selectinload(Asset.battery_configuration),
+        )
+        .where(Asset.id == asset_id)
     )
+
+    return db.scalars(stmt).first()
 
 
 def create_asset(
@@ -43,6 +57,12 @@ def create_asset(
     db.refresh(db_asset)
 
     return db_asset
+
+def save_asset(db, asset: Asset):
+    db.add(asset)
+    db.commit()
+    db.refresh(asset)
+    return asset
 
 def update_asset(
     db: Session,

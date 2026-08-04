@@ -14,4 +14,14 @@ This project is supposed to simulate all the relevant aspects of an energy manag
 - REST APIs
 - Dashboard (Vue.js + echarts)
 - Docker
-- Necessary tools to operate the system in a safe and controlled way (Logging, Monitoring, Testing) 
+- Necessary tools to operate the system in a safe and controlled way (Logging, Monitoring, Testing)
+
+## Reached Milestones
+
+- Micro Services communicating via RabbitMQ and REST
+- OpenMeteo API implemented
+- Structured persistence of forecasts
+- First Dashboard with asset map and forecast chart
+- First implementation of non-trivial power forecast strategies
+
+![Showing a map, a panel for asset details and a chart that contains weather forecast information](./docs/images/energy_dashboard.png "Screenshot of Energy Management Dashboard")

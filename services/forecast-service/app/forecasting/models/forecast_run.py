@@ -44,9 +44,3 @@ class ForecastRun(Base):
         nullable=False,
         default=lambda: datetime.now(timezone.utc)
     )
-
-    series = relationship(
-        "ForecastSeries",
-        back_populates="forecast_run",
-        cascade="all, delete-orphan"
-    )

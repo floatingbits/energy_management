@@ -1,5 +1,7 @@
 from datetime import timedelta
 
+import numpy as np
+
 from app.weather.adapter import WeatherAdapter
 from app.weather.provider_result import ProviderForecastResult
 from app.weather.request import WeatherForecastRequest
@@ -38,6 +40,11 @@ class DefaultWeatherAdapter(WeatherAdapter):
                 metric = self.map_metric(
                     provider_series.variable_name
                 )
+                values = provider_series.values
+
+                if provider_series.resolution != request.resolution:
+                    values = self.resample(values, provider_series.resolution/request.resolution)
+
 
                 series.append(
                     ForecastSeries(
@@ -46,7 +53,7 @@ class DefaultWeatherAdapter(WeatherAdapter):
                             ForecastValue(
                                 p50=value
                             )
-                            for value in provider_series.values
+                            for value in values
                         ]
                     )
                 )
@@ -58,7 +65,8 @@ class DefaultWeatherAdapter(WeatherAdapter):
                     location=forecast_location,
                     run=self.create_run(
                         provider_result,
-                        location_forecast
+                        location_forecast,
+                        request
                     ),
                     series=series
                 )
@@ -84,11 +92,16 @@ class DefaultWeatherAdapter(WeatherAdapter):
             forecasts=forecasts
         )
 
+    def resample(self, values: list[float], factor: float):
+        # simple interpolation in case we have an hourly variable requested at 15 minute grid
+        # TODO: make interpolation flexible via strategy per variable, for example.
+       return np.interp(np.arange(0, len(values), 1/factor), np.arange(0, len(values)), values)
 
     def create_run(
         self,
         provider_result,
-        location_forecast
+        location_forecast,
+        request: WeatherForecastRequest
     ) -> ForecastRun:
 
         # vorerst:
@@ -99,9 +112,9 @@ class DefaultWeatherAdapter(WeatherAdapter):
         )
 
         return ForecastRun(
-            start=first_series.start,
-            resolution=first_series.resolution,
-            slots=len(first_series.values)
+            start=request.start,
+            resolution=request.resolution,
+            slots=1 + round((request.end - request.start)/request.resolution)
         )
 
 

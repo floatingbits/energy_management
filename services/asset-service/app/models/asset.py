@@ -5,6 +5,11 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.portfolio import portfolio_assets
 from app.database import Base
 
+from app.models.configuration import (
+    PvConfiguration,
+    WindConfiguration,
+    BatteryConfiguration,
+)
 
 class Asset(Base):
 
@@ -70,4 +75,22 @@ class Asset(Base):
         "Portfolio",
         secondary=portfolio_assets,
         back_populates="assets"
+    )
+
+    pv_configuration: Mapped["PvConfiguration | None"] = relationship(
+        back_populates="asset",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
+
+    wind_configuration: Mapped["WindConfiguration | None"] = relationship(
+        back_populates="asset",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
+
+    battery_configuration: Mapped["BatteryConfiguration | None"] = relationship(
+        back_populates="asset",
+        uselist=False,
+        cascade="all, delete-orphan",
     )

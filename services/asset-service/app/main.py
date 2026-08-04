@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from sqlalchemy import text
 
 from app.database import engine
@@ -7,9 +9,22 @@ from app.api.assets import router as asset_router
 from app.api.portfolios import router as portfolio_router
 
 
+
+
+
 app = FastAPI(
     title="Asset Service",
     version="0.1.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 

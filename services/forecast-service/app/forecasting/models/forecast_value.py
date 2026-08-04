@@ -59,3 +59,8 @@ class ForecastValue(Base):
         nullable=False,
         default="forecast"
     )
+
+    series = relationship(
+        "ForecastSeries",
+        back_populates="values"
+    )

@@ -1,8 +1,12 @@
-from sqlalchemy.orm import Session
+from typing import Optional
 
+from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 from app.forecasting.models.forecast_series import ForecastSeries
 from app.forecasting.models.forecast_value import ForecastValue
 from app.forecasting.models.forecast_run import ForecastRun
+from app.forecasting.models.forecast import Forecast
 from app.weather.models import (
     WeatherForecast, WeatherSource,
 )
@@ -10,71 +14,112 @@ from app.weather.models import (
 from app.weather.result import WeatherForecastResult
 
 
-def create_weather_forecast_run(
-    db: Session,
-    result: WeatherForecastResult
-):
-    # TODO: Data Structure
-    result_run = result.forecasts[0].run
-    run = ForecastRun(
-        start=result_run.start,
-        slots=result_run.slots,
-        resolution_seconds=result_run.resolution.total_seconds(),
 
 
-    )
 
-    db.add(run)
+class WeatherRepository:
 
-    db.flush()
+    def __init__(self, db_session: Session):
+        self.db_session = db_session
+    def get_forecasts_for_location(
+        self,
+        latitude: float,
+        longitude: float,
+        limit: Optional[int] = None
+    ) -> list[WeatherForecast]:
 
+        stmt = (
+            select(WeatherForecast)
+            .options(
+                joinedload(WeatherForecast.forecast)
+                    .joinedload(Forecast.forecast_run),
 
-    source = WeatherSource(
-        model=result.model,
-        provider=result.provider,
-        version='0.0.1'
-    )
-    db.add(source)
+                joinedload(WeatherForecast.forecast)
+                    .joinedload(Forecast.series)
+                    .joinedload(ForecastSeries.values),
 
-    db.flush()
+                joinedload(WeatherForecast.source),
+            )
+            .where(
+                WeatherForecast.latitude == latitude,
+                WeatherForecast.longitude == longitude,
+            )
+            .join(WeatherForecast.forecast)
+            .join(Forecast.forecast_run)
+            .order_by(ForecastRun.created_at.desc())
+        )
+        if limit is not None:
+            stmt = stmt.limit(limit)
 
-
-    for point in result.forecasts:
-
-        forecast = WeatherForecast(
-            forecast_run_id=run.id,
-            latitude=point.location.latitude,
-            longitude=point.location.longitude,
-            source_id=source.id
+        return list(
+            self.db_session.scalars(stmt).unique()
         )
 
-        db.add(forecast)
+    def create_weather_forecast_run(
+            self,
+            result: WeatherForecastResult
+    ):
+        # TODO: Data Structure
+        result_run = result.forecasts[0].run
+        run = ForecastRun(
+            start=result_run.start,
+            slots=result_run.slots,
+            resolution_seconds=result_run.resolution.total_seconds(),
 
-        db.flush()
+        )
 
+        self.db_session.add(run)
 
-        for series in point.series:
+        self.db_session.flush()
 
-            series_model = ForecastSeries(
-                forecast_run_id=run.id,
-                metric=series.metric,
+        source = WeatherSource(
+            model=result.model,
+            provider=result.provider,
+            version='0.0.1'
+        )
+        self.db_session.add(source)
+
+        self.db_session.flush()
+
+        for point in result.forecasts:
+            forecast = Forecast(
+                forecast_run_id=run.id
+            )
+            self.db_session.add(forecast)
+            self.db_session.flush()
+
+            weather_forecast = WeatherForecast(
+                forecast_id=forecast.id,
+                latitude=point.location.latitude,
+                longitude=point.location.longitude,
+                source_id=source.id
             )
 
-            db.add(series_model)
-            db.flush()
-            for i, value in enumerate(series.values):
-                value_model = ForecastValue(
-                    series_id=series_model.id,
-                    slot_index=i,
-                    p05=value.p05,
-                    p50=value.p50,
-                    p95=value.p95
+            self.db_session.add(weather_forecast)
+
+            self.db_session.flush()
+
+            for series in point.series:
+
+                series_model = ForecastSeries(
+                    forecast_id=forecast.id,
+                    metric=series.metric,
                 )
 
-                db.add(value_model)
-                db.flush()
+                self.db_session.add(series_model)
+                self.db_session.flush()
+                for i, value in enumerate(series.values):
+                    value_model = ForecastValue(
+                        series_id=series_model.id,
+                        slot_index=i,
+                        p05=value.p05,
+                        p50=value.p50,
+                        p95=value.p95
+                    )
 
+                    self.db_session.add(value_model)
+                    self.db_session.flush()
 
-    db.commit()
+        self.db_session.commit()
 
-    return run
+        return run

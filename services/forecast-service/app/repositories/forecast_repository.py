@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 
-from app.models.forecast import Forecast
+from app.forecasting.models import Forecast
 
 
 def get_forecasts(

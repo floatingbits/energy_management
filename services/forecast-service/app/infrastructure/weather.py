@@ -1,3 +1,4 @@
+from app.database import SessionLocal
 from app.weather.adapters.default import DefaultWeatherAdapter
 from app.weather.open_meteo_mapping import OPEN_METEO_VARIABLES
 
@@ -20,13 +21,15 @@ def create_weather_service():
     provider = OpenMeteoProvider()
 
     adapter = DefaultWeatherAdapter(OPEN_METEO_VARIABLES, resolver)
-
+    repository = create_weather_forecast_repository()
     return WeatherService(
         resolver=resolver,
         provider=provider,
-        adapter=adapter
+        adapter=adapter,
+        repository=repository
     )
 
 
 def create_weather_forecast_repository():
-    return weather_repository
+    db_session = SessionLocal()
+    return weather_repository.WeatherRepository(db_session)

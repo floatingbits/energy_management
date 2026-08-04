@@ -301,7 +301,9 @@ services:
       - energy-net
     volumes:
       - ./frontend/dashboard-ui:/app
-
+      - /app/node_modules
+    command:
+      npm run dev -- --host 0.0.0.0
   pgadmin:
     image: dpage/pgadmin4
     environment:

@@ -1,6 +1,8 @@
+from typing import Optional
+
 from sqlalchemy.orm import Session
 
-
+from app.repositories.weather_repository import WeatherRepository
 from app.weather.adapter import WeatherAdapter
 from app.weather.provider import WeatherProvider
 from app.weather.request import WeatherForecastRequest
@@ -16,11 +18,27 @@ class WeatherService:
             self,
             provider: WeatherProvider,
             adapter: WeatherAdapter,
-            resolver: WeatherLocationResolver
+            resolver: WeatherLocationResolver,
+            repository: WeatherRepository
     ):
         self.provider = provider
         self.adapter = adapter
         self.resolver = resolver
+        self.repository = repository
+
+    def get_weather_forecasts(
+            self,
+            latitude: float,
+            longitude: float,
+            limit: Optional[int] = None
+    ):
+
+
+        return self.repository.get_forecasts_for_location(
+            latitude=latitude,
+            longitude=longitude,
+            limit=limit
+        )
 
     def get_forecast(
             self,
