@@ -19,7 +19,7 @@ export interface ForecastSeries {
 }
 interface ForecastRun {
     start: string;
-    resolution: string;
+    resolution_seconds: number;
     slots: number;
 }
 interface Forecast {
