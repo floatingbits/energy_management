@@ -1,5 +1,5 @@
 from app.forecasting.enums import ForecastMetric
-from app.infrastructure.weather import create_weather_service, create_weather_forecast_repository
+from app.bootstrap.weather import create_weather_service, create_weather_forecast_repository
 from app.database import SessionLocal
 
 from datetime import datetime, timedelta, timezone
@@ -35,7 +35,9 @@ def run_weather_forecast_job(
         ForecastMetric.WIND_SPEED,
         ForecastMetric.CLOUD_COVER,
         ForecastMetric.TEMPERATURE,
-        ForecastMetric.GLOBAL_SOLAR_IRRADIANCE
+        ForecastMetric.GLOBAL_SOLAR_IRRADIANCE,
+        ForecastMetric.DIRECT_NORMAL_IRRADIANCE,
+        ForecastMetric.DIFFUSE_IRRADIANCE
     ]
 
     request = WeatherForecastRequest(
@@ -55,8 +57,6 @@ def run_weather_forecast_job(
     )
 
 def main():
-
-    db = SessionLocal()
 
     service = create_weather_service()
     weather_repository = create_weather_forecast_repository()

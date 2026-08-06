@@ -5,6 +5,7 @@ class ParamsBuilder:
         "wind_speed_10m",
         "shortwave_radiation",
         "direct_radiation",
+        "diffuse_radiation",
         "direct_normal_irradiance",
         "global_tilted_irradiance",
         "global_tilted_irradiance_instant"

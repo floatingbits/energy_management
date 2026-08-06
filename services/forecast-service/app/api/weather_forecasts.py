@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.infrastructure.weather import create_weather_service
+from app.bootstrap.weather import create_weather_service
 from app.weather.schemas import WeatherForecastResponse
 from app.services.weather_service import WeatherService
 

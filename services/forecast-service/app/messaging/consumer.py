@@ -1,11 +1,12 @@
 import json
 import pika
 
-from app.infrastructure.messaging import get_event_publisher
+from app.bootstrap.asset_forecast import create_asset_forecast_service
+from app.bootstrap.messaging import get_event_publisher
 from event_contracts.asset_events import AssetCreatedEvent
 
 from app.database import SessionLocal
-from app.services import forecast_service
+
 
 def callback(
     channel,
@@ -19,14 +20,10 @@ def callback(
     )
 
     db = SessionLocal()
-
+    asset_forecast_service = create_asset_forecast_service()
     try:
 
-        forecast_service.create_forecast_for_asset(
-            db,
-            event.asset_id,
-            get_event_publisher()
-        )
+        asset_forecast_service.generate(event.asset_id)
 
         print(
             f"Created forecast for asset {event.asset_id}"

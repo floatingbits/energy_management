@@ -104,15 +104,15 @@ class DefaultWeatherAdapter(WeatherAdapter):
         request: WeatherForecastRequest
     ) -> ForecastRun:
 
-        # vorerst:
-        # nimmt erstes Raster an
-
+        # TODO:
+        # for the time being:
+        # use start time of first series (in open metoe they are all the same anyway)
         first_series = (
             location_forecast.series[0]
         )
 
         return ForecastRun(
-            start=request.start,
+            start=first_series.start,
             resolution=request.resolution,
             slots=1 + round((request.end - request.start)/request.resolution)
         )

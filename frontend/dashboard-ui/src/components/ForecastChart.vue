@@ -8,6 +8,7 @@ import type { Asset } from "../api/asset";
 
 const props = defineProps<{
     forecast: WeatherForecast,
+    forecastType: string,
     asset?: Asset | null
 }>();
 const chartTitle = computed(() => {
@@ -16,7 +17,7 @@ const chartTitle = computed(() => {
         return "Weather Forecast";
     }
 
-    return `${props.asset.name} - Weather Forecast`;
+    return `${props.asset.name} - ${props.forecastType} Forecast`;
 
 });
 

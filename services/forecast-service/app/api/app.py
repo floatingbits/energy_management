@@ -6,11 +6,17 @@ from app.database import engine
 #from app.api.forecasts import router as forecast_router
 from app.api.weather_forecasts import router as weather_router
 
+from app.asset_forecast.router import (
+    router as asset_forecast_router,
+)
+
 
 app = FastAPI(
     title="Forecast Service",
     version="0.1.0"
 )
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -19,6 +25,11 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+app.include_router(
+    asset_forecast_router,
+    prefix="/api/v1"
 )
 
 # app.include_router(

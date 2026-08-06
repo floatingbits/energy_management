@@ -5,5 +5,7 @@ OPEN_METEO_VARIABLES = {
     "temperature_2m": ForecastMetric.TEMPERATURE,
     "cloud_cover": ForecastMetric.CLOUD_COVER,
     "wind_speed_10m": ForecastMetric.WIND_SPEED,
-    "shortwave_radiation": ForecastMetric.GLOBAL_SOLAR_IRRADIANCE
+    "shortwave_radiation": ForecastMetric.GLOBAL_SOLAR_IRRADIANCE,
+    "direct_normal_irradiance": ForecastMetric.DIRECT_NORMAL_IRRADIANCE,
+    "diffuse_radiation": ForecastMetric.DIFFUSE_IRRADIANCE
 }

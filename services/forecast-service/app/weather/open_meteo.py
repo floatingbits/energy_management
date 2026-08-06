@@ -61,7 +61,6 @@ class OpenMeteoProvider(WeatherProvider):
                 print(container.VariablesLength())
                 for i in range(0, container.VariablesLength()):
                     var_name = request_params[container_id][i]
-
                     series.append(ProviderSeries(
                         variable_name=var_name,
                         start=datetime.fromtimestamp(container.Time(), timezone.utc),

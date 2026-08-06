@@ -1,3 +1,5 @@
+from datetime import timezone,datetime as dt
+
 from sqlalchemy import (
     Column,
     Integer,
@@ -43,7 +45,8 @@ class AssetForecast(Base):
 
     created_at = Column(
         DateTime(timezone=True),
-        nullable=False
+        nullable=False,
+        default=lambda: dt.now(timezone.utc)
     )
 
     forecast = relationship(

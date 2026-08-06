@@ -10,7 +10,7 @@ from app.main import app
 from app.database import get_db
 from app.models.asset import Base
 from app.messaging.debug_publisher import FakeEventPublisher
-from app.infrastructure.messaging import get_event_publisher
+from app.bootstrap.messaging import get_event_publisher
 
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"

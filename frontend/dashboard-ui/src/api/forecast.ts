@@ -17,20 +17,29 @@ export interface ForecastSeries {
     metric: string;
     values: ForecastValue[];
 }
+interface ForecastRun {
+    start: string;
+    resolution: string;
+    slots: number;
+}
+interface Forecast {
 
+    run: ForecastRun
+
+    series: ForecastSeries[]
+}
 
 export interface WeatherForecast {
     id: number;
     latitude: number;
     longitude: number;
-    forecast: {
-        run: {
-            start: string;
-            resolution: string;
-            slots: number;
-        },
-        series: ForecastSeries[];
-    }
+    forecast: Forecast
+}
+
+export interface AssetForecast {
+    id: number;
+    asset_id: number;
+    forecast: Forecast
 }
 
 
@@ -46,6 +55,15 @@ export async function getWeatherForecast(
             limit: 1
         }
     });
+
+    return response.data;
+}
+
+export async function getAssetForecast(
+    asset_id: number
+): Promise<AssetForecast[]> {
+
+    const response = await client.get(`/asset-forecasts/${asset_id}`, {});
 
     return response.data;
 }

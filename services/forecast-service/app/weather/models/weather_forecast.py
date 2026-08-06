@@ -11,7 +11,7 @@ from sqlalchemy import (
 from app.database import Base
 from sqlalchemy.orm import relationship
 
-
+from app.forecasting.models import Forecast
 class WeatherForecast(Base):
 
     __tablename__ = "weather_forecasts"

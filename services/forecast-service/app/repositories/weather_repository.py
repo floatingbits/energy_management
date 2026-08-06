@@ -3,6 +3,7 @@ from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
+
 from app.forecasting.models.forecast_series import ForecastSeries
 from app.forecasting.models.forecast_value import ForecastValue
 from app.forecasting.models.forecast_run import ForecastRun
@@ -54,6 +55,14 @@ class WeatherRepository:
         return list(
             self.db_session.scalars(stmt).unique()
         )
+
+    def get_latest_weather_forecast(
+        self,
+        latitude: float,
+        longitude: float,
+    ):
+        forecasts_list =  self.get_forecasts_for_location(latitude,longitude,1)
+        return forecasts_list[0]
 
     def create_weather_forecast_run(
             self,

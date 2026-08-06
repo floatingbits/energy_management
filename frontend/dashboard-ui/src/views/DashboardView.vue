@@ -5,7 +5,9 @@ import { ref, onMounted } from "vue";
 import { getAssets, type Asset } from "../api/asset";
 import {
     getWeatherForecast,
-    type WeatherForecast
+    type WeatherForecast,
+    getAssetForecast,
+    type AssetForecast
 } from "../api/forecast";
 
 
@@ -19,6 +21,7 @@ const assets = ref<Asset[]>([]);
 const selectedAsset = ref<Asset|null>(null);
 
 const selectedForecast = ref<WeatherForecast|null>(null);
+const selectedAssetForecast = ref<AssetForecast|null>(null);
 
 
 
@@ -32,10 +35,16 @@ async function selectAsset(asset: Asset) {
             asset.latitude,
             asset.longitude
         );
-
+    const assetForecasts =
+        await getAssetForecast(
+            asset.id
+        );
 
     selectedForecast.value =
         forecasts[0] ?? null;
+
+    selectedAssetForecast.value =
+        assetForecasts ?? null;
 
 }
 
@@ -77,7 +86,7 @@ onMounted(async () => {
 
 
 
-        <section class="content">
+
 
 
             <AssetDetails
@@ -86,6 +95,7 @@ onMounted(async () => {
 
                 :forecast="selectedForecast"
 
+
             />
 
 
@@ -93,11 +103,18 @@ onMounted(async () => {
                 v-if="selectedForecast"
                 :forecast="selectedForecast"
                 :asset="selectedAsset"
+                forecast-type="Weather"
+            />
+            <ForecastChart
+                v-if="selectedAssetForecast"
+                :forecast="selectedAssetForecast"
+                :asset="selectedAsset"
+                forecast-type="Asset"
 
             />
 
 
-        </section>
+
 
 
     </main>
