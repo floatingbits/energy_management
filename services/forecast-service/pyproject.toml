@@ -1,0 +1,40 @@
+[build-system]
+requires = [
+    "setuptools>=68",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "forecast-service"
+version = "0.1.0"
+description = "Forecasting service for renewable energy assets"
+requires-python = ">=3.11"
+
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "sqlalchemy",
+    "alembic",
+    "pydantic",
+    "pydantic-settings",
+    "psycopg2-binary",
+    "requests",
+    "python-dotenv",
+    "pika",
+    "openmeteo-requests",
+    "requests-cache",
+    "retry-requests",
+    "numpy",
+    "pysolar"
+]
+
+
+[tool.setuptools.packages.find]
+where = [
+    "."
+]
+include = [
+    "app*"
+]

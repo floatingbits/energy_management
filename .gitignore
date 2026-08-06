@@ -3,3 +3,8 @@
 .env
 
 .cache.sqlite
+data/real_pv/br-pvgen
+
+.ipynb_checkpoints
+
+*.egg-info/
