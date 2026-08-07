@@ -1,7 +1,5 @@
 from typing import Optional
 
-from sqlalchemy.orm import Session
-
 from app.repositories.weather_repository import WeatherRepository
 from app.weather.adapter import WeatherAdapter
 from app.weather.provider import WeatherProvider

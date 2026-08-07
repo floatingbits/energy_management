@@ -40,7 +40,7 @@ class OpenMeteoProvider(WeatherProvider):
         mapping = OPEN_METEO_VARIABLES
         inv_mapping = {v: k for k, v in mapping.items()}
         open_meteo_variables = [inv_mapping[var] for var in variables ]
-        request_params = request_builder.build_request_params(locations, open_meteo_variables)
+        request_params = request_builder.build_request_params(locations, open_meteo_variables, request.start, request.end)
         api_responses = self.client.get_current_forecast(params=request_params)
 
         # build appropriate response format from API responses
@@ -48,17 +48,14 @@ class OpenMeteoProvider(WeatherProvider):
         for response in api_responses:
             lat = response.Latitude()
             lon = response.Longitude()
-            print("Response", lat, lon, response.Model())
             minutely_15 = response.Minutely15()
             hourly = response.Hourly()
             daily = response.Daily()
             series = []
             containers = [('minutely_15', minutely_15), ('hourly', hourly), ('daily',daily)]
             for container_id, container in containers:
-                print(container_id, container)
                 if container is None:
                     continue
-                print(container.VariablesLength())
                 for i in range(0, container.VariablesLength()):
                     var_name = request_params[container_id][i]
                     series.append(ProviderSeries(

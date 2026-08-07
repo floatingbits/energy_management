@@ -2,3 +2,5 @@ jupyter
 pandas
 numpy
 fastparquet
+matplotlib
+seaborn

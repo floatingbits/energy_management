@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class ParamsBuilder:
 
     VARIABLES_15_MINUTELY = [
@@ -17,13 +19,21 @@ class ParamsBuilder:
         "temperature_2m_mean"
     ]
 
-    def build_request_params(self, locations: list[dict[str,float]], variables: list[str], models:list[str]|None=None):
+    def build_request_params(self,
+                             locations: list[dict[str,float]],
+                             variables: list[str],
+                             start_date: datetime,
+                             end_date: datetime,
+                             
+                             models:list[str]|None=None
+                             ):
         params = {}
         if models is not None:
             params['models'] = models
         params['latitude'] = [location['latitude'] for location in locations]
         params['longitude'] = [location['longitude'] for location in locations]
-
+        params['start_date'] = start_date.strftime("%Y-%m-%d")
+        params['end_date'] = end_date.strftime("%Y-%m-%d")
         variables_daily =[]
         variables_hourly = []
         variables_minutely_15 = []
