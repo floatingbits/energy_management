@@ -23,5 +23,7 @@ This project is supposed to simulate all the relevant aspects of an energy manag
 - Structured persistence of forecasts
 - First Dashboard with asset map and forecast chart
 - First implementation of non-trivial power forecast strategies
+- successful reality check/validation of first prediction: plausible results in good range for first shot
+- reflection on systematic improvement for PV prediction
 
 ![Showing a map, a panel for asset details and a chart that contains weather forecast information](./docs/images/energy_dashboard.png "Screenshot of Energy Management Dashboard")
