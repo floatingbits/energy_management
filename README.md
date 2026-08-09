@@ -23,7 +23,10 @@ This project is supposed to simulate all the relevant aspects of an energy manag
 - Structured persistence of forecasts
 - First Dashboard with asset map and forecast chart
 - First implementation of non-trivial power forecast strategies
-- successful reality check/validation of first prediction: plausible results in good range for first shot
-- reflection on systematic improvement for PV prediction
+- successful reality check/validation of first prediction: plausible results in good range for first shot.
+Validation against [BR-PVGen dataset](https://zenodo.org/records/21511487). Prediction in peak times generally within 10%. 
+Error metrics to follow.
+- reflection on systematic improvement for PV prediction: Inverter types, tracker technologies, bifacial modules, 
+diffuse radiation model, shadowing in off-peak-times
 
 ![Showing a map, a panel for asset details and a chart that contains weather forecast information](./docs/images/energy_dashboard.png "Screenshot of Energy Management Dashboard")
