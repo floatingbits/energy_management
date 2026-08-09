@@ -22,3 +22,15 @@ class AssetClient:
         response.raise_for_status()
 
         return response.json()
+
+    def get_assets(
+        self
+    ):
+
+        response = requests.get(
+            f"{self.base_url}/assets"
+        )
+
+        response.raise_for_status()
+
+        return response.json()

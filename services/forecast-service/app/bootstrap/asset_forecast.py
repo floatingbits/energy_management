@@ -37,14 +37,16 @@ from app.database import SessionLocal
 from app.repositories.asset_forecast_repository import AssetForecastRepository
 from app.weather.mappers.weather_forecast_mapper import WeatherForecastMapper
 
+def create_asset_client():
+    return AssetClient(
+        base_url="http://asset-service:8000/api/v1"
+    )
+
 
 def create_asset_forecast_service():
     db_session = SessionLocal()
 
-    asset_client = AssetClient(
-        base_url="http://asset-service:8000/api/v1"
-    )
-
+    asset_client = create_asset_client()
     asset_context_provider = (
         ApiAssetContextProvider(
             asset_client

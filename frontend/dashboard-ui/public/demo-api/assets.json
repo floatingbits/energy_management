@@ -15,5 +15,22 @@
       "tilt_deg": 35.0,
       "azimuth_deg": 180.0
     }
+  },
+  {
+    "name": "PV Park Berlin",
+    "asset_type": "solar",
+    "installed_power_kw": 5000.0,
+    "latitude": 52.5,
+    "longitude": 13.04,
+    "status": "ACTIVE",
+    "id": 3,
+    "created_at": "2026-08-09T08:13:01.731603Z",
+    "updated_at": "2026-08-09T08:13:01.731609Z",
+    "configuration": {
+      "panel_area_m2": 25000.0,
+      "efficiency": 0.2,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 180.0
+    }
   }
 ]

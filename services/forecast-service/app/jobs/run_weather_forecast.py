@@ -20,8 +20,8 @@ def run_weather_forecast_job(
     locations = weather_service.resolve_locations(
         [
             (53.55, 10.0),
-            (53.56, 10.01),
-            (52.52, 13.41),
+            (53.5, 10.01),
+            (52.52, 13.04),
         ]
     )
 

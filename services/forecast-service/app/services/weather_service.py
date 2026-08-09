@@ -31,10 +31,11 @@ class WeatherService:
             limit: Optional[int] = None
     ):
 
-
+        location = self.resolver.resolve(latitude, longitude)
+        print(location)
         return self.repository.get_forecasts_for_location(
-            latitude=latitude,
-            longitude=longitude,
+            latitude=location.latitude,
+            longitude=location.longitude,
             limit=limit
         )
 
