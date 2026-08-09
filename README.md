@@ -28,5 +28,6 @@ Validation against [BR-PVGen dataset](https://zenodo.org/records/21511487). Pred
 Error metrics to follow.
 - reflection on systematic improvement for PV prediction: Inverter types, tracker technologies, bifacial modules, 
 diffuse radiation model, shadowing in off-peak-times
+- static export of Dashboard UI deployed to [demo server](http://energy-dashboard.soerenparton.de/).
 
 ![Showing a map, a panel for asset details and a chart that contains weather forecast information](./docs/images/energy_dashboard.png "Screenshot of Energy Management Dashboard")
