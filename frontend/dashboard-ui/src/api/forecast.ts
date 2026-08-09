@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const client = axios.create({
-    baseURL: "http://localhost:8001/api/v1"
+    baseURL: import.meta.env.VITE_API_FORECAST_BASE_URL
 });
 
 
@@ -24,7 +24,7 @@ interface ForecastRun {
 }
 interface Forecast {
 
-    run: ForecastRun
+    forecast_run: ForecastRun
 
     series: ForecastSeries[]
 }
@@ -33,7 +33,8 @@ export interface WeatherForecast {
     id: number;
     latitude: number;
     longitude: number;
-    forecast: Forecast
+    forecast: Forecast;
+    source: any;
 }
 
 export interface AssetForecast {
@@ -41,7 +42,9 @@ export interface AssetForecast {
     asset_id: number;
     forecast: Forecast
 }
-
+function formatCoordinate(value: number): string {
+    return value.toFixed(2);
+}
 
 export async function getWeatherForecast(
     latitude: number,
@@ -50,8 +53,8 @@ export async function getWeatherForecast(
 
     const response = await client.get("/weather-forecasts/", {
         params: {
-            latitude,
-            longitude,
+            latitude: formatCoordinate(latitude),
+            longitude: formatCoordinate(longitude),
             limit: 1
         }
     });
@@ -59,9 +62,11 @@ export async function getWeatherForecast(
     return response.data;
 }
 
+
+
 export async function getAssetForecast(
     asset_id: number
-): Promise<AssetForecast[]> {
+): Promise<AssetForecast> {
 
     const response = await client.get(`/asset-forecasts/${asset_id}`, {});
 

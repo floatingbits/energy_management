@@ -8,3 +8,8 @@ data/real_pv/br-pvgen
 .ipynb_checkpoints
 
 *.egg-info/
+
+.deployment-passwd.txt
+.deploy-frontend-demot
+
+frontend/dashboard-ui/dist

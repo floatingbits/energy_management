@@ -3,11 +3,11 @@
 import { computed } from "vue";
 import VChart from "vue-echarts";
 
-import type { WeatherForecast } from "../api/forecast";
+import type { WeatherForecast, AssetForecast } from "../api/forecast";
 import type { Asset } from "../api/asset";
 
 const props = defineProps<{
-    forecast: WeatherForecast,
+    forecast: WeatherForecast|AssetForecast,
     forecastType: string,
     asset?: Asset | null
 }>();

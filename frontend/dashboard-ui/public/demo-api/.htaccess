@@ -1,0 +1,9 @@
+RewriteEngine On
+
+
+RewriteRule ^assets/?$ assets.json [L]
+RewriteRule ^portfolio/?$ portfolio.json [L]
+RewriteRule ^asset-forecasts/([^./]+)$ asset-forecasts/$1.json [L]
+
+RewriteCond %{QUERY_STRING} ^(?:.*&)?latitude=([^&]+)(?:&[^&]*)*&longitude=([^&]+)(?:&|$)
+RewriteRule ^weather-forecasts/$ weather-forecasts/%1_%2.json [END]

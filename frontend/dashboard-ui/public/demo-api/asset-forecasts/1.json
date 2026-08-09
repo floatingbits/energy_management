@@ -1,0 +1,1179 @@
+{
+  "id": 8,
+  "asset_id": 1,
+  "forecast": {
+    "id": 31,
+    "forecast_run": {
+      "id": 16,
+      "start": "2026-08-06T00:00:00Z",
+      "resolution_seconds": 900,
+      "slots": 193,
+      "created_at": "2026-08-06T14:07:32.441866Z"
+    },
+    "series": [
+      {
+        "metric": "active_power",
+        "values": [
+          {
+            "slot_index": 0,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 1,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 2,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 3,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 4,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 5,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 6,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 7,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 8,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 9,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 10,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 11,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 12,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 13,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 14,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 15,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 16,
+            "p05": null,
+            "p50": 0.03465,
+            "p95": null
+          },
+          {
+            "slot_index": 17,
+            "p05": null,
+            "p50": 0.16169999999999998,
+            "p95": null
+          },
+          {
+            "slot_index": 18,
+            "p05": null,
+            "p50": 0.31184999999999996,
+            "p95": null
+          },
+          {
+            "slot_index": 19,
+            "p05": null,
+            "p50": 0.4158,
+            "p95": null
+          },
+          {
+            "slot_index": 20,
+            "p05": null,
+            "p50": 0.5082,
+            "p95": null
+          },
+          {
+            "slot_index": 21,
+            "p05": null,
+            "p50": 0.8405589653387159,
+            "p95": null
+          },
+          {
+            "slot_index": 22,
+            "p05": null,
+            "p50": 1.2571568587286193,
+            "p95": null
+          },
+          {
+            "slot_index": 23,
+            "p05": null,
+            "p50": 1.7281905366252917,
+            "p95": null
+          },
+          {
+            "slot_index": 24,
+            "p05": null,
+            "p50": 2.1867403203362192,
+            "p95": null
+          },
+          {
+            "slot_index": 25,
+            "p05": null,
+            "p50": 2.716612174113021,
+            "p95": null
+          },
+          {
+            "slot_index": 26,
+            "p05": null,
+            "p50": 3.333761108812416,
+            "p95": null
+          },
+          {
+            "slot_index": 27,
+            "p05": null,
+            "p50": 3.956351407727793,
+            "p95": null
+          },
+          {
+            "slot_index": 28,
+            "p05": null,
+            "p50": 4.37494431694701,
+            "p95": null
+          },
+          {
+            "slot_index": 29,
+            "p05": null,
+            "p50": 4.51856643412375,
+            "p95": null
+          },
+          {
+            "slot_index": 30,
+            "p05": null,
+            "p50": 5.215270844321373,
+            "p95": null
+          },
+          {
+            "slot_index": 31,
+            "p05": null,
+            "p50": 6.083252637016585,
+            "p95": null
+          },
+          {
+            "slot_index": 32,
+            "p05": null,
+            "p50": 6.68240437272303,
+            "p95": null
+          },
+          {
+            "slot_index": 33,
+            "p05": null,
+            "p50": 7.348443583218341,
+            "p95": null
+          },
+          {
+            "slot_index": 34,
+            "p05": null,
+            "p50": 7.9116236171565,
+            "p95": null
+          },
+          {
+            "slot_index": 35,
+            "p05": null,
+            "p50": 8.192321056878932,
+            "p95": null
+          },
+          {
+            "slot_index": 36,
+            "p05": null,
+            "p50": 6.437736754954416,
+            "p95": null
+          },
+          {
+            "slot_index": 37,
+            "p05": null,
+            "p50": 6.045146930500449,
+            "p95": null
+          },
+          {
+            "slot_index": 38,
+            "p05": null,
+            "p50": 7.674234421704784,
+            "p95": null
+          },
+          {
+            "slot_index": 39,
+            "p05": null,
+            "p50": 8.401516933754616,
+            "p95": null
+          },
+          {
+            "slot_index": 40,
+            "p05": null,
+            "p50": 7.904043162429534,
+            "p95": null
+          },
+          {
+            "slot_index": 41,
+            "p05": null,
+            "p50": 5.79602438001571,
+            "p95": null
+          },
+          {
+            "slot_index": 42,
+            "p05": null,
+            "p50": 4.556444714857772,
+            "p95": null
+          },
+          {
+            "slot_index": 43,
+            "p05": null,
+            "p50": 6.370452189334251,
+            "p95": null
+          },
+          {
+            "slot_index": 44,
+            "p05": null,
+            "p50": 6.993273409518078,
+            "p95": null
+          },
+          {
+            "slot_index": 45,
+            "p05": null,
+            "p50": 6.462829607632694,
+            "p95": null
+          },
+          {
+            "slot_index": 46,
+            "p05": null,
+            "p50": 6.675367671049205,
+            "p95": null
+          },
+          {
+            "slot_index": 47,
+            "p05": null,
+            "p50": 5.731427058873825,
+            "p95": null
+          },
+          {
+            "slot_index": 48,
+            "p05": null,
+            "p50": 7.102751131151493,
+            "p95": null
+          },
+          {
+            "slot_index": 49,
+            "p05": null,
+            "p50": 4.299288256140191,
+            "p95": null
+          },
+          {
+            "slot_index": 50,
+            "p05": null,
+            "p50": 5.9061600060796176,
+            "p95": null
+          },
+          {
+            "slot_index": 51,
+            "p05": null,
+            "p50": 7.9775551323192175,
+            "p95": null
+          },
+          {
+            "slot_index": 52,
+            "p05": null,
+            "p50": 4.546306808134225,
+            "p95": null
+          },
+          {
+            "slot_index": 53,
+            "p05": null,
+            "p50": 5.393383917707964,
+            "p95": null
+          },
+          {
+            "slot_index": 54,
+            "p05": null,
+            "p50": 6.804013113573164,
+            "p95": null
+          },
+          {
+            "slot_index": 55,
+            "p05": null,
+            "p50": 7.4159878227237614,
+            "p95": null
+          },
+          {
+            "slot_index": 56,
+            "p05": null,
+            "p50": 4.586695177534039,
+            "p95": null
+          },
+          {
+            "slot_index": 57,
+            "p05": null,
+            "p50": 4.539588306367997,
+            "p95": null
+          },
+          {
+            "slot_index": 58,
+            "p05": null,
+            "p50": 5.2282006544262805,
+            "p95": null
+          },
+          {
+            "slot_index": 59,
+            "p05": null,
+            "p50": 2.5717493944745504,
+            "p95": null
+          },
+          {
+            "slot_index": 60,
+            "p05": null,
+            "p50": 4.053603180159619,
+            "p95": null
+          },
+          {
+            "slot_index": 61,
+            "p05": null,
+            "p50": 5.1132869235592455,
+            "p95": null
+          },
+          {
+            "slot_index": 62,
+            "p05": null,
+            "p50": 3.4042491203731844,
+            "p95": null
+          },
+          {
+            "slot_index": 63,
+            "p05": null,
+            "p50": 1.9185847955195101,
+            "p95": null
+          },
+          {
+            "slot_index": 64,
+            "p05": null,
+            "p50": 2.8767206884472682,
+            "p95": null
+          },
+          {
+            "slot_index": 65,
+            "p05": null,
+            "p50": 2.090397350922343,
+            "p95": null
+          },
+          {
+            "slot_index": 66,
+            "p05": null,
+            "p50": 2.655093849224578,
+            "p95": null
+          },
+          {
+            "slot_index": 67,
+            "p05": null,
+            "p50": 2.302531559695984,
+            "p95": null
+          },
+          {
+            "slot_index": 68,
+            "p05": null,
+            "p50": 1.612578928969592,
+            "p95": null
+          },
+          {
+            "slot_index": 69,
+            "p05": null,
+            "p50": 1.5928589268227935,
+            "p95": null
+          },
+          {
+            "slot_index": 70,
+            "p05": null,
+            "p50": 1.1195462361802393,
+            "p95": null
+          },
+          {
+            "slot_index": 71,
+            "p05": null,
+            "p50": 0.7153261901256459,
+            "p95": null
+          },
+          {
+            "slot_index": 72,
+            "p05": null,
+            "p50": 0.5313,
+            "p95": null
+          },
+          {
+            "slot_index": 73,
+            "p05": null,
+            "p50": 0.45044999999999996,
+            "p95": null
+          },
+          {
+            "slot_index": 74,
+            "p05": null,
+            "p50": 0.3465,
+            "p95": null
+          },
+          {
+            "slot_index": 75,
+            "p05": null,
+            "p50": 0.231,
+            "p95": null
+          },
+          {
+            "slot_index": 76,
+            "p05": null,
+            "p50": 0.0924,
+            "p95": null
+          },
+          {
+            "slot_index": 77,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 78,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 79,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 80,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 81,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 82,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 83,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 84,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 85,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 86,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 87,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 88,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 89,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 90,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 91,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 92,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 93,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 94,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 95,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 96,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 97,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 98,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 99,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 100,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 101,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 102,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 103,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 104,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 105,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 106,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 107,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 108,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 109,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 110,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 111,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 112,
+            "p05": null,
+            "p50": 0.0231,
+            "p95": null
+          },
+          {
+            "slot_index": 113,
+            "p05": null,
+            "p50": 0.1386,
+            "p95": null
+          },
+          {
+            "slot_index": 114,
+            "p05": null,
+            "p50": 0.26565,
+            "p95": null
+          },
+          {
+            "slot_index": 115,
+            "p05": null,
+            "p50": 0.3927,
+            "p95": null
+          },
+          {
+            "slot_index": 116,
+            "p05": null,
+            "p50": 0.5775,
+            "p95": null
+          },
+          {
+            "slot_index": 117,
+            "p05": null,
+            "p50": 0.8098899250005083,
+            "p95": null
+          },
+          {
+            "slot_index": 118,
+            "p05": null,
+            "p50": 1.0752278194682314,
+            "p95": null
+          },
+          {
+            "slot_index": 119,
+            "p05": null,
+            "p50": 1.5693444722952434,
+            "p95": null
+          },
+          {
+            "slot_index": 120,
+            "p05": null,
+            "p50": 1.5903022583765174,
+            "p95": null
+          },
+          {
+            "slot_index": 121,
+            "p05": null,
+            "p50": 2.391711854394315,
+            "p95": null
+          },
+          {
+            "slot_index": 122,
+            "p05": null,
+            "p50": 2.893068570438296,
+            "p95": null
+          },
+          {
+            "slot_index": 123,
+            "p05": null,
+            "p50": 3.805974647809951,
+            "p95": null
+          },
+          {
+            "slot_index": 124,
+            "p05": null,
+            "p50": 3.7458766385094613,
+            "p95": null
+          },
+          {
+            "slot_index": 125,
+            "p05": null,
+            "p50": 4.966225605770956,
+            "p95": null
+          },
+          {
+            "slot_index": 126,
+            "p05": null,
+            "p50": 5.252432937427777,
+            "p95": null
+          },
+          {
+            "slot_index": 127,
+            "p05": null,
+            "p50": 6.232600000546322,
+            "p95": null
+          },
+          {
+            "slot_index": 128,
+            "p05": null,
+            "p50": 6.508787838319753,
+            "p95": null
+          },
+          {
+            "slot_index": 129,
+            "p05": null,
+            "p50": 6.713214999006087,
+            "p95": null
+          },
+          {
+            "slot_index": 130,
+            "p05": null,
+            "p50": 7.381220632271463,
+            "p95": null
+          },
+          {
+            "slot_index": 131,
+            "p05": null,
+            "p50": 8.11885746397328,
+            "p95": null
+          },
+          {
+            "slot_index": 132,
+            "p05": null,
+            "p50": 8.782613608173806,
+            "p95": null
+          },
+          {
+            "slot_index": 133,
+            "p05": null,
+            "p50": 9.086788762280115,
+            "p95": null
+          },
+          {
+            "slot_index": 134,
+            "p05": null,
+            "p50": 8.963213843068996,
+            "p95": null
+          },
+          {
+            "slot_index": 135,
+            "p05": null,
+            "p50": 9.821007930026097,
+            "p95": null
+          },
+          {
+            "slot_index": 136,
+            "p05": null,
+            "p50": 8.34352994431425,
+            "p95": null
+          },
+          {
+            "slot_index": 137,
+            "p05": null,
+            "p50": 4.100450000858613,
+            "p95": null
+          },
+          {
+            "slot_index": 138,
+            "p05": null,
+            "p50": 2.1153007183951757,
+            "p95": null
+          },
+          {
+            "slot_index": 139,
+            "p05": null,
+            "p50": 3.886884548950019,
+            "p95": null
+          },
+          {
+            "slot_index": 140,
+            "p05": null,
+            "p50": 7.60321049161092,
+            "p95": null
+          },
+          {
+            "slot_index": 141,
+            "p05": null,
+            "p50": 5.251482675089468,
+            "p95": null
+          },
+          {
+            "slot_index": 142,
+            "p05": null,
+            "p50": 4.3258997645268575,
+            "p95": null
+          },
+          {
+            "slot_index": 143,
+            "p05": null,
+            "p50": 3.578878746128674,
+            "p95": null
+          },
+          {
+            "slot_index": 144,
+            "p05": null,
+            "p50": 5.4702582162866,
+            "p95": null
+          },
+          {
+            "slot_index": 145,
+            "p05": null,
+            "p50": 5.361871786641003,
+            "p95": null
+          },
+          {
+            "slot_index": 146,
+            "p05": null,
+            "p50": 7.39554351289431,
+            "p95": null
+          },
+          {
+            "slot_index": 147,
+            "p05": null,
+            "p50": 6.162541249736483,
+            "p95": null
+          },
+          {
+            "slot_index": 148,
+            "p05": null,
+            "p50": 8.814247189070802,
+            "p95": null
+          },
+          {
+            "slot_index": 149,
+            "p05": null,
+            "p50": 6.385221186660424,
+            "p95": null
+          },
+          {
+            "slot_index": 150,
+            "p05": null,
+            "p50": 6.740757204996524,
+            "p95": null
+          },
+          {
+            "slot_index": 151,
+            "p05": null,
+            "p50": 6.244795468303407,
+            "p95": null
+          },
+          {
+            "slot_index": 152,
+            "p05": null,
+            "p50": 4.342543815100953,
+            "p95": null
+          },
+          {
+            "slot_index": 153,
+            "p05": null,
+            "p50": 5.252675266735553,
+            "p95": null
+          },
+          {
+            "slot_index": 154,
+            "p05": null,
+            "p50": 4.276799181368075,
+            "p95": null
+          },
+          {
+            "slot_index": 155,
+            "p05": null,
+            "p50": 5.450115787585129,
+            "p95": null
+          },
+          {
+            "slot_index": 156,
+            "p05": null,
+            "p50": 6.089440760362281,
+            "p95": null
+          },
+          {
+            "slot_index": 157,
+            "p05": null,
+            "p50": 5.696005990911053,
+            "p95": null
+          },
+          {
+            "slot_index": 158,
+            "p05": null,
+            "p50": 5.491165046741129,
+            "p95": null
+          },
+          {
+            "slot_index": 159,
+            "p05": null,
+            "p50": 4.882321373878993,
+            "p95": null
+          },
+          {
+            "slot_index": 160,
+            "p05": null,
+            "p50": 3.0103415560788775,
+            "p95": null
+          },
+          {
+            "slot_index": 161,
+            "p05": null,
+            "p50": 2.2369652506046522,
+            "p95": null
+          },
+          {
+            "slot_index": 162,
+            "p05": null,
+            "p50": 2.6680272487319225,
+            "p95": null
+          },
+          {
+            "slot_index": 163,
+            "p05": null,
+            "p50": 2.365696449900366,
+            "p95": null
+          },
+          {
+            "slot_index": 164,
+            "p05": null,
+            "p50": 2.1115204619909522,
+            "p95": null
+          },
+          {
+            "slot_index": 165,
+            "p05": null,
+            "p50": 1.5990674802421103,
+            "p95": null
+          },
+          {
+            "slot_index": 166,
+            "p05": null,
+            "p50": 1.1153806965225002,
+            "p95": null
+          },
+          {
+            "slot_index": 167,
+            "p05": null,
+            "p50": 0.7337425533560823,
+            "p95": null
+          },
+          {
+            "slot_index": 168,
+            "p05": null,
+            "p50": 0.5544,
+            "p95": null
+          },
+          {
+            "slot_index": 169,
+            "p05": null,
+            "p50": 0.45044999999999996,
+            "p95": null
+          },
+          {
+            "slot_index": 170,
+            "p05": null,
+            "p50": 0.33494999999999997,
+            "p95": null
+          },
+          {
+            "slot_index": 171,
+            "p05": null,
+            "p50": 0.21944999999999998,
+            "p95": null
+          },
+          {
+            "slot_index": 172,
+            "p05": null,
+            "p50": 0.08084999999999999,
+            "p95": null
+          },
+          {
+            "slot_index": 173,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 174,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 175,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 176,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 177,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 178,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 179,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 180,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 181,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 182,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 183,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 184,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 185,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 186,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 187,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 188,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 189,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 190,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 191,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          },
+          {
+            "slot_index": 192,
+            "p05": null,
+            "p50": 0.0,
+            "p95": null
+          }
+        ]
+      }
+    ]
+  }
+}

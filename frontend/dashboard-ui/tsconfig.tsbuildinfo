@@ -1,0 +1,1 @@
+{"root":["./src/App.vue","./src/main.ts","./src/vite-env.d.ts","./src/api/asset.ts","./src/api/exchange.ts","./src/api/forecast.ts","./src/api/trading.ts","./src/components/AssetDetails.vue","./src/components/AssetMap.vue","./src/components/ForecastChart.vue","./src/views/DashboardView.vue"],"version":"5.9.3"}

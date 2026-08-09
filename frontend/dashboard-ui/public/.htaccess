@@ -1,0 +1,6 @@
+RewriteEngine On
+DirectorySlash Off
+
+RewriteRule assets/?$ assets.json [L]
+RewriteRule portfolio/?$ portfolio.json [L]
+RewriteRule forecast/(.*)$ forecast/$1.json [L]

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const client = axios.create({
-    baseURL: "http://localhost:8000/api/v1"
+    baseURL: import.meta.env.VITE_API_ASSET_BASE_URL
 });
 
 export interface Asset {
@@ -10,6 +10,7 @@ export interface Asset {
     latitude: number;
     longitude: number;
     asset_type: string;
+    configuration: any
 }
 export enum AssetType {
     SOLAR = "solar",
