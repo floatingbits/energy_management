@@ -4,3 +4,5 @@ numpy
 fastparquet
 matplotlib
 seaborn
+lightgbm
+scikit-learn
