@@ -33,3 +33,10 @@ diffuse radiation model, shadowing in off-peak-times
 - uncertainty modeling results in asset power forecasts and dashboard charts
 
 ![Showing a map, a panel for asset details and a chart that contains weather forecast information](./docs/images/energy_dashboard.png "Screenshot of Energy Management Dashboard")
+
+## Next Steps
+
+- Portfolio Aggregation reflecting error correlation of assets
+- Wind Asset prediction
+- Improving Prediction acccuracy of physical PV model (reflecting inverter types, bifaciality, improving diffuse model)
+- energy price prediction
