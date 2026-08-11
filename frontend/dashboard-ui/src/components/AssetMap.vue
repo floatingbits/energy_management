@@ -67,7 +67,7 @@ function iconForAsset(asset: Asset) {
 <template>
 
 <LMap
-    style="height: 500px"
+    style="height: 767px"
     :zoom="5"
     :center="[51.1657,10.4515]"
 >

@@ -76,7 +76,7 @@ function metricLabel(metric: string): string {
 
 function metricUnit(metric: string): string {
 
-    switch(metric) {
+    switch(metric.split(" ")[0]) {
 
         case "wind_speed":
             return "m/s";
@@ -90,6 +90,8 @@ function metricUnit(metric: string): string {
         case "active_power":
             return "kW";
         case "global_solar_irradiance":
+        case "direct_normal_irradiance":
+        case "diffuse_irradiance":
             return "W/m²";
 
         default:
@@ -234,7 +236,6 @@ const option = computed(() => {
 
                         const metric =
                             item.value[2];
-                        console.log(item.value)
 
                         const unit =
                             metricUnit(metric);
@@ -243,7 +244,9 @@ const option = computed(() => {
                         return `
                             ${item.marker}
                             ${metric}:
-                            ${item.value[1]} ${unit}
+                            ${new Intl.NumberFormat("de-DE", { maximumFractionDigits: 2 }).format(
+    item.value[1],
+  )} ${unit}
                         `;
 
                     }).join("<br/>");
