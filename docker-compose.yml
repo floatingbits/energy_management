@@ -172,6 +172,7 @@ services:
 
     volumes:
       - ./services/forecast-service:/app
+      - ./models:/models
 
     networks:
       - energy-net

@@ -101,25 +101,123 @@ function metricUnit(metric: string): string {
 
 const option = computed(() => {
 
-    const chartSeries =
-        props.forecast.forecast.series.map(series => ({
+    const chartSeries = [];
 
-            name: metricLabel(series.metric),
+    props.forecast.forecast.series.forEach(series => {
+        //For the time being filter only series relevant to pv asset prediction
+        if(!['direct_normal_irradiance', 'diffuse_irradiance', 'active_power'].includes(series.metric)) {
+            return
+        }
 
+
+        const lowerData = series.values.map(value => [
+            createTimestamp(value.slot_index),
+            value.p05,
+            series.metric + ' p05'
+        ]);
+        const upperData = series.values.map(value => [
+            createTimestamp(value.slot_index),
+            value.p95,
+            series.metric + ' p95'
+        ]);
+        const medianData = series.values.map(value => [
+            createTimestamp(value.slot_index),
+            value.p50,
+            series.metric + ' p50'
+        ]);
+
+        const lowerBandData = series.values.map(value => [
+            createTimestamp(value.slot_index),
+            value.p50 - value.p05,
+            series.metric
+        ]);
+
+        const upperBandData = series.values.map(value => [
+            createTimestamp(value.slot_index),
+            value.p95 -value.p50,
+            series.metric
+        ]);
+
+
+
+        // p05
+        chartSeries.push({
+            name: `${metricLabel(series.metric)} uncertainty`,
             type: "line",
-            metric: series.metric,
-
-            smooth: true,
-
+            data: lowerData,
+            stack: `${series.metric}-band`,
             symbol: "none",
+            lineStyle: {
+                opacity: 0.3
+            },
+            areaStyle: {
+                opacity: 0
+            }
+        });
+        chartSeries.push({
+            name: `${metricLabel(series.metric)} uncertainty`,
+            type: "line",
+            data: lowerBandData,
+            stack: `${series.metric}-band`,
+            symbol: "none",
+            lineStyle: {
+                opacity:0
+            },
+            areaStyle: {
+                opacity: 0.15
+            },
+            tooltip: {
+                show: false // This excludes this specific series from the tooltip
+              }
+        });
+        chartSeries.push({
+            name: `${metricLabel(series.metric)} uncertainty`,
+            type: "line",
+            data: upperBandData,
+            stack: `${series.metric}-band`,
+            symbol: "none",
+            lineStyle: {
+                opacity: 0
+            },
+            areaStyle: {
+                opacity: 0.15
+            },
+            tooltip: {
+                show: false // This excludes this specific series from the tooltip
+              }
+        });
+        chartSeries.push({
+            name: `${metricLabel(series.metric)} uncertainty`,
+            type: "line",
+            data: medianData,
+            //stack: `${series.metric}-band`,
+            symbol: "none",
+            lineStyle: {
+                opacity: 1
+            },
+            areaStyle: {
+                opacity: 0
+            }
+        });
 
-            data:
-                series.values.map(value => [
-                    createTimestamp(value.slot_index),
-                    value.p50,
-                    series.metric
-                ])
-        }));
+         chartSeries.push({
+            name: `${metricLabel(series.metric)} uncertainty`,
+            type: "line",
+            data: upperData,
+            //stack: `${series.metric}-band`,
+            symbol: "none",
+            lineStyle: {
+                opacity: 0.3
+            },
+            areaStyle: {
+                opacity: 0
+            }
+        });
+
+        // p95
+
+
+    });
 
 
     return {
@@ -132,25 +230,25 @@ const option = computed(() => {
             trigger: "axis",
                 formatter(params) {
 
-        return params.map(item => {
+                    return params.map(item => {
 
-            const metric =
-                item.value[2];
+                        const metric =
+                            item.value[2];
+                        console.log(item.value)
+
+                        const unit =
+                            metricUnit(metric);
 
 
-            const unit =
-                metricUnit(metric);
+                        return `
+                            ${item.marker}
+                            ${metric}:
+                            ${item.value[1]} ${unit}
+                        `;
 
+                    }).join("<br/>");
 
-            return `
-                ${item.marker}
-                ${metric}:
-                ${item.value[1]} ${unit}
-            `;
-
-        }).join("<br/>");
-
-    }
+                }
         },
 
 

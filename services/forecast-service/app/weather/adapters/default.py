@@ -50,9 +50,7 @@ class DefaultWeatherAdapter(WeatherAdapter):
                     ForecastSeries(
                         metric=metric,
                         values=[
-                            ForecastValue(
-                                p50=value
-                            )
+                            ForecastValue.deterministic(value)
                             for value in values
                         ]
                     )

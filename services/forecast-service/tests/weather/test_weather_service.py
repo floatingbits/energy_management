@@ -16,6 +16,8 @@ from app.services.weather_service import WeatherService
 from app.weather.fake_provider import FakeWeatherProvider
 from app.forecasting.domain.forecast_run import ForecastRun
 from app.forecasting.enums import ForecastMetric
+from app.weather.uncertainty.estimator import ComposedWeatherUncertaintyEstimator
+
 
 class DummyRepository:
     def __init__(self):
@@ -29,11 +31,14 @@ def test_weather_service_calls_provider():
     provider = FakeWeatherProvider()
     adapter = DefaultWeatherAdapter(OPEN_METEO_VARIABLES, resolver)
     repository = DummyRepository()
+    # no sub estimators configured: Stay simple and "deterministic"
+    uncertainty_estimator = ComposedWeatherUncertaintyEstimator({})
     service = WeatherService(
         provider,
         adapter,
         resolver,
-        repository
+        repository,
+        uncertainty_estimator
     )
 
 

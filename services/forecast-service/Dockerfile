@@ -4,6 +4,11 @@ WORKDIR /app
 
 ARG SERVICE_PATH
 
+# lightgbm needs this shared library
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
 
 COPY ${SERVICE_PATH}/requirements.txt .
 

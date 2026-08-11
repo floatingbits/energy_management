@@ -1,3 +1,4 @@
+from dataclasses import replace
 from typing import Optional
 
 from app.repositories.weather_repository import WeatherRepository
@@ -7,7 +8,7 @@ from app.weather.request import WeatherForecastRequest
 from app.weather.resolver import WeatherLocationResolver
 from app.weather.location import WeatherLocation
 from app.weather.result import WeatherForecastResult
-
+from app.weather.uncertainty.estimator import WeatherUncertaintyEstimator
 
 
 class WeatherService:
@@ -17,12 +18,14 @@ class WeatherService:
             provider: WeatherProvider,
             adapter: WeatherAdapter,
             resolver: WeatherLocationResolver,
-            repository: WeatherRepository
+            repository: WeatherRepository,
+            uncertainty_estimator: WeatherUncertaintyEstimator
     ):
         self.provider = provider
         self.adapter = adapter
         self.resolver = resolver
         self.repository = repository
+        self.uncertainty_estimator = uncertainty_estimator
 
     def get_weather_forecasts(
             self,
@@ -43,16 +46,24 @@ class WeatherService:
             self,
             request: WeatherForecastRequest
     ) -> WeatherForecastResult:
+        # Merge requested variables with those needed by uncertainty estimation
+        new_request = replace(
+            request,
+            variables=list(set(self.uncertainty_estimator.needs_variables())|set(request.variables))
+        )
         provider_result = (
             self.provider.get_forecast(
-                request
+                new_request
             )
         )
 
-        return self.adapter.adapt(
+        normalized_result = self.adapter.adapt(
             provider_result,
-            request
+            new_request
         )
+
+        probabilistic_result = self.uncertainty_estimator.apply(normalized_result)
+        return probabilistic_result
 
     def resolve_locations(
             self,

@@ -8,6 +8,8 @@ class ForecastMetric(StrEnum):
     GLOBAL_SOLAR_IRRADIANCE = "global_solar_irradiance"
     DIRECT_NORMAL_IRRADIANCE = "direct_normal_irradiance"
     DIFFUSE_IRRADIANCE = "diffuse_irradiance"
+    WIND_DIRECTION = "wind_direction"
+    PRECIPITATION = "precipitation"
 
     ACTIVE_POWER = "active_power"
 

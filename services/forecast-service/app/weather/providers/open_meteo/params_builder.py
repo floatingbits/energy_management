@@ -10,7 +10,9 @@ class ParamsBuilder:
         "diffuse_radiation",
         "direct_normal_irradiance",
         "global_tilted_irradiance",
-        "global_tilted_irradiance_instant"
+        "global_tilted_irradiance_instant",
+        "precipitation",
+        "wind_direction_10m"
     ]
     VARIABLES_HOURLY = [
         "cloud_cover"
