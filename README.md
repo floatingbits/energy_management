@@ -31,6 +31,8 @@ diffuse radiation model, shadowing in off-peak-times
 - static export of Dashboard UI deployed to [demo server](http://energy-dashboard.soerenparton.de/).
 - first step towards uncertainty modeling: [prediction via LGBMRegressor](notebooks/03_uncertainty_modeling.ipynb)
 - uncertainty modeling results in asset power forecasts and dashboard charts
+- Asset power prediction error metrics for version 1 of physical model: 38.4% relative MAE (from 25% to 58% depending on 
+actual asset). Further investigations derived from errors correlating with assets' metadata
 
 ![Showing a map, a panel for asset details and a chart that contains weather forecast information](./docs/images/energy_dashboard.png "Screenshot of Energy Management Dashboard")
 
