@@ -1,0 +1,18 @@
+id: 001
+name: physical-baseline
+
+model:
+  type: physical
+  git_commit: 09ccc998
+
+dataset:
+  source: br-pvgen
+  period:
+    start: 2025-04-01
+    end: 2025-06-30
+  resolution_minutes: 15
+
+metrics:
+  mae_w: 212559.6181
+  relative_mae: 0.3666
+  rmse_w: 492205.4300
