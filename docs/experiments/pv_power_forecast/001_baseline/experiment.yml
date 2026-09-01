@@ -8,8 +8,8 @@ model:
 dataset:
   source: br-pvgen
   period:
-    start: 2025-04-01
-    end: 2025-06-30
+    start: 2024-03-26
+    end: 2024-12-31
   resolution_minutes: 15
 
 metrics:
