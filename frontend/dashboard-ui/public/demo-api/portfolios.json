@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "name": "PV Portfolio DE",
+    "description": "Test Portfolio with PV-Assets in DE",
+    "created_at": "2026-09-01T11:58:27.228481Z",
+    "updated_at": "2026-09-01T11:58:27.228486Z"
+  },
+  {
+    "id": 2,
+    "name": "PV Portfolio BR",
+    "description": "Test Portfolio with PV-Assets in BR, corresponding to real assets from BR PVGEN dataset",
+    "created_at": "2026-09-01T11:59:31.510723Z",
+    "updated_at": "2026-09-01T11:59:31.510728Z"
+  }
+]

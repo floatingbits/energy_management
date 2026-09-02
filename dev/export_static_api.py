@@ -22,39 +22,51 @@ def export_json(url: str, target: Path, params: dict | None = None):
 
 
 def main():
-    assets_response = requests.get(f"{ASSET_API_BASE_URL}/assets")
-    assets_response.raise_for_status()
+    portfolios_response = requests.get(f"{ASSET_API_BASE_URL}/portfolios")
+    portfolios_response.raise_for_status()
 
-    assets = assets_response.json()
-    print(assets)
+    portfolios = portfolios_response.json()
+    print(portfolios)
     export_json(
-        f"{ASSET_API_BASE_URL}/assets",
-        OUTPUT_DIR / "assets.json",
+        f"{ASSET_API_BASE_URL}/portfolios",
+        OUTPUT_DIR / "portfolios.json",
     )
+    for portfolio in portfolios:
 
-    for asset in assets:
-        asset_id = asset["id"]
 
-        print(asset_id)
-        latitude = round(float(asset["latitude"]), 2)
-        longitude = round(float(asset["longitude"]), 2)
+        assets_response = requests.get(f"{ASSET_API_BASE_URL}/portfolios/{portfolio['id']}/assets")
+        assets_response.raise_for_status()
 
-        latitude_str = f"{latitude:.2f}"
-        longitude_str = f"{longitude:.2f}"
+        assets = assets_response.json()
+        print(assets)
         export_json(
-            f"{FORECAST_API_BASE_URL}/weather-forecasts/",
-            OUTPUT_DIR / "weather-forecasts" / f"{latitude_str}_{longitude_str}.json",
-            params={
-                "latitude": latitude,
-                "longitude": longitude,
-                "limit": 1,
-            },
+            f"{ASSET_API_BASE_URL}/portfolios/{portfolio['id']}/assets",
+            OUTPUT_DIR / "portfolios" / str(portfolio['id']) / f"assets.json",
         )
 
-        export_json(
-            f"{FORECAST_API_BASE_URL}/asset-forecasts/{asset_id}",
-            OUTPUT_DIR / "asset-forecasts" / f"{asset_id}.json",
-        )
+        for asset in assets:
+            asset_id = asset["id"]
+
+            print(asset_id)
+            latitude = round(float(asset["latitude"]), 2)
+            longitude = round(float(asset["longitude"]), 2)
+
+            latitude_str = f"{latitude:.2f}"
+            longitude_str = f"{longitude:.2f}"
+            export_json(
+                f"{FORECAST_API_BASE_URL}/weather-forecasts/",
+                OUTPUT_DIR / "weather-forecasts" / f"{latitude_str}_{longitude_str}.json",
+                params={
+                    "latitude": latitude,
+                    "longitude": longitude,
+                    "limit": 1,
+                },
+            )
+
+            export_json(
+                f"{FORECAST_API_BASE_URL}/asset-forecasts/{asset_id}",
+                OUTPUT_DIR / "asset-forecasts" / f"{asset_id}.json",
+            )
 
 
 if __name__ == "__main__":

@@ -2,3 +2,77 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
 }
+
+.portfolio-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+
+  background: var(--surface-color, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 8px;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Header */
+.portfolio-table thead {
+  background: var(--surface-header, #f1f5f9);
+}
+
+.portfolio-table th {
+  padding: 12px 16px;
+
+  text-align: left;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  color: var(--text-muted, #64748b);
+  border-bottom: 2px solid var(--border-color, #cbd5e1);
+}
+
+/* Rows */
+.portfolio-table tbody tr {
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.portfolio-table tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+.portfolio-table tbody tr:hover {
+  background: #eef2ff;
+  box-shadow: inset 3px 0 0 var(--accent-color, #6366f1);
+}
+
+.portfolio-table td {
+  padding: 14px 16px;
+
+  color: var(--text-color, #1e293b);
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+}
+
+.portfolio-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Portfolio name */
+.portfolio-table td:first-child {
+  font-weight: 600;
+}
+
+/* Description */
+.portfolio-table td:nth-child(2) {
+  color: var(--text-muted, #64748b);
+}
+
+.portfolio-table tbody tr.selected {
+  background: #eef2ff;
+  box-shadow: inset 3px 0 0 var(--accent-color, #6366f1);
+}

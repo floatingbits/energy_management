@@ -1,6 +1,7 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
-
-from app.repositories import portfolio_repository
+from app.mapper import to_response, to_response_list
+from app.repositories import portfolio_repository, asset_repository
 
 from app.schemas.portfolio import PortfolioCreate
 
@@ -26,12 +27,21 @@ def get_assets(
     db: Session,
     portfolio_id: int
 ):
-
     portfolio = portfolio_repository.get_portfolio(
         db,
         portfolio_id
     )
-    return portfolio.assets
+
+    if portfolio is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Portfolio not found"
+        )
+
+    return to_response_list(asset_repository.get_assets_by_portfolio(
+        db,
+        portfolio_id
+    ))
 
 
 def create_portfolio(

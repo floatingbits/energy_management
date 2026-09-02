@@ -12,7 +12,7 @@ import "leaflet/dist/leaflet.css";
 import type { Asset } from "../api/asset";
 import { AssetType } from "../api/asset";
 
-
+import { computed } from "vue";
 const props = defineProps<{
     assets: Asset[],
     selectedAsset?: Asset | null
@@ -61,6 +61,27 @@ function iconForAsset(asset: Asset) {
     });
 
 }
+function getAssetsCenter(assets: Asset[]): [number, number] {
+  if (assets.length === 0) {
+    return [51.1657, 10.4515]; // Fallback Deutschland
+  }
+
+  const latitudes = assets.map(asset => asset.latitude);
+  const longitudes = assets.map(asset => asset.longitude);
+
+  const minLat = Math.min(...latitudes);
+  const maxLat = Math.max(...latitudes);
+  const minLng = Math.min(...longitudes);
+  const maxLng = Math.max(...longitudes);
+
+  return [
+    (minLat + maxLat) / 2,
+    (minLng + maxLng) / 2,
+  ];
+}
+const center = computed(() => {
+    return getAssetsCenter(props.assets)
+})
 
 </script>
 
@@ -69,7 +90,7 @@ function iconForAsset(asset: Asset) {
 <LMap
     style="height: 767px"
     :zoom="5"
-    :center="[51.1657,10.4515]"
+    :center="center"
 >
 
     <LTileLayer

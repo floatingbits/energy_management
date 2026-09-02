@@ -2,7 +2,8 @@
 
 import { ref, onMounted } from "vue";
 
-import { getAssets, type Asset } from "../api/asset";
+import { getAssets, getAssetsByPortfolio, type Asset } from "../api/asset";
+import { getPortfolios, type Portfolio } from "../api/portfolio";
 import {
     getWeatherForecast,
     type WeatherForecast,
@@ -10,11 +11,13 @@ import {
     type AssetForecast
 } from "../api/forecast";
 
-
+import PortfolioTable from "../components/PortfolioTable.vue";
 import AssetMap from "../components/AssetMap.vue";
 import AssetDetails from "../components/AssetDetails.vue";
 import ForecastChart from "../components/ForecastChart.vue";
 
+const portfolios = ref<Portfolio[]>([]);
+const selectedPortfolio = ref<Portfolio|null>(null);
 
 const assets = ref<Asset[]>([]);
 
@@ -48,11 +51,23 @@ async function selectAsset(asset: Asset) {
 
 }
 
+async function handlePortfolioSelect(portfolio: Portfolio) {
+  console.log('Selected portfolio:', portfolio);
+
+  if (!selectedPortfolio.value || selectedPortfolio.value.id !== portfolio.id) {
+      selectedPortfolio.value = portfolio;
+      assets.value = await getAssetsByPortfolio(portfolio.id)
+      selectedAsset.value = null
+      selectedForecast.value = null
+      selectedAssetForecast.value = null
+  }
+}
+
 
 onMounted(async () => {
 
-    assets.value =
-        await getAssets();
+    portfolios.value =
+        await getPortfolios();
 
 });
 
@@ -72,10 +87,16 @@ onMounted(async () => {
 
 
     <main>
-
+        <section class="portfolio-table-wrapper">
+            <PortfolioTable
+              :portfolios="portfolios"
+              @select="handlePortfolioSelect"
+              class="portfolio-table"
+            />
+        </section>
 
         <section class="map">
-
+            <h3 v-html="selectedPortfolio ? selectedPortfolio.name : 'Bitte Portfolio wählen'"></h3>
             <AssetMap
                 :assets="assets"
                 :selected-asset="selectedAsset"
@@ -129,8 +150,6 @@ onMounted(async () => {
 
 .dashboard {
 
-    height: 100vh;
-
     display: flex;
 
     flex-direction: column;
@@ -164,6 +183,9 @@ main {
 
     min-height: 600px;
 
+}
+.portfolio-table-wrapper {
+    grid-column: span 2;
 }
 
 

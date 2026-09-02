@@ -21,3 +21,8 @@ export async function getAssets(): Promise<Asset[]> {
     const response = await client.get("/assets/");
     return response.data;
 }
+
+export async function getAssetsByPortfolio(portfolioId: number): Promise<Asset[]> {
+    const response = await client.get(`/portfolios/${portfolioId}/assets/`);
+    return response.data;
+}

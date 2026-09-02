@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import select
 from app.models.asset import Asset
+from app.models.portfolio import portfolio_assets
 from app.schemas.asset import AssetCreate, AssetUpdate
 
 def get_assets(
@@ -16,6 +17,22 @@ def get_assets(
     )
     return list(
         db.scalars(stmt)
+    )
+
+def get_assets_by_portfolio(
+    db: Session,
+    portfolio_id: int
+) -> list[Asset]:
+    return (
+        db.query(Asset)
+        .join(
+            portfolio_assets,
+            portfolio_assets.c.asset_id == Asset.id
+        )
+        .filter(
+            portfolio_assets.c.portfolio_id == portfolio_id
+        )
+        .all()
     )
 
 
