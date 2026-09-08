@@ -1,12 +1,15 @@
-import json
 import pika
 
-from app.bootstrap.asset_forecast import create_asset_forecast_service
-from app.bootstrap.messaging import get_event_publisher
-from event_contracts.asset_events import AssetCreatedEvent
+from event_contracts.base import BaseEvent
 
-from app.database import SessionLocal
+from app.bootstrap.events import (
+    create_event_deserializer,
+    create_event_dispatcher,
+)
 
+
+event_deserializer = create_event_deserializer()
+event_dispatcher = create_event_dispatcher()
 
 def callback(
     channel,
@@ -15,29 +18,20 @@ def callback(
     body
 ):
 
-    event = AssetCreatedEvent.model_validate_json(
-        body
-    )
-
-    db = SessionLocal()
-    asset_forecast_service = create_asset_forecast_service()
     try:
+        event = event_deserializer.deserialize(body)
+        event_dispatcher.dispatch(event)
 
-        asset_forecast_service.generate(event.asset_id)
-
-        print(
-            f"Created forecast for asset {event.asset_id}"
+        channel.basic_ack(
+            delivery_tag=method.delivery_tag
         )
 
-
-    finally:
-
-        db.close()
-
-
-    channel.basic_ack(
-        delivery_tag=method.delivery_tag
-    )
+    except Exception:
+        channel.basic_nack(
+            delivery_tag=method.delivery_tag,
+            requeue=False
+        )
+        raise
 
 
 def start_consumer():
@@ -57,19 +51,19 @@ def start_consumer():
     )
 
     channel.queue_declare(
-        queue="forecast.asset.created",
+        queue="forecast.asset",
         durable=True
     )
 
     channel.queue_bind(
         exchange="energy.events",
-        queue="forecast.asset.created",
-        routing_key="asset.created"
+        queue="forecast.asset",
+        routing_key="asset.*"
     )
 
 
     channel.basic_consume(
-        queue="forecast.asset.created",
+        queue="forecast.asset",
         on_message_callback=callback
     )
 

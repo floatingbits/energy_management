@@ -305,6 +305,10 @@ services:
       - /app/node_modules
     command:
       npm run dev -- --host 0.0.0.0
+  #######################################################
+  # PG admin
+  #######################################################
+
   pgadmin:
     image: dpage/pgadmin4
     environment:
