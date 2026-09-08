@@ -34,6 +34,12 @@ class PortfolioForecast(Base):
         nullable=False
     )
 
+    based_on_revision = Column(
+        Integer,
+        nullable=False,
+        default=0
+    )
+
 
     aggregation_model = Column(
         String,

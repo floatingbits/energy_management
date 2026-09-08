@@ -105,7 +105,7 @@ def update_asset(
             key,
             value
         )
-
+    db_asset.revision += 1
     db.commit()
 
     db.refresh(db_asset)

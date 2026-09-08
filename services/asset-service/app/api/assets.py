@@ -74,12 +74,14 @@ def create_asset(
 def update_asset(
     asset_id: int,
     asset: AssetUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    publisher: EventPublisher = Depends(get_event_publisher)
 ):
     updated_asset = asset_service.update_asset(
         db,
         asset_id,
-        asset
+        asset,
+        publisher
     )
 
     if updated_asset is None:

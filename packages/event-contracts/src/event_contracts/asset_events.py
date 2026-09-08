@@ -3,6 +3,7 @@ from typing import Literal
 from event_contracts.base import BaseEvent
 
 
+
 class AssetCreatedEvent(BaseEvent):
 
     event_type: Literal["asset.created"] = "asset.created"
@@ -14,6 +15,7 @@ class AssetUpdatedEvent(BaseEvent):
     event_type: Literal["asset.updated"] = "asset.updated"
 
     asset_id: int
+    revision: int
     changed_fields: list[str]
 
 

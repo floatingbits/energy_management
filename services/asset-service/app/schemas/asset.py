@@ -37,6 +37,8 @@ class AssetResponseBase(AssetBase):
 
     updated_at: datetime
 
+    revision: int
+
     model_config = ConfigDict(
         from_attributes=True
     )

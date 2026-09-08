@@ -15,6 +15,7 @@ class PortfolioUpdatedEvent(BaseEvent):
     event_type: Literal["portfolio.updated"] = "portfolio.updated"
 
     portfolio_id: int
+    revision: int
     changed_fields: list[str]
 
 

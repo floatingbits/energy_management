@@ -36,6 +36,12 @@ class AssetForecast(Base):
         nullable=False
     )
 
+    based_on_revision = Column(
+        Integer,
+        nullable=False,
+        default=0
+    )
+
 
     model = Column(
         String,

@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import String, Float, DateTime
+from sqlalchemy import String, Float, DateTime, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.portfolio import portfolio_assets
 from app.database import Base
@@ -49,6 +49,12 @@ class Asset(Base):
     longitude: Mapped[float] = mapped_column(
         Float,
         nullable=False
+    )
+
+    revision = mapped_column(
+        Integer,
+        nullable=False,
+        default=0
     )
 
 

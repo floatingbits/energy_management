@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import String, DateTime, Table, Column, ForeignKey
+from sqlalchemy import String, DateTime, Table, Column, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -37,6 +37,12 @@ class Portfolio(Base):
     description: Mapped[str | None] = mapped_column(
         String(500),
         nullable=True
+    )
+
+    revision = mapped_column(
+        Integer,
+        nullable=False,
+        default=0
     )
 
     created_at: Mapped[datetime] = mapped_column(

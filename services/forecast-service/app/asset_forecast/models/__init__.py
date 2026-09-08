@@ -1,1 +1,2 @@
 from .asset_forecast import AssetForecast
+from .asset_forecast_requirement import AssetForecastRequirement

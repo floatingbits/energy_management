@@ -68,7 +68,7 @@ def add_asset(
         return portfolio
 
     portfolio.assets.append(asset)
-
+    portfolio.revision += 1
     db.commit()
 
     db.refresh(portfolio)
@@ -98,6 +98,9 @@ def remove_asset(
             "Asset not found"
         )
 
-    portfolio.assets.remove(asset)
+    if asset not in portfolio.assets:
+        return
 
+    portfolio.assets.remove(asset)
+    portfolio.revision += 1
     db.commit()
