@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import uuid4
 
 from pydantic import BaseModel, Field
@@ -10,7 +10,8 @@ class BaseEvent(BaseModel):
     )
 
     timestamp: datetime = Field(
-        default_factory=datetime.utcnow
+        default_factory=lambda: datetime.now(timezone.utc)
     )
 
     event_type: str
+    schema_version: int = 1
