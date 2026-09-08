@@ -15,7 +15,8 @@ class AssetForecastRepository:
         self,
         asset_id: int,
         forecast_run: ForecastRun,
-        series: ForecastSeries
+        series: ForecastSeries,
+        revision: int
     ):
 
         run = ForecastRunModel(
@@ -41,7 +42,8 @@ class AssetForecastRepository:
         asset_forecast = AssetForecastModel(
             asset_id=asset_id,
             forecast_id=forecast.id,
-            model="default"
+            model="default",
+            based_on_revision=revision
         )
 
         self.db_session.add(asset_forecast)

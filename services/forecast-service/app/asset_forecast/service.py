@@ -55,6 +55,7 @@ class AssetForecastService:
             asset_id=asset.asset_id,
             forecast_run=domain_weather_forecast.run,
             series=series,
+            revision=asset.revision
         )
 
     def get_asset_forecast(

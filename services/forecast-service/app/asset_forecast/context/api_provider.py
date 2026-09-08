@@ -33,6 +33,7 @@ class ApiAssetContextProvider(AssetContextProvider):
         return PvAssetContext(
 
             asset_id=asset["id"],
+            revision=asset["revision"],
 
             latitude=asset["latitude"],
             longitude=asset["longitude"],

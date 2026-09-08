@@ -8,7 +8,7 @@ from app.asset_forecast.models.asset_forecast_requirement import (
 
 class AssetForecastRequirementRepository:
 
-    def __init__(self, db: Session):
+    def __init__(self, db):
         self.db = db
 
     def require(
@@ -26,7 +26,6 @@ class AssetForecastRequirementRepository:
                 asset_id=asset_id,
                 required_revision=revision,
             )
-
             self.db.add(requirement)
 
         else:
@@ -36,3 +35,8 @@ class AssetForecastRequirementRepository:
             )
 
         self.db.commit()
+
+    def get_all(self):
+        return self.db.query(
+            AssetForecastRequirement
+        ).all()

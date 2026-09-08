@@ -8,6 +8,7 @@ from app.asset_forecast.domain.pv_configuration import PvConfiguration
 class PvAssetContext:
 
     asset_id: int
+    revision: int
 
     latitude: float
     longitude: float
