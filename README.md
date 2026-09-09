@@ -43,6 +43,19 @@ actual asset). Further investigations derived from errors correlating with asset
 - Improving Prediction acccuracy of physical PV model (reflecting inverter types, bifaciality, improving diffuse model)
 - energy price prediction
 
+## Architectural Decision Documentation
+
+### Event system
+
+Events describe facts, not required actions
+
+### Forecast update flow
+
+To make sure forecasts are kept up to date, we set up a system made of two parts:
+- Asset events communicate (update-) requirements via revision.
+- A worker process gathers requirements (both from persisted asset revision and configured freshness conditions),
+compares them to the current state and processes necessary updates in a synchronous way.
+
 ## Experiment Documentation
 ### PV Power forecast
 ![Shows a bar diagram of the evolving errors of pv power prediction](./docs/images/pv-power-forecast-error-evolution.svg "Evolution of error of pv power prediction")
