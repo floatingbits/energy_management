@@ -1,13 +1,15 @@
 from typing import Optional
-
+from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 
+from app.forecasting.domain.forecast_policy import ForecastPeriod
 from app.forecasting.models.forecast_series import ForecastSeries
 from app.forecasting.models.forecast_value import ForecastValue
 from app.forecasting.models.forecast_run import ForecastRun
 from app.forecasting.models.forecast import Forecast
+from app.weather.location import WeatherLocation
 from app.weather.models import (
     WeatherForecast, WeatherSource,
 )
@@ -55,6 +57,35 @@ class WeatherRepository:
         return list(
             self.db_session.scalars(stmt).unique()
         )
+    def get_forecast_by_id(
+        self,
+        weather_forecast_id
+    ) -> WeatherForecast|None:
+
+        stmt = (
+            select(WeatherForecast)
+            .options(
+                joinedload(WeatherForecast.forecast)
+                    .joinedload(Forecast.forecast_run),
+
+                joinedload(WeatherForecast.forecast)
+                    .joinedload(Forecast.series)
+                    .joinedload(ForecastSeries.values),
+
+                joinedload(WeatherForecast.source),
+            )
+            .where(
+                WeatherForecast.id == weather_forecast_id,
+            )
+            .join(WeatherForecast.forecast)
+            .join(Forecast.forecast_run)
+        )
+
+
+        result = list(
+            self.db_session.scalars(stmt).unique()
+        )
+        return result[0] if len(result) > 0 else None
 
     def get_latest_weather_forecast(
         self,
@@ -63,6 +94,42 @@ class WeatherRepository:
     ):
         forecasts_list =  self.get_forecasts_for_location(latitude,longitude,1)
         return forecasts_list[0]
+
+    def get_for_run(
+            self,
+            location: WeatherLocation,
+            start: datetime,
+            resolution_seconds: int,
+            slots: int,
+        ):
+        stmt = (
+            select(WeatherForecast)
+            .options(
+                joinedload(WeatherForecast.forecast)
+                .joinedload(Forecast.forecast_run),
+
+                joinedload(WeatherForecast.forecast)
+                .joinedload(Forecast.series)
+                .joinedload(ForecastSeries.values),
+
+                joinedload(WeatherForecast.source),
+            )
+            .where(
+                WeatherForecast.latitude == location.latitude,
+                WeatherForecast.longitude == location.longitude,
+                ForecastRun.start == start,
+                ForecastRun.resolution_seconds == resolution_seconds,
+                ForecastRun.slots == slots
+            )
+            .join(WeatherForecast.forecast)
+            .join(Forecast.forecast_run)
+            .order_by(ForecastRun.created_at.desc())
+        )
+
+
+        return list(
+            self.db_session.scalars(stmt).unique()
+        )
 
     def create_weather_forecast_run(
             self,

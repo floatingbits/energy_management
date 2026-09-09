@@ -25,7 +25,8 @@ class AssetForecastService:
 
     def generate(
         self,
-        asset_id: int
+        asset_id: int,
+        weather_forecast_id: int = None,
     ):
         print(asset_id)
         asset = (
@@ -41,6 +42,11 @@ class AssetForecastService:
                 asset.longitude,
                 1
             )
+        ) if weather_forecast_id is None else (
+            self.weather_service
+            .get_weather_forecast(
+                weather_forecast_id
+            )
         )
 
 
@@ -55,7 +61,8 @@ class AssetForecastService:
             asset_id=asset.asset_id,
             forecast_run=domain_weather_forecast.run,
             series=series,
-            revision=asset.revision
+            revision=asset.revision,
+            based_on_weather_forecast_id=db_weather[0].id
         )
 
     def get_asset_forecast(

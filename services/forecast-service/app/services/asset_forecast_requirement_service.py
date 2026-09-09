@@ -21,6 +21,9 @@ class AssetForecastRequirementService:
             revision=revision,
         )
 
+    def get_all(self):
+        return self.requirement_repository.get_all()
+
     def get_assets_needing_forecasts(self) -> list[int]:
         requirements = (
             self.requirement_repository.get_all()

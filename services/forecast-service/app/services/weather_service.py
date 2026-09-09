@@ -42,6 +42,14 @@ class WeatherService:
             limit=limit
         )
 
+    def get_weather_forecast(
+            self,
+            weather_forecast_id: int
+    ):
+        return self.repository.get_forecast_by_id(
+            weather_forecast_id
+        )
+
     def get_forecast(
             self,
             request: WeatherForecastRequest
@@ -76,3 +84,5 @@ class WeatherService:
             )
             for lat, lon in coordinates
         ]
+
+
