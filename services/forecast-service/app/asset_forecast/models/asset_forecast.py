@@ -42,6 +42,14 @@ class AssetForecast(Base):
         default=0
     )
 
+    based_on_weather_forecast_id = Column(
+        Integer,
+        ForeignKey(
+            "weather_forecasts.id"
+        ),
+        nullable=False
+    )
+
 
     model = Column(
         String,
@@ -58,3 +66,7 @@ class AssetForecast(Base):
     forecast = relationship(
         "Forecast"
     )
+    based_on_weather_forecast = relationship(
+        "WeatherForecast"
+    )
+
