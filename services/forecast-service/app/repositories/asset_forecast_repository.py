@@ -107,3 +107,18 @@ class AssetForecastRepository:
 
         return self.db_session.scalar(stmt)
 
+    def get_for_requirements(
+        self,
+        asset_id: int,
+        required_revision: int,
+        weather_forecast_id: int,
+    ):
+        return (
+            self.db_session.query(AssetForecastModel)
+            .filter(
+                AssetForecastModel.asset_id == asset_id,
+                AssetForecastModel.based_on_revision >= required_revision,
+                AssetForecastModel.based_on_weather_forecast_id == weather_forecast_id,
+            )
+            .first()
+        )

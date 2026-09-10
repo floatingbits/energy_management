@@ -1,6 +1,8 @@
 from app.repositories.asset_forecast_requirement_repository import AssetForecastRequirementRepository
 from app.repositories.asset_forecast_repository import AssetForecastRepository
-
+from app.asset_forecast.models.asset_forecast_requirement import (
+    AssetForecastRequirement,
+)
 class AssetForecastRequirementService:
 
     def __init__(
@@ -47,3 +49,12 @@ class AssetForecastRequirementService:
                 result.append(requirement.asset_id)
 
         return result
+
+    def check_requirement(self,
+                requirement: AssetForecastRequirement,
+                weather_forecast_id: int
+            ) -> bool:
+        asset_forecast = self.forecast_repository.get_for_requirements(requirement.asset_id, requirement.required_revision,weather_forecast_id)
+        return asset_forecast is not None
+
+

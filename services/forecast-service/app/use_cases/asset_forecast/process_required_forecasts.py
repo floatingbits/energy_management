@@ -11,13 +11,11 @@ class ProcessRequiredForecasts:
         requirement_service: AssetForecastRequirementService,
         asset_service,
         weather_forecast_requirement_service,
-        asset_forecast_checker,
         asset_forecast_service,
     ):
         self.requirement_service = requirement_service
         self.asset_service = asset_service
         self.weather_forecast_requirement_service = weather_forecast_requirement_service
-        self.asset_forecast_checker = asset_forecast_checker
         self.asset_forecast_service = asset_forecast_service
 
     def execute(self) -> None:
@@ -65,12 +63,12 @@ class ProcessRequiredForecasts:
         for requirement in requirements:
             location = asset_locations[requirement.asset_id]
             weather_forecast_id = weather_forecast_ids[location]
-            result = self.asset_forecast_checker.check(
+            requirement_fulfilled = self.requirement_service.check_requirement(
                 requirement=requirement,
                 weather_forecast_id=weather_forecast_id,
             )
 
-            if not result.required:
+            if requirement_fulfilled:
                 continue
 
             self.asset_forecast_service.generate(
