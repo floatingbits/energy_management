@@ -10,6 +10,10 @@ from app.asset_forecast.router import (
     router as asset_forecast_router,
 )
 
+from app.api.portfolio_forecasts import (
+    router as portfolio_forecast_router,
+)
+
 
 app = FastAPI(
     title="Forecast Service",
@@ -29,6 +33,11 @@ app.add_middleware(
 
 app.include_router(
     asset_forecast_router,
+    prefix="/api/v1"
+)
+
+app.include_router(
+    portfolio_forecast_router,
     prefix="/api/v1"
 )
 

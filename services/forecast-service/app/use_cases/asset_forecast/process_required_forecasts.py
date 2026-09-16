@@ -12,11 +12,15 @@ class ProcessRequiredForecasts:
         asset_service,
         weather_forecast_requirement_service,
         asset_forecast_service,
+        portfolio_forecast_service=None,
     ):
         self.requirement_service = requirement_service
         self.asset_service = asset_service
         self.weather_forecast_requirement_service = weather_forecast_requirement_service
         self.asset_forecast_service = asset_forecast_service
+        # Optional, damit der Use Case auch ohne Portfolio-Teil
+        # lauffähig bleibt (z.B. asset_forecast_worker allein).
+        self.portfolio_forecast_service = portfolio_forecast_service
 
     def execute(self) -> None:
         # 1. Welche Assets sind grundsätzlich forecast-relevant?
@@ -40,7 +44,7 @@ class ProcessRequiredForecasts:
 
         # 3. Für tatsächlich relevante Locations einen aktuellen
         #    WeatherForecast sicherstellen.
-        weather_forecast_ids = []
+        weather_forecast_ids = {}
 
         for location, asset_ids in locations.items():
 
@@ -78,6 +82,9 @@ class ProcessRequiredForecasts:
 
             affected_asset_ids.append(requirement.asset_id)
 
-        # 5. Später:
-        #    Aus affected_asset_ids betroffene Portfolios bestimmen
-        #    und PortfolioForecasts aggregieren.
+        # 5. Betroffene Portfolios bestimmen und PortfolioForecasts
+        #    aggregieren.
+        if self.portfolio_forecast_service is not None:
+            self.portfolio_forecast_service.update_affected_portfolios(
+                affected_asset_ids
+            )

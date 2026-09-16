@@ -3,21 +3,27 @@
 import { computed } from "vue";
 import VChart from "vue-echarts";
 
-import type { WeatherForecast, AssetForecast } from "../api/forecast";
+import type { WeatherForecast, AssetForecast, PortfolioForecast } from "../api/forecast";
 import type { Asset } from "../api/asset";
+import type { Portfolio } from "../api/portfolio";
 
 const props = defineProps<{
-    forecast: WeatherForecast|AssetForecast,
+    forecast: WeatherForecast|AssetForecast|PortfolioForecast,
     forecastType: string,
-    asset?: Asset | null
+    asset?: Asset | null,
+    portfolio?: Portfolio | null
 }>();
 const chartTitle = computed(() => {
 
-    if (!props.asset) {
-        return "Weather Forecast";
+    if (props.asset) {
+        return `${props.asset.name} - ${props.forecastType} Forecast`;
     }
 
-    return `${props.asset.name} - ${props.forecastType} Forecast`;
+    if (props.portfolio) {
+        return `${props.portfolio.name} - Portfolio Forecast`;
+    }
+
+    return "Weather Forecast";
 
 });
 
