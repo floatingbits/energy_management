@@ -57,6 +57,15 @@ class PortfolioForecastService:
         self.asset_forecast_repository = asset_forecast_repository
         self.aggregator = aggregator
 
+    def get_portfolio_forecast(
+        self,
+        portfolio_id: int,
+    ):
+
+        return self.portfolio_forecast_repository.get_latest_portfolio_forecast(
+            portfolio_id
+        )
+
     def update_portfolio_forecast(
         self,
         portfolio_id: int,

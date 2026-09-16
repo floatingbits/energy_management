@@ -8,7 +8,9 @@ import {
     getWeatherForecast,
     type WeatherForecast,
     getAssetForecast,
-    type AssetForecast
+    type AssetForecast,
+    getPortfolioForecast,
+    type PortfolioForecast
 } from "../api/forecast";
 
 import PortfolioTable from "../components/PortfolioTable.vue";
@@ -25,6 +27,8 @@ const selectedAsset = ref<Asset|null>(null);
 
 const selectedForecast = ref<WeatherForecast|null>(null);
 const selectedAssetForecast = ref<AssetForecast|null>(null);
+
+const selectedPortfolioForecast = ref<PortfolioForecast|null>(null);
 
 
 
@@ -60,6 +64,14 @@ async function handlePortfolioSelect(portfolio: Portfolio) {
       selectedAsset.value = null
       selectedForecast.value = null
       selectedAssetForecast.value = null
+
+      try {
+          selectedPortfolioForecast.value =
+              await getPortfolioForecast(portfolio.id);
+      } catch {
+          // Noch kein Portfolio-Forecast für dieses Portfolio vorhanden.
+          selectedPortfolioForecast.value = null;
+      }
   }
 }
 
@@ -92,6 +104,13 @@ onMounted(async () => {
               :portfolios="portfolios"
               @select="handlePortfolioSelect"
               class="portfolio-table"
+            />
+            <ForecastChart
+                v-if="selectedPortfolioForecast"
+                :forecast="selectedPortfolioForecast"
+                :portfolio="selectedPortfolio"
+                forecast-type="Portfolio"
+                class="portfolio-forecast-chart"
             />
         </section>
 

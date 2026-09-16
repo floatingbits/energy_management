@@ -42,6 +42,12 @@ export interface AssetForecast {
     asset_id: number;
     forecast: Forecast
 }
+
+export interface PortfolioForecast {
+    id: number;
+    portfolio_id: number;
+    forecast: Forecast
+}
 function formatCoordinate(value: number): string {
     return value.toFixed(2);
 }
@@ -69,6 +75,17 @@ export async function getAssetForecast(
 ): Promise<AssetForecast> {
 
     const response = await client.get(`/asset-forecasts/${asset_id}`, {});
+
+    return response.data;
+}
+
+
+
+export async function getPortfolioForecast(
+    portfolio_id: number
+): Promise<PortfolioForecast> {
+
+    const response = await client.get(`/portfolio-forecasts/${portfolio_id}`, {});
 
     return response.data;
 }
