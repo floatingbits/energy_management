@@ -3,7 +3,7 @@ from pydantic import BaseModel, ConfigDict
 from app.forecasting.schemas import TimeSeriesGroupResponse
 
 
-class PortfolioTimeSeriesGroupResponse(BaseModel):
+class PortfolioForecastResponse(BaseModel):
 
     id: int
 

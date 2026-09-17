@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.bootstrap.portfolio_forecast import (
     create_portfolio_forecast_service,
 )
-from app.portfolio_forecast.schemas import PortfolioTimeSeriesGroupResponse
+from app.portfolio_forecast.schemas import PortfolioForecastResponse
 
 
 router = APIRouter(
@@ -14,7 +14,7 @@ router = APIRouter(
 
 @router.get(
     "/{portfolio_id}",
-    response_model=PortfolioTimeSeriesGroupResponse,
+    response_model=PortfolioForecastResponse,
 )
 def get_portfolio_forecast(
     portfolio_id: int,
@@ -30,7 +30,7 @@ def get_portfolio_forecast(
     if forecast is None:
         raise HTTPException(
             status_code=404,
-            detail="TimeSeriesGroup not found",
+            detail="Forecast not found",
         )
 
     return forecast

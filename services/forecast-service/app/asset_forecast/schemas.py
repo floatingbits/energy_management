@@ -1,7 +1,7 @@
 from pydantic import BaseModel, ConfigDict
 from app.forecasting.schemas import TimeSeriesGroupResponse
 
-class AssetTimeSeriesGroupResponse(BaseModel):
+class AssetForecastResponse(BaseModel):
 
     id: int
 

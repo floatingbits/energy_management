@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.schemas.forecast import TimeSeriesGroupResponse
+from app.schemas.forecast import ForecastResponse
 from app.services import forecast_service
 
 
@@ -15,7 +15,7 @@ router = APIRouter(
 
 @router.get(
     "/",
-    response_model=list[TimeSeriesGroupResponse]
+    response_model=list[ForecastResponse]
 )
 def get_forecasts(
     db: Session = Depends(get_db)
@@ -25,7 +25,7 @@ def get_forecasts(
 
 @router.get(
     "/{id}",
-    response_model=TimeSeriesGroupResponse
+    response_model=ForecastResponse
 )
 def get_forecast(
         id: int,
@@ -37,7 +37,7 @@ def get_forecast(
 
 @router.get(
     "/asset/{asset_id}",
-    response_model=list[TimeSeriesGroupResponse]
+    response_model=list[ForecastResponse]
 )
 def get_asset_forecasts(
     asset_id: int,
