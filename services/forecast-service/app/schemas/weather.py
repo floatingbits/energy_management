@@ -5,14 +5,13 @@ from pydantic import BaseModel
 
 class WeatherVariableValue(BaseModel):
     """
-    Eine Wettervariable für einen Zeitpunkt.
+    Eine Wettervariable für einen Zeitpunkt: das geordnete Zahlenarray
+    des Payloads (bezogen auf die Definitions-Pyramide der Serie).
     """
 
     variable: str
 
-    p05: float
-    p50: float
-    p95: float
+    values: list[float | None]
 
 
 class WeatherForecastPoint(BaseModel):

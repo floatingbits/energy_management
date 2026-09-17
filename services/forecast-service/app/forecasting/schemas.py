@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
 
@@ -6,11 +6,15 @@ from app.forecasting.enums import ForecastMetric
 
 
 class TimeSeriesValueResponse(BaseModel):
+    """
+    Ein Wert innerhalb einer Serie, bestehend aus dem Slot-Index und
+    dem Payload als Zahlenarray — geordnet nach der Definition
+    der Serie (siehe value_type_definition am TimeSeriesResponse).
+    """
+
     slot_index: int
 
-    p05: float | None = None
-    p50: float | None = None
-    p95: float | None = None
+    values: list[float | None]
 
     model_config = ConfigDict(
         from_attributes=True
@@ -18,6 +22,12 @@ class TimeSeriesValueResponse(BaseModel):
 
 
 class TimeSeriesResponse(BaseModel):
+    """
+    Eine Serie mit ihrer Wert-Definition (z. B.
+    {"type": "quantile", "quantiles": [5, 50, 95]}). Das
+    values-Array je Wert ist bezüglich dieser Definition geordnet.
+    """
+
     metric: ForecastMetric
 
     value_type_definition: str

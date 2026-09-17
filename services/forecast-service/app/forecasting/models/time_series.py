@@ -9,7 +9,7 @@ from sqlalchemy.orm import relationship
 
 
 from app.database import Base
-from app.forecasting.encoding import quantile_definition
+from app.forecasting.encoding.definitions import DEFAULT_QUANTILE_DEFINITION
 
 
 class TimeSeries(Base):
@@ -31,7 +31,7 @@ class TimeSeries(Base):
     value_type_definition = Column(
         String,
         nullable=False,
-        default=quantile_definition(),
+        default=DEFAULT_QUANTILE_DEFINITION.serialize,
     )
 
     time_series_group_id = Column(

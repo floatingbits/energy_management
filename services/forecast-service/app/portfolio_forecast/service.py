@@ -10,6 +10,9 @@ from app.portfolio_forecast.domain.timeslice import (
 from app.forecasting.domain.time_series_time_base import TimeSeriesTimeBase
 from app.forecasting.domain.time_series import TimeSeries
 from app.forecasting.domain.time_series_value import TimeSeriesValue
+from app.forecasting.encoding.definitions import definition_from_payload
+from app.forecasting.encoding.serializers import parser_for
+from app.forecasting.models.time_series_value import TimeSeriesValue as TimeSeriesValueModel
 from app.repositories.asset_forecast_repository import AssetForecastRepository
 from app.repositories.portfolio_forecast_repository import PortfolioForecastRepository
 
@@ -193,11 +196,19 @@ class PortfolioForecastService:
         slot_count: int,
     ) -> TimeSeries:
 
+        # Quantile-Stufen aus der Definition der Asset-Forecast-Serie;
+        # die Aggregate nutzen die in allen Assets angebotenen Stufen.
+        definition = definition_from_payload(
+            asset_forecasts[0].forecast.time_series[0].value_type_definition
+        )
+        levels = definition.quantiles
+        parser = parser_for(definition)
+
         # Quantile je Asset je Slot indexieren, damit die
         # Slot-Reihenfolge nicht von der Persistenz abhängt.
         values_by_asset = {
             asset_forecast.asset_id: (
-                self._quantiles_by_slot(asset_forecast)
+                self._quantiles_by_slot(asset_forecast, parser)
             )
             for asset_forecast in asset_forecasts
         }
@@ -209,9 +220,13 @@ class PortfolioForecastService:
             timeslice_values = [
                 TimesliceValues(
                     asset_id=asset_id,
-                    p05=quantiles[slot_index].p05,
-                    p50=quantiles[slot_index].p50,
-                    p95=quantiles[slot_index].p95,
+                    quantiles={
+                        level: quantile
+                        for level in levels
+                        if (quantile := parser.quantile(
+                            quantiles[slot_index], level
+                        )) is not None
+                    },
                 )
                 for asset_id, quantiles in values_by_asset.items()
             ]
@@ -219,10 +234,11 @@ class PortfolioForecastService:
             aggregated = self.aggregator.aggregate(timeslice_values)
 
             aggregated_values.append(
-                TimeSeriesValue.probabilistic(
-                    p05=aggregated.p05,
-                    p50=aggregated.p50,
-                    p95=aggregated.p95,
+                TimeSeriesValue(
+                    values=tuple(
+                        aggregated.quantiles.get(level)
+                        for level in levels
+                    )
                 )
             )
 
@@ -234,11 +250,12 @@ class PortfolioForecastService:
     @staticmethod
     def _quantiles_by_slot(
         asset_forecast,
+        parser,
     ) -> dict[int, TimeSeriesValue]:
 
         series = asset_forecast.forecast.time_series[0]
 
         return {
-            value.slot_index: value
+            value.slot_index: parser.parse(value.payload)
             for value in series.values
         }

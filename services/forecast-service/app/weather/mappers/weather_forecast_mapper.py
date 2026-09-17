@@ -10,6 +10,8 @@ from app.weather.result import (
 from app.forecasting.domain.time_series_time_base import TimeSeriesTimeBase
 from app.forecasting.domain.time_series import TimeSeries
 from app.forecasting.domain.time_series_value import TimeSeriesValue
+from app.forecasting.encoding.definitions import definition_from_payload
+from app.forecasting.encoding.serializers import parser_for
 
 
 class WeatherForecastMapper:
@@ -30,17 +32,14 @@ class WeatherForecastMapper:
 
         for db_series in model.forecast.time_series:
 
+            definition = definition_from_payload(db_series.value_type_definition)
+            parser = parser_for(definition)
+
             series.append(
                 TimeSeries(
                     metric=db_series.metric,
-                    values=[
-                        TimeSeriesValue(
-                            p05=value.p05,
-                            p50=value.p50,
-                            p95=value.p95,
-                        )
-                        for value in db_series.values
-                    ],
+                    value_definition=definition,
+                    values=[parser.parse(value.payload) for value in db_series.values],
                 )
             )
 

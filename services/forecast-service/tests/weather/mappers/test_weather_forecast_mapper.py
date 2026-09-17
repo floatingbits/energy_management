@@ -10,7 +10,9 @@ from app.weather.mappers.weather_forecast_mapper import (
 from app.weather.models import WeatherForecast
 
 from app.forecasting.enums import ForecastMetric
-from app.forecasting.encoding import serialize_quantiles
+from app.forecasting.encoding.definitions import DEFAULT_QUANTILE_DEFINITION
+from app.forecasting.encoding.serializers import serialize
+from app.forecasting.domain.time_series_value import TimeSeriesValue as DomainTimeSeriesValue
 
 def create_forecast_value(
         slot_index,
@@ -18,7 +20,10 @@ def create_forecast_value(
     ):
     return TimeSeriesValue(
         slot_index=slot_index,
-        payload=serialize_quantiles(None, value, None),
+        payload=serialize(
+            DomainTimeSeriesValue(values=(None, value, None)),
+            DEFAULT_QUANTILE_DEFINITION,
+        ),
     )
 
 def create_forecast_series(
@@ -27,7 +32,8 @@ def create_forecast_series(
     ):
     return TimeSeries(
         metric=metric,
-        values=[]
+        values=values,
+        value_type_definition=DEFAULT_QUANTILE_DEFINITION.serialize(),
     )
 def test_maps_weather_forecast_model_to_domain():
 
@@ -47,6 +53,7 @@ def test_maps_weather_forecast_model_to_domain():
     db_series = TimeSeries(
         metric=ForecastMetric.GLOBAL_SOLAR_IRRADIANCE,
         values=db_values,
+        value_type_definition=DEFAULT_QUANTILE_DEFINITION.serialize(),
     )
 
     db_run = TimeSeriesTimeBase(
@@ -102,5 +109,5 @@ def test_maps_weather_forecast_model_to_domain():
 
     assert len(series.values) == 2
 
-    assert series.values[0].p50 == 500
-    assert series.values[1].p50 == 600
+    assert series.quantile(series.values[0], 50) == 500
+    assert series.quantile(series.values[1], 50) == 600

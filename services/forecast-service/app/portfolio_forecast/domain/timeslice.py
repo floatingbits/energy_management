@@ -6,21 +6,20 @@ class TimesliceValues:
     """
     Asset-Quantile innerhalb eines einzelnen Zeitscheibenslots
     eines aggregierten Asset-Forecasts.
+
+    Quantile-Stufen sind Prozentwerte (z. B. 5, 50, 95) und hängen
+    nicht mehr an festen p05/p50/p95-Attributen.
     """
 
     asset_id: int
-    p05: float
-    p50: float
-    p95: float
+    quantiles: dict[float, float]
 
 
 @dataclass(frozen=True)
 class AggregatedTimeslice:
     """
-    Aggregiertes Quantile-Tripel für eine einzelne
+    Aggregiertes Quantile für eine einzelne
     Zeitscheibe eines Portfolio-Forecasts.
     """
 
-    p05: float
-    p50: float
-    p95: float
+    quantiles: dict[float, float]

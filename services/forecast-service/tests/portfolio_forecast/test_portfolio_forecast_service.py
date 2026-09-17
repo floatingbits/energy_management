@@ -1,3 +1,4 @@
+import json
 from unittest.mock import Mock
 
 import pytest
@@ -23,14 +24,12 @@ def _make_asset_forecast(
     based_on_revision=1,
 ):
 
-    value = Mock()
-    value.p05 = p05
-    value.p50 = p50
-    value.p95 = p95
-
     series = Mock()
+    series.value_type_definition = json.dumps(
+        {"type": "quantile", "quantiles": [5, 50, 95]}
+    )
     series.values = [
-        Mock(slot_index=index, p05=p05, p50=p50, p95=p95)
+        Mock(slot_index=index, payload=json.dumps([p05, p50, p95]))
         for index in range(slots)
     ]
 
@@ -84,9 +83,7 @@ def test_update_portfolio_forecast_aggregates_and_persists():
 
     values = kwargs["series"].values
 
-    assert values[0].p50 == 22.0
-    assert values[0].p05 == 11.0
-    assert values[0].p95 == 33.0
+    assert values[0].values == (11.0, 22.0, 33.0)
 
 
 def test_update_portfolio_forecast_raises_on_misaligned_runs():

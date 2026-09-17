@@ -14,22 +14,18 @@ def test_naive_aggregator_sums_quantiles():
         [
             TimesliceValues(
                 asset_id=1,
-                p05=1.0,
-                p50=2.0,
-                p95=3.0,
+                quantiles={5: 1.0, 50: 2.0, 95: 3.0},
             ),
             TimesliceValues(
                 asset_id=2,
-                p05=10.0,
-                p50=20.0,
-                p95=30.0,
+                quantiles={5: 10.0, 50: 20.0, 95: 30.0},
             ),
         ]
     )
 
-    assert aggregated.p05 == 11.0
-    assert aggregated.p50 == 22.0
-    assert aggregated.p95 == 33.0
+    assert aggregated.quantiles[5] == 11.0
+    assert aggregated.quantiles[50] == 22.0
+    assert aggregated.quantiles[95] == 33.0
 
 
 def test_naive_aggregator_rejects_empty_timeslice():

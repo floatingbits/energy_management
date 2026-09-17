@@ -32,8 +32,17 @@ class NaivePortfolioAggregator(PortfolioAggregator):
                 "No asset timeslices to aggregate."
             )
 
+        # Quantile, die in allen gleichgelagerten Assets vorhanden sind
+        common_levels = set.intersection(
+            *(
+                set(value.quantiles.keys())
+                for value in timeslice_values
+            )
+        )
+
         return AggregatedTimeslice(
-            p05=sum(value.p05 for value in timeslice_values),
-            p50=sum(value.p50 for value in timeslice_values),
-            p95=sum(value.p95 for value in timeslice_values),
+            quantiles={
+                level: sum(value.quantiles[level] for value in timeslice_values)
+                for level in sorted(common_levels)
+            }
         )

@@ -58,6 +58,8 @@ class ComposedWeatherUncertaintyEstimator(WeatherUncertaintyEstimator):
         now = datetime.now(tz=timezone.utc)
         result['forecast_horizon'] = [(forecast.run.timestamp_for_slot(i) - now).total_seconds() for i in range(0, num_slots)]
         for series in forecast.series:
-            result[series.metric] = [value.p50 for value in series.values[:num_slots]]
+            result[series.metric] = [
+                series.quantile(value, 50) for value in series.values[:num_slots]
+            ]
 
         return result
