@@ -16,7 +16,7 @@ from app.api.portfolio_forecasts import (
 
 
 app = FastAPI(
-    title="TimeSeriesGroup Service",
+    title="Forecast Service",
     version="0.1.0"
 )
 
