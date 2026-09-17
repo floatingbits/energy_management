@@ -9,6 +9,7 @@ from sqlalchemy.orm import relationship
 
 
 from app.database import Base
+from app.forecasting.encoding import quantile_definition
 
 
 class TimeSeries(Base):
@@ -25,6 +26,12 @@ class TimeSeries(Base):
     metric = Column(
         String,
         nullable=False
+    )
+
+    value_type_definition = Column(
+        String,
+        nullable=False,
+        default=quantile_definition(),
     )
 
     time_series_group_id = Column(
