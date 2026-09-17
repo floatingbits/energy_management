@@ -21,9 +21,9 @@ from app.asset_forecast.generators.pv_asset_forecast_generator import (
     PvAssetForecastGenerator,
 )
 
-from app.forecasting.domain.forecast_run import ForecastRun
-from app.forecasting.domain.forecast_series import ForecastSeries
-from app.forecasting.domain.forecast_value import ForecastValue
+from app.forecasting.domain.time_series_time_base import TimeSeriesTimeBase
+from app.forecasting.domain.time_series import TimeSeries
+from app.forecasting.domain.time_series_value import TimeSeriesValue
 from app.forecasting.enums import ForecastMetric
 
 
@@ -61,7 +61,7 @@ def test_generate_pv_asset_forecast():
     )
 
 
-    run = ForecastRun(
+    run = TimeSeriesTimeBase(
         start=datetime(
             2026,
             6,
@@ -74,26 +74,26 @@ def test_generate_pv_asset_forecast():
     )
 
 
-    dni_series = ForecastSeries(
+    dni_series = TimeSeries(
         metric=ForecastMetric.DIRECT_NORMAL_IRRADIANCE,
         values=[
-            ForecastValue(
+            TimeSeriesValue(
                 p50=900,
             ),
-            ForecastValue(
+            TimeSeriesValue(
                 p50=850,
             ),
         ],
     )
 
 
-    diffuse_series = ForecastSeries(
+    diffuse_series = TimeSeries(
         metric=ForecastMetric.DIFFUSE_IRRADIANCE,
         values=[
-            ForecastValue(
+            TimeSeriesValue(
                 p50=100,
             ),
-            ForecastValue(
+            TimeSeriesValue(
                 p50=100,
             ),
         ],

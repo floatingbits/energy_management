@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 
-from app.forecasting.models import Forecast
+from app.forecasting.models import TimeSeriesGroup
 
 
 def get_forecasts(
@@ -10,7 +10,7 @@ def get_forecasts(
 ):
 
     return (
-        db.query(Forecast)
+        db.query(TimeSeriesGroup)
         .all()
     )
 
@@ -20,9 +20,9 @@ def get_forecast(
 ):
 
     return (
-        db.query(Forecast)
+        db.query(TimeSeriesGroup)
         .filter(
-            Forecast.id == id
+            TimeSeriesGroup.id == id
         )
         .first()
     )
@@ -34,16 +34,16 @@ def get_forecasts_by_asset(
 ):
 
     return (
-        db.query(Forecast)
+        db.query(TimeSeriesGroup)
         .filter(
-            Forecast.asset_id == asset_id
+            TimeSeriesGroup.asset_id == asset_id
         )
         .all()
     )
 
 def create_forecasts(
     db: Session,
-    forecasts: list[Forecast]
+    forecasts: list[TimeSeriesGroup]
 ):
 
     db.add_all(forecasts)

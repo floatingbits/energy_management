@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict
-from app.forecasting.schemas import ForecastResponse
+from app.forecasting.schemas import TimeSeriesGroupResponse
 
 class AssetForecastResponse(BaseModel):
 
@@ -7,7 +7,7 @@ class AssetForecastResponse(BaseModel):
 
     asset_id: int
 
-    forecast: ForecastResponse
+    forecast: TimeSeriesGroupResponse
 
     model_config = ConfigDict(
         from_attributes=True

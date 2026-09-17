@@ -10,9 +10,9 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 
 
-class ForecastValue(Base):
+class TimeSeriesValue(Base):
 
-    __tablename__ = "forecast_values"
+    __tablename__ = "time_series_values"
 
 
     id = Column(
@@ -21,10 +21,10 @@ class ForecastValue(Base):
     )
 
 
-    series_id = Column(
+    time_series_id = Column(
         Integer,
         ForeignKey(
-            "forecast_series.id"
+            "time_series.id"
         ),
         nullable=False
     )
@@ -60,7 +60,7 @@ class ForecastValue(Base):
         default="forecast"
     )
 
-    series = relationship(
-        "ForecastSeries",
+    time_series = relationship(
+        "TimeSeries",
         back_populates="values"
     )

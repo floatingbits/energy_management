@@ -4,5 +4,5 @@ class AssetForecastWorker:
         self.use_case = use_case
 
     def run(self) -> None:
-        self.use_case.process()
+        self.use_case.execute()
 

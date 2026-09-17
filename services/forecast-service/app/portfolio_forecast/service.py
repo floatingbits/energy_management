@@ -7,9 +7,9 @@ from app.portfolio_forecast.aggregators.aggregator import (
 from app.portfolio_forecast.domain.timeslice import (
     TimesliceValues,
 )
-from app.forecasting.domain.forecast_run import ForecastRun
-from app.forecasting.domain.forecast_series import ForecastSeries
-from app.forecasting.domain.forecast_value import ForecastValue
+from app.forecasting.domain.time_series_time_base import TimeSeriesTimeBase
+from app.forecasting.domain.time_series import TimeSeries
+from app.forecasting.domain.time_series_value import TimeSeriesValue
 from app.repositories.asset_forecast_repository import AssetForecastRepository
 from app.repositories.portfolio_forecast_repository import PortfolioForecastRepository
 
@@ -26,7 +26,7 @@ class MisalignedAssetForecastsError(Exception):
 class MissingAssetForecastError(Exception):
     """
     Für mindestens ein Asset des Portfolios existiert
-    (noch) kein Asset-Forecast.
+    (noch) kein Asset-TimeSeriesGroup.
     """
     pass
 
@@ -89,8 +89,8 @@ class PortfolioForecastService:
             )
 
             # Bis eine Frische-/Requirement-Logik auf dieser Seite
-            # existiert, gilt: ohne Asset-Forecast für alle Assets
-            # kein Portfolio-Forecast.
+            # existiert, gilt: ohne Asset-TimeSeriesGroup für alle Assets
+            # kein Portfolio-TimeSeriesGroup.
             if asset_forecast is None:
                 raise MissingAssetForecastError(
                     f"No asset forecast for asset {asset_id} "
@@ -102,10 +102,10 @@ class PortfolioForecastService:
         self._check_alignment(asset_forecasts)
 
         # Alignment ist geprüft, daher genügt die Referenz-Run der
-        # Asset-Forecasts als Vorlage für den Portfolio-Forecast.
-        reference_run = asset_forecasts[0].forecast.forecast_run
+        # Asset-Forecasts als Vorlage für den Portfolio-TimeSeriesGroup.
+        reference_run = asset_forecasts[0].forecast.time_series_time_base
 
-        forecast_run = ForecastRun(
+        time_series_time_base = TimeSeriesTimeBase(
             start=reference_run.start,
             resolution=timedelta(seconds=reference_run.resolution_seconds),
             slots=reference_run.slots,
@@ -118,7 +118,7 @@ class PortfolioForecastService:
 
         self.portfolio_forecast_repository.save(
             portfolio_id=portfolio_id,
-            forecast_run=forecast_run,
+            time_series_time_base=time_series_time_base,
             series=series,
             aggregation_model=self.aggregator.get_name(),
             based_on_revision=max(
@@ -143,7 +143,7 @@ class PortfolioForecastService:
         """
         Bestimmt die Portfolios, die mindestens eines der
         betroffenen Assets enthalten, und aktualisiert deren
-        Portfolio-Forecast.
+        Portfolio-TimeSeriesGroup.
         """
 
         affected_asset_ids = set(affected_asset_ids)
@@ -168,11 +168,11 @@ class PortfolioForecastService:
         asset_forecasts,
     ) -> None:
 
-        first = asset_forecasts[0].forecast.forecast_run
+        first = asset_forecasts[0].forecast.time_series_time_base
 
         for asset_forecast in asset_forecasts:
 
-            run = asset_forecast.forecast.forecast_run
+            run = asset_forecast.forecast.time_series_time_base
 
             if (
                 run.start != first.start
@@ -191,7 +191,7 @@ class PortfolioForecastService:
         self,
         asset_forecasts,
         slot_count: int,
-    ) -> ForecastSeries:
+    ) -> TimeSeries:
 
         # Quantile je Asset je Slot indexieren, damit die
         # Slot-Reihenfolge nicht von der Persistenz abhängt.
@@ -219,14 +219,14 @@ class PortfolioForecastService:
             aggregated = self.aggregator.aggregate(timeslice_values)
 
             aggregated_values.append(
-                ForecastValue.probabilistic(
+                TimeSeriesValue.probabilistic(
                     p05=aggregated.p05,
                     p50=aggregated.p50,
                     p95=aggregated.p95,
                 )
             )
 
-        return ForecastSeries(
+        return TimeSeries(
             metric=ForecastMetric.ACTIVE_POWER,
             values=aggregated_values
         )
@@ -234,9 +234,9 @@ class PortfolioForecastService:
     @staticmethod
     def _quantiles_by_slot(
         asset_forecast,
-    ) -> dict[int, ForecastValue]:
+    ) -> dict[int, TimeSeriesValue]:
 
-        series = asset_forecast.forecast.series[0]
+        series = asset_forecast.forecast.time_series[0]
 
         return {
             value.slot_index: value

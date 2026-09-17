@@ -5,10 +5,10 @@ from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 
 from app.forecasting.domain.forecast_policy import ForecastPeriod
-from app.forecasting.models.forecast_series import ForecastSeries
-from app.forecasting.models.forecast_value import ForecastValue
-from app.forecasting.models.forecast_run import ForecastRun
-from app.forecasting.models.forecast import Forecast
+from app.forecasting.models.time_series import TimeSeries
+from app.forecasting.models.time_series_value import TimeSeriesValue
+from app.forecasting.models.time_series_time_base import TimeSeriesTimeBase
+from app.forecasting.models.time_series_group import TimeSeriesGroup
 from app.weather.location import WeatherLocation
 from app.weather.models import (
     WeatherForecast, WeatherSource,
@@ -35,11 +35,11 @@ class WeatherRepository:
             select(WeatherForecast)
             .options(
                 joinedload(WeatherForecast.forecast)
-                    .joinedload(Forecast.forecast_run),
+                    .joinedload(TimeSeriesGroup.time_series_time_base),
 
                 joinedload(WeatherForecast.forecast)
-                    .joinedload(Forecast.series)
-                    .joinedload(ForecastSeries.values),
+                    .joinedload(TimeSeriesGroup.time_series)
+                    .joinedload(TimeSeries.values),
 
                 joinedload(WeatherForecast.source),
             )
@@ -48,8 +48,8 @@ class WeatherRepository:
                 WeatherForecast.longitude == longitude,
             )
             .join(WeatherForecast.forecast)
-            .join(Forecast.forecast_run)
-            .order_by(ForecastRun.created_at.desc())
+            .join(TimeSeriesGroup.time_series_time_base)
+            .order_by(TimeSeriesTimeBase.created_at.desc())
         )
         if limit is not None:
             stmt = stmt.limit(limit)
@@ -66,11 +66,11 @@ class WeatherRepository:
             select(WeatherForecast)
             .options(
                 joinedload(WeatherForecast.forecast)
-                    .joinedload(Forecast.forecast_run),
+                    .joinedload(TimeSeriesGroup.time_series_time_base),
 
                 joinedload(WeatherForecast.forecast)
-                    .joinedload(Forecast.series)
-                    .joinedload(ForecastSeries.values),
+                    .joinedload(TimeSeriesGroup.time_series)
+                    .joinedload(TimeSeries.values),
 
                 joinedload(WeatherForecast.source),
             )
@@ -78,7 +78,7 @@ class WeatherRepository:
                 WeatherForecast.id == weather_forecast_id,
             )
             .join(WeatherForecast.forecast)
-            .join(Forecast.forecast_run)
+            .join(TimeSeriesGroup.time_series_time_base)
         )
 
 
@@ -106,24 +106,24 @@ class WeatherRepository:
             select(WeatherForecast)
             .options(
                 joinedload(WeatherForecast.forecast)
-                .joinedload(Forecast.forecast_run),
+                .joinedload(TimeSeriesGroup.time_series_time_base),
 
                 joinedload(WeatherForecast.forecast)
-                .joinedload(Forecast.series)
-                .joinedload(ForecastSeries.values),
+                .joinedload(TimeSeriesGroup.time_series)
+                .joinedload(TimeSeries.values),
 
                 joinedload(WeatherForecast.source),
             )
             .where(
                 WeatherForecast.latitude == location.latitude,
                 WeatherForecast.longitude == location.longitude,
-                ForecastRun.start == start,
-                ForecastRun.resolution_seconds == resolution_seconds,
-                ForecastRun.slots == slots
+                TimeSeriesTimeBase.start == start,
+                TimeSeriesTimeBase.resolution_seconds == resolution_seconds,
+                TimeSeriesTimeBase.slots == slots
             )
             .join(WeatherForecast.forecast)
-            .join(Forecast.forecast_run)
-            .order_by(ForecastRun.created_at.desc())
+            .join(TimeSeriesGroup.time_series_time_base)
+            .order_by(TimeSeriesTimeBase.created_at.desc())
         )
 
 
@@ -137,7 +137,7 @@ class WeatherRepository:
     ):
         # TODO: Data Structure
         result_run = result.forecasts[0].run
-        run = ForecastRun(
+        run = TimeSeriesTimeBase(
             start=result_run.start,
             slots=result_run.slots,
             resolution_seconds=result_run.resolution.total_seconds(),
@@ -158,14 +158,14 @@ class WeatherRepository:
         self.db_session.flush()
 
         for point in result.forecasts:
-            forecast = Forecast(
-                forecast_run_id=run.id
+            time_series_group = TimeSeriesGroup(
+                time_series_time_base_id=run.id
             )
-            self.db_session.add(forecast)
+            self.db_session.add(time_series_group)
             self.db_session.flush()
 
             weather_forecast = WeatherForecast(
-                forecast_id=forecast.id,
+                forecast_id=time_series_group.id,
                 latitude=point.location.latitude,
                 longitude=point.location.longitude,
                 source_id=source.id
@@ -177,16 +177,16 @@ class WeatherRepository:
 
             for series in point.series:
 
-                series_model = ForecastSeries(
-                    forecast_id=forecast.id,
+                series_model = TimeSeries(
+                    time_series_group_id=time_series_group.id,
                     metric=series.metric,
                 )
 
                 self.db_session.add(series_model)
                 self.db_session.flush()
                 for i, value in enumerate(series.values):
-                    value_model = ForecastValue(
-                        series_id=series_model.id,
+                    value_model = TimeSeriesValue(
+                        time_series_id=series_model.id,
                         slot_index=i,
                         p05=value.p05,
                         p50=value.p50,

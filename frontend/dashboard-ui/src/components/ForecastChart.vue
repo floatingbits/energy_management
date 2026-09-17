@@ -32,11 +32,11 @@ function createTimestamp(
 ): string {
 
     const start = new Date(
-        props.forecast.forecast.forecast_run.start
+        props.forecast.forecast.time_series_time_base.start
     );
 
     const resolution =
-        props.forecast.forecast.forecast_run.resolution_seconds;
+        props.forecast.forecast.time_series_time_base.resolution_seconds;
 
 
     const timestamp = new Date(
@@ -111,7 +111,7 @@ const option = computed(() => {
 
     const chartSeries = [];
 
-    props.forecast.forecast.series.forEach(series => {
+    props.forecast.forecast.time_series.forEach(series => {
         //For the time being filter only series relevant to pv asset prediction
         if(!['direct_normal_irradiance', 'diffuse_irradiance', 'active_power'].includes(series.metric)) {
             return

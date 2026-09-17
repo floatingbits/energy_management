@@ -4,7 +4,7 @@ from app.weather.location import WeatherLocation
 from app.weather.provider_result import ProviderForecastResult
 from app.weather.request import WeatherForecastRequest
 from app.weather.result import WeatherLocationForecast
-from app.forecasting.domain.forecast_run import ForecastRun
+from app.forecasting.domain.time_series_time_base import TimeSeriesTimeBase
 from app.forecasting.enums import ForecastMetric
 
 

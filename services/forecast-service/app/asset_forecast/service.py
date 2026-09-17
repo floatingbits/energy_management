@@ -43,14 +43,18 @@ class AssetForecastService:
                 1
             )
         ) if weather_forecast_id is None else (
-            self.weather_service
+            [self.weather_service
             .get_weather_forecast(
                 weather_forecast_id
-            )
+            )]
         )
+        if len(db_weather) > 0:
+            db_weather = db_weather[0]
+        else:
+            raise Exception(f"No matching weather found for asset {asset_id} and weather_forecast_id {weather_forecast_id}")
 
 
-        domain_weather_forecast = self.domain_mapper.to_domain(db_weather[0])
+        domain_weather_forecast = self.domain_mapper.to_domain(db_weather)
         # TODO: Where will the forecast gnerated event be triggered
         series = self.pv_forecast_generator.generate(
             asset,
@@ -59,10 +63,10 @@ class AssetForecastService:
 
         return self.asset_forecast_repository.save(
             asset_id=asset.asset_id,
-            forecast_run=domain_weather_forecast.run,
+            time_series_time_base=domain_weather_forecast.run,
             series=series,
             revision=asset.revision,
-            based_on_weather_forecast_id=db_weather[0].id
+            based_on_weather_forecast_id=db_weather.id
         )
 
     def get_asset_forecast(

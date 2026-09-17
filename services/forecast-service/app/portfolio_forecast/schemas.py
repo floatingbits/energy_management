@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 
-from app.forecasting.schemas import ForecastResponse
+from app.forecasting.schemas import TimeSeriesGroupResponse
 
 
 class PortfolioForecastResponse(BaseModel):
@@ -9,7 +9,7 @@ class PortfolioForecastResponse(BaseModel):
 
     portfolio_id: int
 
-    forecast: ForecastResponse
+    forecast: TimeSeriesGroupResponse
 
     model_config = ConfigDict(
         from_attributes=True

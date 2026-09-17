@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 
 @dataclass(frozen=True)
-class ForecastRun:
+class TimeSeriesTimeBase:
 
     start: datetime
 

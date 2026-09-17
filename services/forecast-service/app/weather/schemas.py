@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 
-from app.forecasting.schemas import ForecastResponse
+from app.forecasting.schemas import TimeSeriesGroupResponse
 
 class WeatherSourceResponse(BaseModel):
     provider: str
@@ -18,7 +18,7 @@ class WeatherForecastResponse(BaseModel):
 
     source: WeatherSourceResponse
 
-    forecast: ForecastResponse
+    forecast: TimeSeriesGroupResponse
 
     model_config = ConfigDict(
         from_attributes=True

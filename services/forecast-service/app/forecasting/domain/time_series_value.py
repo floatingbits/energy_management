@@ -4,7 +4,7 @@ from app.forecasting.enums import ForecastValueType
 
 
 @dataclass(frozen=True)
-class ForecastValue:
+class TimeSeriesValue:
 
     p50: float
 
@@ -21,7 +21,7 @@ class ForecastValue:
         return self.p05 is not None and self.p95 is not None
 
     @classmethod
-    def deterministic(cls, value: float) -> "ForecastValue":
+    def deterministic(cls, value: float) -> "TimeSeriesValue":
         return cls(
             p05=None,
             p50=value,
@@ -34,7 +34,7 @@ class ForecastValue:
             p05: float,
             p50: float,
             p95: float,
-    ) -> "ForecastValue":
+    ) -> "TimeSeriesValue":
         # hack
         if p05 > p50:
             p05, p50 = p50,p05

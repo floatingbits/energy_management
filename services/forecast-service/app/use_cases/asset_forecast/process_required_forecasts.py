@@ -40,13 +40,13 @@ class ProcessRequiredForecasts:
         #     WeatherLocation(...): [42],
         # }
         #
-        locations, asset_locations = self.asset_service.get_weather_locations()
+        location_assets, asset_locations = self.asset_service.get_weather_locations()
 
         # 3. Für tatsächlich relevante Locations einen aktuellen
         #    WeatherForecast sicherstellen.
         weather_forecast_ids = {}
 
-        for location, asset_ids in locations.items():
+        for location, asset_ids in location_assets.items():
 
             # Location hat zwar Assets, aber keines davon hat
             # aktuell ein ForecastRequirement.

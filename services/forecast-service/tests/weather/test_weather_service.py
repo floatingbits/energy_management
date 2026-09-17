@@ -14,7 +14,7 @@ from app.weather.result import WeatherForecastResult
 from app.services.weather_service import WeatherService
 
 from app.weather.fake_provider import FakeWeatherProvider
-from app.forecasting.domain.forecast_run import ForecastRun
+from app.forecasting.domain.time_series_time_base import TimeSeriesTimeBase
 from app.forecasting.enums import ForecastMetric
 from app.weather.uncertainty.estimator import ComposedWeatherUncertaintyEstimator
 
@@ -48,7 +48,7 @@ def test_weather_service_calls_provider():
         ]
     )
 
-    run = ForecastRun(
+    run = TimeSeriesTimeBase(
         start=datetime.now(timezone.utc),
         resolution=timedelta(minutes=15),
         slots=1

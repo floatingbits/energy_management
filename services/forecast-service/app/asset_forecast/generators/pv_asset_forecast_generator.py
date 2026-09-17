@@ -9,8 +9,8 @@ from app.asset_forecast.domain.pv_asset_context import PvAssetContext
 from app.asset_forecast.domain.pv_forecast import PvForecastInput
 
 from app.forecasting.enums import ForecastMetric
-from app.forecasting.domain.forecast_series import ForecastSeries
-from app.forecasting.domain.forecast_value import ForecastValue
+from app.forecasting.domain.time_series import TimeSeries
+from app.forecasting.domain.time_series_value import TimeSeriesValue
 from app.weather.result import WeatherLocationForecast
 
 
@@ -27,7 +27,7 @@ class PvAssetForecastGenerator:
         self,
         asset: PvAssetContext,
             weather_forecast: WeatherLocationForecast,
-    ) -> ForecastSeries:
+    ) -> TimeSeries:
 
         run = weather_forecast.run
 
@@ -81,7 +81,7 @@ class PvAssetForecastGenerator:
 
 
             values.append(
-                ForecastValue(
+                TimeSeriesValue(
                     p50=result_p50.active_power_kw,
                     p05=result_p05.active_power_kw if result_p05 is not None else None,
                     p95 = result_p95.active_power_kw if result_p95 is not None else None
@@ -89,7 +89,7 @@ class PvAssetForecastGenerator:
             )
 
 
-        return ForecastSeries(
+        return TimeSeries(
             metric=ForecastMetric.ACTIVE_POWER,
             values=values,
         )

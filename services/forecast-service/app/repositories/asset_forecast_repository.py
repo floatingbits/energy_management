@@ -2,9 +2,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload, selectinload
 
-from app.forecasting.domain.forecast_series import ForecastSeries
-from app.forecasting.domain.forecast_run import ForecastRun
-from app.forecasting.models import Forecast as ForecastModel, ForecastRun as ForecastRunModel, ForecastSeries as ForecastSeriesModel, ForecastValue as ForecastValueModel
+from app.forecasting.domain.time_series import TimeSeries
+from app.forecasting.domain.time_series_time_base import TimeSeriesTimeBase
+from app.forecasting.models import TimeSeriesGroup as TimeSeriesGroupModel, TimeSeriesTimeBase as TimeSeriesTimeBaseModel, TimeSeries as TimeSeriesModel, TimeSeriesValue as TimeSeriesValueModel
 from app.asset_forecast.models import AssetForecast as AssetForecastModel
 
 class AssetForecastRepository:
@@ -14,16 +14,16 @@ class AssetForecastRepository:
     def save(
         self,
         asset_id: int,
-        forecast_run: ForecastRun,
-        series: ForecastSeries,
+        time_series_time_base: TimeSeriesTimeBase,
+        series: TimeSeries,
         revision: int,
         based_on_weather_forecast_id: int
     ):
 
-        run = ForecastRunModel(
-            start=forecast_run.start,
-            resolution_seconds=forecast_run.resolution.total_seconds(),
-            slots=forecast_run.slots,
+        run = TimeSeriesTimeBaseModel(
+            start=time_series_time_base.start,
+            resolution_seconds=time_series_time_base.resolution.total_seconds(),
+            slots=time_series_time_base.slots,
         )
 
 
@@ -31,18 +31,18 @@ class AssetForecastRepository:
         self.db_session.add(run)
 
         self.db_session.flush()
-        forecast = ForecastModel(
-            forecast_run_id=run.id
+        time_series_group = TimeSeriesGroupModel(
+            time_series_time_base_id=run.id
         )
 
-        self.db_session.add(forecast)
+        self.db_session.add(time_series_group)
 
         self.db_session.flush()
 
 
         asset_forecast = AssetForecastModel(
             asset_id=asset_id,
-            forecast_id=forecast.id,
+            forecast_id=time_series_group.id,
             model="default",
             based_on_revision=revision,
             based_on_weather_forecast_id=based_on_weather_forecast_id
@@ -52,8 +52,8 @@ class AssetForecastRepository:
 
         self.db_session.flush()
 
-        db_series = ForecastSeriesModel(
-            forecast_id=forecast.id,
+        db_series = TimeSeriesModel(
+            time_series_group_id=time_series_group.id,
             metric=series.metric,
         )
 
@@ -63,8 +63,8 @@ class AssetForecastRepository:
 
         for index, value in enumerate(series.values):
             self.db_session.add(
-                ForecastValueModel(
-                    series_id=db_series.id,
+                TimeSeriesValueModel(
+                    time_series_id=db_series.id,
                     slot_index=index,
                     p05=value.p05,
                     p50=value.p50,
@@ -74,7 +74,7 @@ class AssetForecastRepository:
 
         self.db_session.commit()
 
-        return forecast
+        return time_series_group
 
     def get_latest_asset_forecast(
             self,
@@ -84,11 +84,11 @@ class AssetForecastRepository:
             select(AssetForecastModel)
             .options(
                 selectinload(AssetForecastModel.forecast)
-                .selectinload(ForecastModel.series)
-                .selectinload(ForecastSeriesModel.values),
+                .selectinload(TimeSeriesGroupModel.time_series)
+                .selectinload(TimeSeriesModel.values),
 
                 selectinload(AssetForecastModel.forecast)
-                .selectinload(ForecastModel.forecast_run),
+                .selectinload(TimeSeriesGroupModel.time_series_time_base),
             )
             .where(
                 AssetForecastModel.asset_id == asset_id
@@ -97,10 +97,10 @@ class AssetForecastRepository:
                 AssetForecastModel.forecast
             )
             .join(
-                ForecastModel.forecast_run
+                TimeSeriesGroupModel.time_series_time_base
             )
             .order_by(
-                ForecastRunModel.created_at.desc()
+                TimeSeriesTimeBaseModel.created_at.desc()
             )
             .limit(1)
         )

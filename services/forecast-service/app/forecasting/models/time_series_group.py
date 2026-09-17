@@ -1,9 +1,6 @@
-from datetime import timezone, datetime
-
 from sqlalchemy import (
     Column,
     Integer,
-    DateTime,
     ForeignKey
 )
 from sqlalchemy.orm import relationship
@@ -11,9 +8,9 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 
 
-class Forecast(Base):
+class TimeSeriesGroup(Base):
 
-    __tablename__ = "forecasts"
+    __tablename__ = "time_series_groups"
 
 
     id = Column(
@@ -21,20 +18,20 @@ class Forecast(Base):
         primary_key=True
     )
 
-    forecast_run_id = Column(
+    time_series_time_base_id = Column(
         Integer,
         ForeignKey(
-            "forecast_runs.id"
+            "time_series_time_bases.id"
         ),
         nullable=False
     )
 
-    series = relationship(
-        "ForecastSeries",
-        back_populates="forecast",
+    time_series = relationship(
+        "TimeSeries",
+        back_populates="time_series_group",
         cascade="all, delete-orphan"
     )
 
-    forecast_run = relationship(
-        "ForecastRun"
+    time_series_time_base = relationship(
+        "TimeSeriesTimeBase"
     )

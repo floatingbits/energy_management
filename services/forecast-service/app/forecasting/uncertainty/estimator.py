@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-from app.forecasting.domain.forecast_value import ForecastValue
+from app.forecasting.domain.time_series_value import TimeSeriesValue
 from app.forecasting.enums import ForecastMetric
 from app.weather.uncertainty.predictor_model import UncertaintyEstimatorPredictorWrapper
 
@@ -16,7 +16,7 @@ class UncertaintyEstimatorInput:
 
 class UncertaintyEstimator(ABC):
     @abstractmethod
-    def estimate_uncertain_forecast_values(self,estimator_input: UncertaintyEstimatorInput) -> list[ForecastValue]:
+    def estimate_uncertain_forecast_values(self,estimator_input: UncertaintyEstimatorInput) -> list[TimeSeriesValue]:
         pass
 
     def needs_variables(self) -> list[str]:
@@ -24,9 +24,9 @@ class UncertaintyEstimator(ABC):
 
 class TrivialUncertaintyEstimator(UncertaintyEstimator):
 
-    def estimate_uncertain_forecast_values(self,estimator_input: UncertaintyEstimatorInput) -> list[ForecastValue]:
+    def estimate_uncertain_forecast_values(self,estimator_input: UncertaintyEstimatorInput) -> list[TimeSeriesValue]:
         return [
-            ForecastValue.deterministic(value)
+            TimeSeriesValue.deterministic(value)
             for value in estimator_input.input_values[estimator_input.output_var]
         ]
 
@@ -39,14 +39,14 @@ class ModeledUncertaintyEstimator(UncertaintyEstimator):
         self.model_p50 = model_p50
         self.model_p95 = model_p95
 
-    def estimate_uncertain_forecast_values(self,estimator_input: UncertaintyEstimatorInput) -> list[ForecastValue]:
+    def estimate_uncertain_forecast_values(self,estimator_input: UncertaintyEstimatorInput) -> list[TimeSeriesValue]:
 
         p05 = self.model_p05.predict(estimator_input.input_values)
         p50 = self.model_p50.predict(estimator_input.input_values)
         p95 = self.model_p95.predict(estimator_input.input_values)
 
         return [
-            ForecastValue.probabilistic(
+            TimeSeriesValue.probabilistic(
                 p05=val05,
                 p50=val50,
                 p95=val95

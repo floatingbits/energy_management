@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 
 @dataclass(frozen=True)
-class ProviderForecastValue:
+class ProviderTimeSeriesValue:
 
     variable: str
 
