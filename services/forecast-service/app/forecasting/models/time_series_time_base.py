@@ -10,9 +10,9 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 
 
-class ForecastRun(Base):
+class TimeSeriesTimeBase(Base):
 
-    __tablename__ = "forecast_runs"
+    __tablename__ = "time_series_time_bases"
 
 
     id = Column(

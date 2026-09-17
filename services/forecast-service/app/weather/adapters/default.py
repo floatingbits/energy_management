@@ -11,10 +11,10 @@ from app.weather.result import (
     WeatherLocationForecast
 )
 
-from app.forecasting.domain.forecast_series import ForecastSeries
-from app.forecasting.domain.forecast_value import ForecastValue
+from app.forecasting.domain.time_series import TimeSeries
+from app.forecasting.domain.time_series_value import TimeSeriesValue
 from app.forecasting.enums import ForecastMetric
-from app.forecasting.domain.forecast_run import ForecastRun
+from app.forecasting.domain.time_series_time_base import TimeSeriesTimeBase
 
 
 class DefaultWeatherAdapter(WeatherAdapter):
@@ -47,10 +47,10 @@ class DefaultWeatherAdapter(WeatherAdapter):
 
 
                 series.append(
-                    ForecastSeries(
+                    TimeSeries(
                         metric=metric,
                         values=[
-                            ForecastValue.deterministic(value)
+                            TimeSeriesValue.deterministic(value)
                             for value in values
                         ]
                     )
@@ -100,7 +100,7 @@ class DefaultWeatherAdapter(WeatherAdapter):
         provider_result,
         location_forecast,
         request: WeatherForecastRequest
-    ) -> ForecastRun:
+    ) -> TimeSeriesTimeBase:
 
         # TODO:
         # for the time being:
@@ -109,7 +109,7 @@ class DefaultWeatherAdapter(WeatherAdapter):
             location_forecast.series[0]
         )
 
-        return ForecastRun(
+        return TimeSeriesTimeBase(
             start=first_series.start,
             resolution=request.resolution,
             slots=1 + round((request.end - request.start)/request.resolution)

@@ -7,9 +7,9 @@ from app.weather.result import (
     WeatherLocation,
 )
 
-from app.forecasting.domain.forecast_run import ForecastRun
-from app.forecasting.domain.forecast_series import ForecastSeries
-from app.forecasting.domain.forecast_value import ForecastValue
+from app.forecasting.domain.time_series_time_base import TimeSeriesTimeBase
+from app.forecasting.domain.time_series import TimeSeries
+from app.forecasting.domain.time_series_value import TimeSeriesValue
 
 
 class WeatherForecastMapper:
@@ -19,22 +19,22 @@ class WeatherForecastMapper:
         model: WeatherForecastModel,
     ) -> WeatherLocationForecast:
 
-        run = ForecastRun(
-            start=model.forecast.forecast_run.start,
-            resolution=timedelta(seconds=model.forecast.forecast_run.resolution_seconds),
-            slots=model.forecast.forecast_run.slots,
+        run = TimeSeriesTimeBase(
+            start=model.forecast.time_series_time_base.start,
+            resolution=timedelta(seconds=model.forecast.time_series_time_base.resolution_seconds),
+            slots=model.forecast.time_series_time_base.slots,
         )
 
 
         series = []
 
-        for db_series in model.forecast.series:
+        for db_series in model.forecast.time_series:
 
             series.append(
-                ForecastSeries(
+                TimeSeries(
                     metric=db_series.metric,
                     values=[
-                        ForecastValue(
+                        TimeSeriesValue(
                             p05=value.p05,
                             p50=value.p50,
                             p95=value.p95,

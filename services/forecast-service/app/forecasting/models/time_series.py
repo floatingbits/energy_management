@@ -11,9 +11,9 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 
 
-class ForecastSeries(Base):
+class TimeSeries(Base):
 
-    __tablename__ = "forecast_series"
+    __tablename__ = "time_series"
 
 
     id = Column(
@@ -27,20 +27,20 @@ class ForecastSeries(Base):
         nullable=False
     )
 
-    forecast_id = Column(
+    time_series_group_id = Column(
         Integer,
         ForeignKey(
-            "forecasts.id"
+            "time_series_groups.id"
         ),
         nullable=False
     )
 
-    forecast = relationship(
-        "Forecast",
-        back_populates="series"
+    time_series_group = relationship(
+        "TimeSeriesGroup",
+        back_populates="time_series"
     )
     values = relationship(
-        "ForecastValue",
-        back_populates="series",
+        "TimeSeriesValue",
+        back_populates="time_series",
         cascade="all, delete-orphan"
     )

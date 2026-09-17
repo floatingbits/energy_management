@@ -11,7 +11,7 @@ from sqlalchemy import (
 from app.database import Base
 from sqlalchemy.orm import relationship
 
-from app.forecasting.models import Forecast
+from app.forecasting.models import TimeSeriesGroup
 class WeatherForecast(Base):
 
     __tablename__ = "weather_forecasts"
@@ -26,7 +26,7 @@ class WeatherForecast(Base):
     forecast_id = Column(
         Integer,
         ForeignKey(
-            "forecasts.id"
+            "time_series_groups.id"
         ),
         nullable=False
     )
@@ -60,7 +60,7 @@ class WeatherForecast(Base):
     )
 
     forecast = relationship(
-        "Forecast"
+        "TimeSeriesGroup"
     )
 
     source = relationship(

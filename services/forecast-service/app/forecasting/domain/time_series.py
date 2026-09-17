@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
 from app.forecasting.enums import ForecastMetric
-from .forecast_value import ForecastValue
+from app.forecasting.domain.time_series_value import TimeSeriesValue
 
 
 @dataclass
-class ForecastSeries:
+class TimeSeries:
 
     metric: ForecastMetric
 
-    values: list[ForecastValue]
+    values: list[TimeSeriesValue]

@@ -5,9 +5,9 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from app.forecasting.enums import ForecastMetric
-from app.forecasting.domain.forecast_series import ForecastSeries
-from app.forecasting.domain.forecast_run import ForecastRun
-from app.forecasting.models import Forecast as ForecastModel, ForecastRun as ForecastRunModel, ForecastSeries as ForecastSeriesModel, ForecastValue as ForecastValueModel
+from app.forecasting.domain.time_series import TimeSeries
+from app.forecasting.domain.time_series_time_base import TimeSeriesTimeBase
+from app.forecasting.models import TimeSeriesGroup as TimeSeriesGroupModel, TimeSeriesTimeBase as TimeSeriesTimeBaseModel, TimeSeries as TimeSeriesModel, TimeSeriesValue as TimeSeriesValueModel
 from app.portfolio_forecast.models import PortfolioForecast as PortfolioForecastModel
 
 
@@ -18,33 +18,33 @@ class PortfolioForecastRepository:
     def save(
         self,
         portfolio_id: int,
-        forecast_run: ForecastRun,
-        series: ForecastSeries,
+        time_series_time_base: TimeSeriesTimeBase,
+        series: TimeSeries,
         aggregation_model: str,
         based_on_revision: int,
     ):
 
-        run = ForecastRunModel(
-            start=forecast_run.start,
-            resolution_seconds=forecast_run.resolution.total_seconds(),
-            slots=forecast_run.slots,
+        run = TimeSeriesTimeBaseModel(
+            start=time_series_time_base.start,
+            resolution_seconds=time_series_time_base.resolution.total_seconds(),
+            slots=time_series_time_base.slots,
         )
 
         self.db_session.add(run)
 
         self.db_session.flush()
 
-        forecast = ForecastModel(
-            forecast_run_id=run.id
+        time_series_group = TimeSeriesGroupModel(
+            time_series_time_base_id=run.id
         )
 
-        self.db_session.add(forecast)
+        self.db_session.add(time_series_group)
 
         self.db_session.flush()
 
         portfolio_forecast = PortfolioForecastModel(
             portfolio_id=portfolio_id,
-            forecast_id=forecast.id,
+            forecast_id=time_series_group.id,
             aggregation_model=aggregation_model,
             based_on_revision=based_on_revision,
             created_at=datetime.now(timezone.utc),
@@ -54,8 +54,8 @@ class PortfolioForecastRepository:
 
         self.db_session.flush()
 
-        db_series = ForecastSeriesModel(
-            forecast_id=forecast.id,
+        db_series = TimeSeriesModel(
+            time_series_group_id=time_series_group.id,
             metric=series.metric,
         )
 
@@ -65,8 +65,8 @@ class PortfolioForecastRepository:
 
         for index, value in enumerate(series.values):
             self.db_session.add(
-                ForecastValueModel(
-                    series_id=db_series.id,
+                TimeSeriesValueModel(
+                    time_series_id=db_series.id,
                     slot_index=index,
                     p05=value.p05,
                     p50=value.p50,
@@ -86,11 +86,11 @@ class PortfolioForecastRepository:
             select(PortfolioForecastModel)
             .options(
                 selectinload(PortfolioForecastModel.forecast)
-                .selectinload(ForecastModel.series)
-                .selectinload(ForecastSeriesModel.values),
+                .selectinload(TimeSeriesGroupModel.time_series)
+                .selectinload(TimeSeriesModel.values),
 
                 selectinload(PortfolioForecastModel.forecast)
-                .selectinload(ForecastModel.forecast_run),
+                .selectinload(TimeSeriesGroupModel.time_series_time_base),
             )
             .where(
                 PortfolioForecastModel.portfolio_id == portfolio_id
@@ -99,10 +99,10 @@ class PortfolioForecastRepository:
                 PortfolioForecastModel.forecast
             )
             .join(
-                ForecastModel.forecast_run
+                TimeSeriesGroupModel.time_series_time_base
             )
             .order_by(
-                ForecastRunModel.created_at.desc()
+                TimeSeriesTimeBaseModel.created_at.desc()
             )
             .limit(1)
         )

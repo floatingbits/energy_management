@@ -63,20 +63,20 @@ defineProps<{
             <p>
                 Start:
                 <br>
-                {{ forecast.forecast.forecast_run.start }}
+                {{ forecast.forecast.time_series_time_base.start }}
             </p>
 
 
             <p>
                 Raster:
-                {{ forecast.forecast.forecast_run.resolution_seconds / 60 }}
+                {{ forecast.forecast.time_series_time_base.resolution_seconds / 60 }}
                 Minuten
             </p>
 
 
             <p>
                 Slots:
-                {{ forecast.forecast.forecast_run.slots }}
+                {{ forecast.forecast.time_series_time_base.slots }}
             </p>
 
 

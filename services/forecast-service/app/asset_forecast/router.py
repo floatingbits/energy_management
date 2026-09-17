@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, Response, status,HTTPException
 from sqlalchemy.orm import Session
 
-from app.asset_forecast.schemas import AssetForecastResponse
+from app.asset_forecast.schemas import AssetTimeSeriesGroupResponse
 from app.database import get_db
 from app.bootstrap.asset_forecast import (
     create_asset_forecast_service,
@@ -35,7 +35,7 @@ def generate_asset_forecast(
 
 @router.get(
     "/{asset_id}",
-    response_model=AssetForecastResponse,
+    response_model=AssetTimeSeriesGroupResponse,
 )
 def get_asset_forecast(
     asset_id: int,
@@ -51,7 +51,7 @@ def get_asset_forecast(
     if forecast is None:
         raise HTTPException(
             status_code=404,
-            detail="Forecast not found",
+            detail="TimeSeriesGroup not found",
         )
 
     return forecast

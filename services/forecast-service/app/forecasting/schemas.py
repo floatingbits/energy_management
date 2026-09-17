@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict
 from app.forecasting.enums import ForecastMetric
 
 
-class ForecastValueResponse(BaseModel):
+class TimeSeriesValueResponse(BaseModel):
     slot_index: int
 
     p05: float | None = None
@@ -17,17 +17,17 @@ class ForecastValueResponse(BaseModel):
     )
 
 
-class ForecastSeriesResponse(BaseModel):
+class TimeSeriesResponse(BaseModel):
     metric: ForecastMetric
 
-    values: list[ForecastValueResponse]
+    values: list[TimeSeriesValueResponse]
 
     model_config = ConfigDict(
         from_attributes=True
     )
 
 
-class ForecastRunResponse(BaseModel):
+class TimeSeriesTimeBaseResponse(BaseModel):
     id: int
 
     start: datetime
@@ -41,12 +41,12 @@ class ForecastRunResponse(BaseModel):
     )
 
 
-class ForecastResponse(BaseModel):
+class TimeSeriesGroupResponse(BaseModel):
     id: int
 
-    forecast_run: ForecastRunResponse
+    time_series_time_base: TimeSeriesTimeBaseResponse
 
-    series: list[ForecastSeriesResponse]
+    time_series: list[TimeSeriesResponse]
 
     model_config = ConfigDict(
         from_attributes=True

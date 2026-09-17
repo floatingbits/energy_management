@@ -14,7 +14,7 @@ def create_asset_service():
     )
 
 def create_weather_forecast_requirement_service():
-    policy = ForecastPolicy(horizon=timedelta(days=2), quantization=timedelta(hours=1))
+    policy = ForecastPolicy(horizon=timedelta(days=2), quantization=timedelta(hours=1), resolution=timedelta(minutes=15))
     return WeatherForecastRequirementService(
         repository=create_weather_forecast_repository(),
         weather_forecast_service=create_weather_service(),

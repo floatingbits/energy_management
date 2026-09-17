@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 
-from app.forecasting.models import ForecastValue, ForecastSeries
-from app.forecasting.models import ForecastRun
-from app.forecasting.models.forecast import Forecast
+from app.forecasting.models import TimeSeriesValue, TimeSeries
+from app.forecasting.models import TimeSeriesTimeBase
+from app.forecasting.models.time_series_group import TimeSeriesGroup
 from app.weather.mappers.weather_forecast_mapper import (
     WeatherForecastMapper,
 )
@@ -15,7 +15,7 @@ def create_forecast_value(
         slot_index,
         value,
     ):
-    return ForecastValue(
+    return TimeSeriesValue(
         slot_index=slot_index,
         p50=value,
         p05=None,
@@ -26,7 +26,7 @@ def create_forecast_series(
         metric,
         values,
     ):
-    return ForecastSeries(
+    return TimeSeries(
         metric=metric,
         values=[]
     )
@@ -45,12 +45,12 @@ def test_maps_weather_forecast_model_to_domain():
         ),
     ]
 
-    db_series = ForecastSeries(
+    db_series = TimeSeries(
         metric=ForecastMetric.GLOBAL_SOLAR_IRRADIANCE,
         values=db_values,
     )
 
-    db_run = ForecastRun(
+    db_run = TimeSeriesTimeBase(
         start=datetime(2026, 8, 6, 12, 0),
         resolution_seconds=timedelta(minutes=15).total_seconds(),
         slots=2,
@@ -58,12 +58,12 @@ def test_maps_weather_forecast_model_to_domain():
 
 
 
-    db_forecast = Forecast(
-        forecast_run_id=1,
-        series=[db_series]
+    db_forecast = TimeSeriesGroup(
+        time_series_time_base_id=1,
+        time_series=[db_series]
     )
 
-    db_forecast.forecast_run=db_run
+    db_forecast.time_series_time_base=db_run
 
     weather_model = WeatherForecast(
         forecast_id=1,

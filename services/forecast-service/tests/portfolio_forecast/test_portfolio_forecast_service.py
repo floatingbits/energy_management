@@ -40,8 +40,8 @@ def _make_asset_forecast(
     run.slots = slots
 
     forecast = Mock()
-    forecast.forecast_run = run
-    forecast.series = [series]
+    forecast.time_series_time_base = run
+    forecast.time_series = [series]
 
     asset_forecast = Mock()
     asset_forecast.asset_id = asset_id

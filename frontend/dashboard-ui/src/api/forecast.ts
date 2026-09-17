@@ -5,7 +5,7 @@ const client = axios.create({
 });
 
 
-export interface ForecastValue {
+export interface TimeSeriesValue {
     slot_index: number;
     p05?: number;
     p50?: number;
@@ -13,20 +13,20 @@ export interface ForecastValue {
 }
 
 
-export interface ForecastSeries {
+export interface TimeSeries {
     metric: string;
-    values: ForecastValue[];
+    values: TimeSeriesValue[];
 }
-interface ForecastRun {
+interface TimeSeriesTimeBase {
     start: string;
     resolution_seconds: number;
     slots: number;
 }
 interface Forecast {
 
-    forecast_run: ForecastRun
+    time_series_time_base: TimeSeriesTimeBase
 
-    series: ForecastSeries[]
+    time_series: TimeSeries[]
 }
 
 export interface WeatherForecast {
