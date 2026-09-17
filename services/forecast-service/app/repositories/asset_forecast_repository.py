@@ -3,6 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import joinedload, selectinload
 
 from app.forecasting.domain.time_series import TimeSeries
+from app.forecasting.encoding import serialize_quantiles
 from app.forecasting.domain.time_series_time_base import TimeSeriesTimeBase
 from app.forecasting.models import TimeSeriesGroup as TimeSeriesGroupModel, TimeSeriesTimeBase as TimeSeriesTimeBaseModel, TimeSeries as TimeSeriesModel, TimeSeriesValue as TimeSeriesValueModel
 from app.asset_forecast.models import AssetForecast as AssetForecastModel
@@ -66,9 +67,7 @@ class AssetForecastRepository:
                 TimeSeriesValueModel(
                     time_series_id=db_series.id,
                     slot_index=index,
-                    p05=value.p05,
-                    p50=value.p50,
-                    p95=value.p95,
+                    payload=serialize_quantiles(value.p05, value.p50, value.p95),
                 )
             )
 

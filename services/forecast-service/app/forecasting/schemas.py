@@ -20,6 +20,8 @@ class TimeSeriesValueResponse(BaseModel):
 class TimeSeriesResponse(BaseModel):
     metric: ForecastMetric
 
+    value_type_definition: str
+
     values: list[TimeSeriesValueResponse]
 
     model_config = ConfigDict(

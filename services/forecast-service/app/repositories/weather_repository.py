@@ -5,6 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 
 from app.forecasting.domain.forecast_policy import ForecastPeriod
+from app.forecasting.encoding import serialize_quantiles
 from app.forecasting.models.time_series import TimeSeries
 from app.forecasting.models.time_series_value import TimeSeriesValue
 from app.forecasting.models.time_series_time_base import TimeSeriesTimeBase
@@ -188,9 +189,7 @@ class WeatherRepository:
                     value_model = TimeSeriesValue(
                         time_series_id=series_model.id,
                         slot_index=i,
-                        p05=value.p05,
-                        p50=value.p50,
-                        p95=value.p95
+                        payload=serialize_quantiles(value.p05, value.p50, value.p95)
                     )
 
                     self.db_session.add(value_model)

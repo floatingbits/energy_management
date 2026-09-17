@@ -1,13 +1,13 @@
 from sqlalchemy import (
     Column,
     Integer,
-    Float,
     String,
     ForeignKey
 )
 from sqlalchemy.orm import relationship
 
 from app.database import Base
+from app.forecasting.encoding import parse_quantiles
 
 
 class TimeSeriesValue(Base):
@@ -36,21 +36,9 @@ class TimeSeriesValue(Base):
     )
 
 
-    p05 = Column(
-        Float,
-        nullable=True
-    )
-
-
-    p50 = Column(
-        Float,
+    payload = Column(
+        String,
         nullable=False
-    )
-
-
-    p95 = Column(
-        Float,
-        nullable=True
     )
 
 
@@ -64,3 +52,15 @@ class TimeSeriesValue(Base):
         "TimeSeries",
         back_populates="values"
     )
+
+    @property
+    def p05(self):
+        return parse_quantiles(self.payload)[0]
+
+    @property
+    def p50(self):
+        return parse_quantiles(self.payload)[1]
+
+    @property
+    def p95(self):
+        return parse_quantiles(self.payload)[2]

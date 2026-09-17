@@ -10,6 +10,7 @@ from app.weather.mappers.weather_forecast_mapper import (
 from app.weather.models import WeatherForecast
 
 from app.forecasting.enums import ForecastMetric
+from app.forecasting.encoding import serialize_quantiles
 
 def create_forecast_value(
         slot_index,
@@ -17,9 +18,7 @@ def create_forecast_value(
     ):
     return TimeSeriesValue(
         slot_index=slot_index,
-        p50=value,
-        p05=None,
-        p95=None,
+        payload=serialize_quantiles(None, value, None),
     )
 
 def create_forecast_series(
