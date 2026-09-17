@@ -70,7 +70,7 @@ class PortfolioForecastRepository:
                 TimeSeriesValueModel(
                     time_series_id=db_series.id,
                     slot_index=index,
-                    payload=serialize(value, series_definition),
+                    payload=serialize(value, series.value_definition),
                 )
             )
 

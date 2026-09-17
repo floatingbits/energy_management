@@ -7,7 +7,8 @@ from app.forecasting.enums import ForecastMetric
 @dataclass(frozen=True)
 class EnergyObservationRequest:
 
-    variables: list[ForecastMetric]
+    # None means "all variables the provider supports"
+    variables: list[ForecastMetric] | None = None
 
     resolution: timedelta = timedelta(minutes=15)
 

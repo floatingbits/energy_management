@@ -8,6 +8,7 @@ from alembic import context
 from app.forecasting.models  import *
 from app.weather.models import *
 from app.asset_forecast.models import *
+from app.energy.observation.models import *
 from app.portfolio_forecast.models import *
 from app.database import Base, engine
 

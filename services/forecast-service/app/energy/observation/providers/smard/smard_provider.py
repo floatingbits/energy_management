@@ -31,7 +31,8 @@ class SmardProvider(EnergyObservationProvider):
         request: EnergyObservationRequest,
     ) -> ProviderObservationResult:
         filters = {}
-        for variable in request.variables:
+        requested = request.variables or list(SMARD_FILTERS)
+        for variable in requested:
             if variable not in SMARD_FILTERS:
                 raise ValueError(
                     f"No SMARD filter known for variable {variable}, available: {list(SMARD_FILTERS)}"
@@ -40,7 +41,7 @@ class SmardProvider(EnergyObservationProvider):
         resolution = self.smard_resolution(request.resolution)
         series = [
             self.fetch_series(filters[variable], variable, request, resolution)
-            for variable in request.variables
+            for variable in requested
         ]
         observations = [
             ProviderLocationObservations(location_key=request.region, series=series)
