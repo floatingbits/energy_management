@@ -26,6 +26,7 @@ portfolio forecast (done via simple aggregation)
 
 - Run services using Docker Compose.
 - Run tests inside the relevant service container.
+- After updating dependencies in requirements.txt, the container's image must be rebuilt.
 - Inspect existing patterns before introducing new ones.
 - Leave system python untouched
 - The repository_root's venv is made for dev tasks, such as repository_root/dev/export_static_api.py
@@ -34,3 +35,10 @@ portfolio forecast (done via simple aggregation)
 
 - Do not introduce synchronous cross-service database access.
 - Do not change public event schemas without discussing compatibility.
+
+## Nomenclature
+
+- Forecasts are predictions of the future. They can be historical when they were predictions when produced
+- observations are historically correct values
+- Decisions are trading-related numerical recommendations
+- Forecasts, observations and decisions use the TimeSeries* Models to store their actual values
