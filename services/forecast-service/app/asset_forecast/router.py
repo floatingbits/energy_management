@@ -51,7 +51,7 @@ def get_asset_forecast(
     if forecast is None:
         raise HTTPException(
             status_code=404,
-            detail="TimeSeriesGroup not found",
+            detail="Asset Forecast not found",
         )
 
     return forecast
