@@ -15,6 +15,10 @@ class ForecastMetric(StrEnum):
 
     ELECTRICITY_PRICE = "electricity_price"
 
+    DAY_AHEAD_ELECTRICITY_PRICE = "day_ahead_electricity_price"
+
+    TOTAL_ENERGY_CONSUMPTION = "total_energy_consumption"
+
 
 class ForecastValueType(StrEnum):
     FORECAST = "forecast"

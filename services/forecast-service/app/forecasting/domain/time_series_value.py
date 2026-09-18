@@ -1,31 +1,24 @@
 from dataclasses import dataclass
 from app.forecasting.enums import ForecastValueType
-
+from app.forecasting.encoding.definitions import DEFAULT_QUANTILE_DEFINITION, ValueDefinition
 
 
 @dataclass(frozen=True)
 class TimeSeriesValue:
+    """A raw slot value. Its entries are ordered per the series' value
+    definition (see app.forecasting.encoding); alone it carries no meaning."""
 
-    p50: float
-
-    p05: float | None = None
-
-    p95: float | None = None
+    values: tuple[float | None, ...]
 
     value_type: ForecastValueType = (
         ForecastValueType.FORECAST
     )
 
-    @property
-    def is_probabilistic(self) -> bool:
-        return self.p05 is not None and self.p95 is not None
-
     @classmethod
     def deterministic(cls, value: float) -> "TimeSeriesValue":
+        """Median-style entry for a default-quantile series (only p50 set)."""
         return cls(
-            p05=None,
-            p50=value,
-            p95=None,
+            from_quantiles(p05=None, p50=value, p95=None),
         )
 
     @classmethod
@@ -35,14 +28,17 @@ class TimeSeriesValue:
             p50: float,
             p95: float,
     ) -> "TimeSeriesValue":
-        # hack
-        if p05 > p50:
-            p05, p50 = p50,p05
-        if p50 > p95:
-            p95, p50 = p50,p95
-
         return cls(
-            p05=p05,
-            p50=p50,
-            p95=p95,
+            from_quantiles(p05=p05, p50=p50, p95=p95),
         )
+
+
+def from_quantiles(p05: float | None, p50: float | None, p95: float | None,
+                   definition: ValueDefinition = DEFAULT_QUANTILE_DEFINITION) -> tuple[float | None, ...]:
+    """Pack a (p05, p50, p95) triple into a payload tuple in definition order."""
+    if definition != DEFAULT_QUANTILE_DEFINITION:
+        raise ValueError(
+            "Building (p05, p50, p95) triplets is only supported for the "
+            "default quantile definition"
+        )
+    return (p05, p50, p95)

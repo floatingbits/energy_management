@@ -10,7 +10,7 @@ from app.asset_forecast.domain.pv_forecast import PvForecastInput
 
 from app.forecasting.enums import ForecastMetric
 from app.forecasting.domain.time_series import TimeSeries
-from app.forecasting.domain.time_series_value import TimeSeriesValue
+from app.forecasting.domain.time_series_value import TimeSeriesValue, from_quantiles
 from app.weather.result import WeatherLocationForecast
 
 
@@ -52,28 +52,30 @@ class PvAssetForecastGenerator:
                     seconds=slot_index * run.resolution.total_seconds()
                 )
             )
+            dni_value = dni_series.values[slot_index]
+            diffuse_value = diffuse_series.values[slot_index]
             forecast_input_50 = PvForecastInput(
                 timestamp=timestamp,
                 latitude=asset.latitude,
                 longitude=asset.longitude,
-                direct_normal_irradiance=dni_series.values[slot_index].p50,
-                diffuse_radiation=diffuse_series.values[slot_index].p50,
+                direct_normal_irradiance=dni_series.quantile(dni_value, 50),
+                diffuse_radiation=diffuse_series.quantile(diffuse_value, 50),
                 panel_geometry=asset.panel_geometry,
                 pv_configuration=asset.pv_configuration,
             )
             result_p50 = self.forecast_calculator.calculate(forecast_input_50)
             result_p05 = None
             result_p95 = None
-            if dni_series.values[slot_index].is_probabilistic:
+            if dni_series.is_probabilistic(dni_value):
                 forecast_input_05 = replace(
                     forecast_input_50,
-                    direct_normal_irradiance=dni_series.values[slot_index].p05,
-                    diffuse_radiation=diffuse_series.values[slot_index].p50,
+                    direct_normal_irradiance=dni_series.quantile(dni_value, 5),
+                    diffuse_radiation=diffuse_series.quantile(diffuse_value, 50),
                 )
                 forecast_input_95 = replace(
                     forecast_input_50,
-                    direct_normal_irradiance=dni_series.values[slot_index].p95,
-                    diffuse_radiation=diffuse_series.values[slot_index].p95,
+                    direct_normal_irradiance=dni_series.quantile(dni_value, 95),
+                    diffuse_radiation=diffuse_series.quantile(diffuse_value, 95),
                 )
 
                 result_p05 = self.forecast_calculator.calculate(forecast_input_05)
@@ -82,9 +84,11 @@ class PvAssetForecastGenerator:
 
             values.append(
                 TimeSeriesValue(
-                    p50=result_p50.active_power_kw,
-                    p05=result_p05.active_power_kw if result_p05 is not None else None,
-                    p95 = result_p95.active_power_kw if result_p95 is not None else None
+                    from_quantiles(
+                        p05=result_p05.active_power_kw if result_p05 is not None else None,
+                        p50=result_p50.active_power_kw,
+                        p95=result_p95.active_power_kw if result_p95 is not None else None,
+                    )
                 )
             )
 

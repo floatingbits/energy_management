@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 
 from app.forecasting.domain.forecast_policy import ForecastPeriod
-from app.forecasting.encoding import serialize_quantiles
+from app.forecasting.encoding.serializers import serialize
 from app.forecasting.models.time_series import TimeSeries
 from app.forecasting.models.time_series_value import TimeSeriesValue
 from app.forecasting.models.time_series_time_base import TimeSeriesTimeBase
@@ -178,9 +178,11 @@ class WeatherRepository:
 
             for series in point.series:
 
+                series_definition = series.value_definition
                 series_model = TimeSeries(
                     time_series_group_id=time_series_group.id,
                     metric=series.metric,
+                    value_type_definition=series_definition.serialize(),
                 )
 
                 self.db_session.add(series_model)
@@ -189,7 +191,7 @@ class WeatherRepository:
                     value_model = TimeSeriesValue(
                         time_series_id=series_model.id,
                         slot_index=i,
-                        payload=serialize_quantiles(value.p05, value.p50, value.p95)
+                        payload=serialize(value, series_definition)
                     )
 
                     self.db_session.add(value_model)
