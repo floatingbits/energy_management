@@ -1,4 +1,5 @@
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.orm import Session, selectinload
 
 from app.energy.observation.models import (
     EnergyMarketObservation as EnergyMarketObservationModel,
@@ -11,6 +12,14 @@ from app.forecasting.models import (
     TimeSeriesTimeBase as TimeSeriesTimeBaseModel,
     TimeSeries as TimeSeriesModel,
     TimeSeriesValue as TimeSeriesValueModel,
+)
+
+_EAGER_LOADS = (
+    selectinload(EnergyMarketObservationModel.observation)
+    .selectinload(TimeSeriesGroupModel.time_series)
+    .selectinload(TimeSeriesModel.values),
+    selectinload(EnergyMarketObservationModel.observation)
+    .selectinload(TimeSeriesGroupModel.time_series_time_base),
 )
 
 
@@ -82,3 +91,34 @@ class EnergyObservationRepository:
         self.db_session.commit()
 
         return db_observation
+
+    def get_observations(
+        self,
+        location_key: str | None = None,
+    ) -> list[EnergyMarketObservationModel]:
+        stmt = (
+            select(EnergyMarketObservationModel)
+            .options(*_EAGER_LOADS)
+            .order_by(
+                EnergyMarketObservationModel.created_at.desc(),
+            )
+        )
+
+        if location_key is not None:
+            stmt = stmt.where(
+                EnergyMarketObservationModel.location_key == location_key,
+            )
+
+        return list(self.db_session.scalars(stmt))
+
+    def get_observation(
+        self,
+        observation_id: int,
+    ) -> EnergyMarketObservationModel | None:
+        stmt = (
+            select(EnergyMarketObservationModel)
+            .options(*_EAGER_LOADS)
+            .where(EnergyMarketObservationModel.id == observation_id)
+        )
+
+        return self.db_session.scalar(stmt)

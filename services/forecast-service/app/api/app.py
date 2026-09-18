@@ -14,6 +14,10 @@ from app.api.portfolio_forecasts import (
     router as portfolio_forecast_router,
 )
 
+from app.energy.observation.router import (
+    router as energy_market_observation_router,
+)
+
 
 app = FastAPI(
     title="Forecast Service",
@@ -48,6 +52,11 @@ app.include_router(
 
 app.include_router(
     weather_router,
+    prefix="/api/v1"
+)
+
+app.include_router(
+    energy_market_observation_router,
     prefix="/api/v1"
 )
 

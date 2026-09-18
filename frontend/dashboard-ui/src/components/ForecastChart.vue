@@ -3,7 +3,8 @@
 import { computed } from "vue";
 import VChart from "vue-echarts";
 
-import type { WeatherForecast, AssetForecast, PortfolioForecast } from "../api/forecast";
+import type { WeatherForecast, AssetForecast, PortfolioForecast, TimeSeries } from "../api/forecast";
+import { decodeSeries, type DecodedSeries, type QuantileSeries, type ScalarSeries } from "../api/time-series-decode";
 import type { Asset } from "../api/asset";
 import type { Portfolio } from "../api/portfolio";
 
@@ -107,6 +108,166 @@ function metricUnit(metric: string): string {
 
 }
 
+/**
+ * Chart display strategies.
+ *
+ * Each strategy turns one decoded API series into ECharts series
+ * entries pushed onto `chartSeries`. Data tuples are
+ * [timestamp, value, label] — label feeds the tooltip formatter,
+ * which resolves the unit from it.
+ */
+type StrategyFn = (
+    series: TimeSeries,
+    decoded: DecodedSeries,
+    chartSeries: any[]
+) => void;
+
+/**
+ * Uncertainty band for a 3-quantile series:
+ * lower/median traces plus a stacked translucent band between
+ * median and each bound. Requires exactly one lower, one median
+ * and one upper level (other quantile counts are skipped).
+ */
+function quantileBandStrategy(
+    series: TimeSeries,
+    decoded: DecodedSeries,
+    chartSeries: any[]
+): void {
+
+    if (decoded.kind !== "quantile") {
+        throw new Error(`quantileBandStrategy got a ${decoded.kind} series`);
+    }
+
+    if (decoded.quantiles.length !== 3
+        || decoded.slots.some(slot => slot.values.length !== 3)) {
+        console.warn(
+            `Series ${series.metric}: expected 3 quantile levels, skipping`
+        );
+        return;
+    }
+
+    // Levels are ascending: lower / median / upper.
+    const { labelFor } = decoded;
+    const levelLabel = (levelIndex: number) => series.metric + " " + labelFor(levelIndex);
+    const lowerLevel = levelLabel(0);
+    const medianLevel = levelLabel(1);
+    const upperLevel = levelLabel(2);
+
+    const lowerData = decoded.slots.map(slot => [
+        createTimestamp(slot.slotIndex),
+        slot.values[0],
+        lowerLevel
+    ]);
+    const upperData = decoded.slots.map(slot => [
+        createTimestamp(slot.slotIndex),
+        slot.values[2],
+        upperLevel
+    ]);
+    const medianData = decoded.slots.map(slot => [
+        createTimestamp(slot.slotIndex),
+        slot.values[1],
+        medianLevel
+    ]);
+
+    const lowerBandData = decoded.slots.map(slot => [
+        createTimestamp(slot.slotIndex),
+        (slot.values[1] as number) - (slot.values[0] as number),
+        series.metric
+    ]);
+    const upperBandData = decoded.slots.map(slot => [
+        createTimestamp(slot.slotIndex),
+        (slot.values[2] as number) - (slot.values[1] as number),
+        series.metric
+    ]);
+
+    const bandStack = `${series.metric}-band`;
+    const seriesName = `${metricLabel(series.metric)} uncertainty`
+    chartSeries.push({ // Lower bound trace
+        name: seriesName,//`Quantile ${decoded.labelFor(0)}`,
+        type: "line",
+        data: lowerData,
+        stack: bandStack,
+        symbol: "none",
+        lineStyle: { opacity: 0.3 },
+        areaStyle: { opacity: 0 }
+    });
+    chartSeries.push({ // Translucent area between lower bound and median
+        name: seriesName,//`Area ${decoded.labelFor(0)}-${decoded.labelFor(1)}`,
+        ...bandAreaEntry(bandStack, lowerBandData)
+    });
+    chartSeries.push({ // Translucent area between upper bound and median
+        name: seriesName,//`Area ${decoded.labelFor(1)}-${decoded.labelFor(2)}`,
+        ...bandAreaEntry(bandStack, upperBandData)
+    });
+    chartSeries.push({ // Median line
+        name: seriesName,//`Quantile ${decoded.labelFor(1)}`,
+        type: "line",
+        data: medianData,
+        symbol: "none",
+        lineStyle: { opacity: 1 },
+        areaStyle: { opacity: 0 }
+    });
+    chartSeries.push({ // Upper bound trace
+        name: seriesName,//`Quantile ${decoded.labelFor(2)}`,
+        type: "line",
+        data: upperData,
+        symbol: "none",
+        lineStyle: { opacity: 0.3 },
+        areaStyle: { opacity: 0 }
+    });
+}
+
+function bandAreaEntry(
+    stack: string,
+    data: any[]
+): Record<string, unknown> {
+    return {
+        type: "line",
+        data: data,
+        stack: stack,
+        symbol: "none",
+        lineStyle: { opacity: 0 },
+        areaStyle: { opacity: 0.15 },
+        tooltip: {
+            show: false // This excludes this specific series from the tooltip
+        }
+    };
+}
+
+/** Single opaque line: one value per slot, no band. */
+function scalarLineStrategy(
+    series: TimeSeries,
+    decoded: DecodedSeries,
+    chartSeries: any[]
+): void {
+
+    if (decoded.kind !== "scalar") {
+        throw new Error(`scalarLineStrategy got a ${decoded.kind} series`);
+    }
+
+    chartSeries.push({
+        name: metricLabel(series.metric),
+        type: "line",
+        data: decoded.slots.map(slot => [
+            createTimestamp(slot.slotIndex),
+            slot.value,
+            series.metric
+        ]),
+        symbol: "none",
+        lineStyle: { opacity: 1 },
+        areaStyle: { opacity: 0 }
+    });
+}
+
+/**
+ * Dispatch by decoded payload semantics; unknown definitions
+ * throw and are skipped per series, never killing the chart.
+ */
+const strategyRegistry: Record<string, StrategyFn> = {
+    quantile: quantileBandStrategy,
+    scalar: scalarLineStrategy
+};
+
 const option = computed(() => {
 
     const chartSeries = [];
@@ -117,113 +278,13 @@ const option = computed(() => {
             return
         }
 
-
-        const lowerData = series.values.map(value => [
-            createTimestamp(value.slot_index),
-            value.p05,
-            series.metric + ' p05'
-        ]);
-        const upperData = series.values.map(value => [
-            createTimestamp(value.slot_index),
-            value.p95,
-            series.metric + ' p95'
-        ]);
-        const medianData = series.values.map(value => [
-            createTimestamp(value.slot_index),
-            value.p50,
-            series.metric + ' p50'
-        ]);
-
-        const lowerBandData = series.values.map(value => [
-            createTimestamp(value.slot_index),
-            value.p50 - value.p05,
-            series.metric
-        ]);
-
-        const upperBandData = series.values.map(value => [
-            createTimestamp(value.slot_index),
-            value.p95 -value.p50,
-            series.metric
-        ]);
-
-
-
-        // p05
-        chartSeries.push({
-            name: `${metricLabel(series.metric)} uncertainty`,
-            type: "line",
-            data: lowerData,
-            stack: `${series.metric}-band`,
-            symbol: "none",
-            lineStyle: {
-                opacity: 0.3
-            },
-            areaStyle: {
-                opacity: 0
-            }
-        });
-        chartSeries.push({
-            name: `${metricLabel(series.metric)} uncertainty`,
-            type: "line",
-            data: lowerBandData,
-            stack: `${series.metric}-band`,
-            symbol: "none",
-            lineStyle: {
-                opacity:0
-            },
-            areaStyle: {
-                opacity: 0.15
-            },
-            tooltip: {
-                show: false // This excludes this specific series from the tooltip
-              }
-        });
-        chartSeries.push({
-            name: `${metricLabel(series.metric)} uncertainty`,
-            type: "line",
-            data: upperBandData,
-            stack: `${series.metric}-band`,
-            symbol: "none",
-            lineStyle: {
-                opacity: 0
-            },
-            areaStyle: {
-                opacity: 0.15
-            },
-            tooltip: {
-                show: false // This excludes this specific series from the tooltip
-              }
-        });
-        chartSeries.push({
-            name: `${metricLabel(series.metric)} uncertainty`,
-            type: "line",
-            data: medianData,
-            //stack: `${series.metric}-band`,
-            symbol: "none",
-            lineStyle: {
-                opacity: 1
-            },
-            areaStyle: {
-                opacity: 0
-            }
-        });
-
-         chartSeries.push({
-            name: `${metricLabel(series.metric)} uncertainty`,
-            type: "line",
-            data: upperData,
-            //stack: `${series.metric}-band`,
-            symbol: "none",
-            lineStyle: {
-                opacity: 0.3
-            },
-            areaStyle: {
-                opacity: 0
-            }
-        });
-
-        // p95
-
+        try {
+            const decoded = decodeSeries(series);
+            strategyRegistry[decoded.kind](series, decoded, chartSeries);
+        }
+        catch (e) {
+            console.error(`Skipping series ${series.metric}:`, e);
+        }
 
     });
 

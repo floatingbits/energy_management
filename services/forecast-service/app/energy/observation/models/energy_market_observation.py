@@ -45,6 +45,6 @@ class EnergyMarketObservation(Base):
         default=lambda: datetime.now(timezone.utc),
     )
 
-    time_series_group = relationship(
+    observation = relationship(
         "TimeSeriesGroup"
     )

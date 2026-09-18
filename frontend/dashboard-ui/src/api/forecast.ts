@@ -5,16 +5,24 @@ const client = axios.create({
 });
 
 
+/**
+ * Raw time series value as delivered by the API.
+ *
+ * The `values` array is definition-agnostic on the wire:
+ * its arity and semantics are defined by `value_type_definition`
+ * on the parent time series (e.g. one entry per quantile level,
+ * a single scalar value, ...).
+ */
 export interface TimeSeriesValue {
     slot_index: number;
-    p05?: number;
-    p50?: number;
-    p95?: number;
+    values: (number | null)[];
 }
 
 
 export interface TimeSeries {
     metric: string;
+    /** JSON value_type_definition, e.g. '{"type": "quantile", "quantiles": [5, 50, 95]}'. */
+    value_type_definition: string;
     values: TimeSeriesValue[];
 }
 interface TimeSeriesTimeBase {
