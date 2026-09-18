@@ -9,6 +9,7 @@ def test_create_pv_asset_context():
 
     asset_client.get_asset.return_value = {
         "id": 5,
+        "revision": 1,
         "latitude": 53.5,
         "longitude": 10.0,
         "configuration": {
