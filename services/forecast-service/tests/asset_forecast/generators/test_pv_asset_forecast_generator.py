@@ -45,6 +45,7 @@ def test_generate_pv_asset_forecast():
 
     asset = PvAssetContext(
         asset_id=1,
+        revision=1,
 
         latitude=53.5,
         longitude=10.0,
@@ -77,12 +78,8 @@ def test_generate_pv_asset_forecast():
     dni_series = TimeSeries(
         metric=ForecastMetric.DIRECT_NORMAL_IRRADIANCE,
         values=[
-            TimeSeriesValue(
-                p50=900,
-            ),
-            TimeSeriesValue(
-                p50=850,
-            ),
+            TimeSeriesValue.deterministic(900),
+            TimeSeriesValue.deterministic(850),
         ],
     )
 
@@ -90,12 +87,8 @@ def test_generate_pv_asset_forecast():
     diffuse_series = TimeSeries(
         metric=ForecastMetric.DIFFUSE_IRRADIANCE,
         values=[
-            TimeSeriesValue(
-                p50=100,
-            ),
-            TimeSeriesValue(
-                p50=100,
-            ),
+            TimeSeriesValue.deterministic(100),
+            TimeSeriesValue.deterministic(100),
         ],
     )
 
@@ -121,13 +114,9 @@ def test_generate_pv_asset_forecast():
     assert len(result.values) == 2
 
 
-    first_value = result.values[0]
+    assert result.values[0].values is not None
 
-    assert first_value.p50 is not None
-
-    assert first_value.p50 > 0
+    assert result.quantile(result.values[0], 50) > 0
 
 
-    second_value = result.values[1]
-
-    assert second_value.p50 > 0
+    assert result.quantile(result.values[1], 50) > 0
