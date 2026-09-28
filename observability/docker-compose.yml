@@ -1,5 +1,13 @@
 services:
 
+  test-exporter:
+    build:
+      context: ./test-exporter
+    container_name: test-exporter
+    volumes:
+      - ../test-artifacts:/test-artifacts:ro
+    networks:
+      - observability
   prometheus:
     image: prom/prometheus:latest
     container_name: project-prometheus
@@ -11,6 +19,10 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
+    networks:
+      - observability
+    depends_on:
+      - test-exporter
 
   grafana:
     image: grafana/grafana:latest
@@ -23,7 +35,12 @@ services:
       - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
     depends_on:
       - prometheus
+    networks:
+      - observability
 
 volumes:
   prometheus-data:
   grafana-data:
+
+networks:
+  observability:
