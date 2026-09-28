@@ -1,2 +1,5 @@
 pika
 pydantic
+pytest
+coverage
+pytest-cov

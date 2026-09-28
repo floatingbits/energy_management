@@ -18,3 +18,5 @@ requests
 responses
 lightgbm
 pandas
+coverage
+pytest-cov

@@ -9,3 +9,5 @@ alembic
 httpx
 pytest
 pika
+coverage
+pytest-cov

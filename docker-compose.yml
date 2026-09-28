@@ -140,6 +140,7 @@ services:
     # NOT IN PRODUCTION
     volumes:
       - ./services/asset-service:/app
+      - ./test-artifacts/asset-service:/artifacts
 
 
   #######################################################
@@ -173,6 +174,7 @@ services:
     volumes:
       - ./services/forecast-service:/app
       - ./models:/models
+      - ./test-artifacts/forecast-service:/artifacts
 
     networks:
       - energy-net
