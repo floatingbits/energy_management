@@ -1,3 +1,8 @@
+from app.enums import AssetType
+
+from tests.test_assets import WIND_CONFIG, PV_CONFIG
+
+
 def test_get_portfolio(
     client
 ):
@@ -60,10 +65,11 @@ def test_add_asset_to_portfolio(
         "/api/v1/assets/",
         json={
             "name": "Windpark Nord",
-            "asset_type": "WIND",
+            "asset_type": AssetType.WIND,
             "installed_power_kw": 5000,
             "latitude": 53.5,
-            "longitude": 10.0
+            "longitude": 10.0,
+            "configuration": WIND_CONFIG
         }
     )
 
@@ -101,10 +107,11 @@ def test_get_portfolio_assets(
         "/api/v1/assets/",
         json={
             "name": "PV Dach",
-            "asset_type": "SOLAR",
+            "asset_type": AssetType.SOLAR,
             "installed_power_kw": 100,
             "latitude": 53.5,
-            "longitude": 10.0
+            "longitude": 10.0,
+            "configuration": PV_CONFIG
         }
     )
 
