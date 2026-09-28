@@ -3,6 +3,7 @@
 .env
 
 .cache.sqlite
+.coverage
 data/real_pv/br-pvgen
 
 .ipynb_checkpoints
@@ -13,3 +14,7 @@ data/real_pv/br-pvgen
 .deploy-frontend-demot
 
 frontend/dashboard-ui/dist
+
+test-artifacts/*/*
+!test-artifacts/*/.gitkeep
+
