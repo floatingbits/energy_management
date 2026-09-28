@@ -25,6 +25,10 @@ def get_asset(
         db,
         asset_id
     )
+
+    if asset is None:
+        return None
+
     return to_response(asset)
 
 
