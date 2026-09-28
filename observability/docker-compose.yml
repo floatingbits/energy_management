@@ -5,6 +5,7 @@ services:
       context: ./test-exporter
     container_name: test-exporter
     volumes:
+      - ./test-exporter/app:/app/app
       - ../test-artifacts:/test-artifacts:ro
     networks:
       - observability

@@ -1,24 +1,31 @@
-from prometheus_client import Gauge, start_http_server
+import time
+
+from prometheus_client import start_http_server
 
 
-EXPORTER_UP = Gauge(
-    "test_exporter_up",
-    "Whether the test exporter is running",
-)
+from app.bootstrap import create_collectors
+
+
+PORT = 8000
+COLLECTION_INTERVAL = 30
 
 
 def main() -> None:
-    start_http_server(8000)
+    collectors = create_collectors()
 
-    EXPORTER_UP.set(1)
+    start_http_server(PORT)
 
-    print("Test exporter listening on :8000")
-
-    # Keep the process alive.
-    import time
+    print(f"Test exporter listening on :{PORT}")
 
     while True:
-        time.sleep(60)
+
+        for collector in collectors:
+            try:
+                collector.collect()
+            except Exception as exc:
+                print(f"Collector error: {exc}")
+
+        time.sleep(COLLECTION_INTERVAL)
 
 
 if __name__ == "__main__":
