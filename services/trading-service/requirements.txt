@@ -7,3 +7,6 @@ pydantic-settings
 aio-pika
 alembic
 httpx
+pytest
+coverage
+pytest-cov
