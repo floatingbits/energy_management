@@ -12,9 +12,9 @@ class SarimaxConfig:
     providers.
     """
 
-    order: tuple = (1, 0, 0)
+    order: tuple = (1, 0, 1)
 
-    seasonal_order: tuple = (1, 0, 0, 24)
+    seasonal_order: tuple = (1, 0, 1, 24)
 
     # how far back history is fetched for fitting
     history: timedelta = timedelta(days=14)

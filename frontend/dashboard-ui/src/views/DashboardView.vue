@@ -91,14 +91,6 @@ onMounted(async () => {
 
 <div class="dashboard">
 
-    <header>
-        <h1>
-            Energy Management Dashboard
-        </h1>
-    </header>
-
-
-    <main>
         <section class="portfolio-table-wrapper">
             <PortfolioTable
               :portfolios="portfolios"
@@ -157,8 +149,6 @@ onMounted(async () => {
 
 
 
-    </main>
-
 </div>
 
 </template>
@@ -183,17 +173,13 @@ header {
 }
 
 
-main {
-
-    flex: 1;
+main, .dashboard {
 
     display: grid;
 
     grid-template-columns: 1fr 1fr;
 
     gap: 1rem;
-
-    padding: 1rem;
 
 }
 

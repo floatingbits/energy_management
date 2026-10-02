@@ -4,15 +4,18 @@ import { computed } from "vue";
 import VChart from "vue-echarts";
 
 import type { WeatherForecast, AssetForecast, PortfolioForecast, TimeSeries } from "../api/forecast";
+import type { EnergyPriceForecast } from "../api/energy-market";
 import { decodeSeries, type DecodedSeries, type QuantileSeries, type ScalarSeries } from "../api/time-series-decode";
 import type { Asset } from "../api/asset";
 import type { Portfolio } from "../api/portfolio";
 
 const props = defineProps<{
-    forecast: WeatherForecast|AssetForecast|PortfolioForecast,
+    forecast: WeatherForecast|AssetForecast|PortfolioForecast|EnergyPriceForecast,
     forecastType: string,
     asset?: Asset | null,
-    portfolio?: Portfolio | null
+    portfolio?: Portfolio | null,
+    /** Metrics to keep; all series are shown by default. */
+    metrics?: string[]
 }>();
 const chartTitle = computed(() => {
 
@@ -24,7 +27,11 @@ const chartTitle = computed(() => {
         return `${props.portfolio.name} - Portfolio Forecast`;
     }
 
-    return "Weather Forecast";
+    if ("market" in props.forecast) {
+        return `${props.forecastType}-${props.forecast.market}`;
+    }
+
+    return `${props.forecastType} Forecast`;
 
 });
 
@@ -74,6 +81,9 @@ function metricLabel(metric: string): string {
         case "active_power":
             return "Wirkleistung";
 
+        case "day_ahead_electricity_price":
+            return "Day-Ahead-Preis";
+
         default:
             return metric;
 
@@ -96,6 +106,8 @@ function metricUnit(metric: string): string {
 
         case "active_power":
             return "kW";
+        case "day_ahead_electricity_price":
+            return "€/MWh";
         case "global_solar_irradiance":
         case "direct_normal_irradiance":
         case "diffuse_irradiance":
@@ -273,8 +285,11 @@ const option = computed(() => {
     const chartSeries = [];
 
     props.forecast.forecast.time_series.forEach(series => {
-        //For the time being filter only series relevant to pv asset prediction
-        if(!['direct_normal_irradiance', 'diffuse_irradiance', 'active_power'].includes(series.metric)) {
+        // For the time being filter only series relevant to pv asset prediction
+        const metrics = props.metrics ?? [
+            'direct_normal_irradiance', 'diffuse_irradiance', 'active_power'
+        ];
+        if(!metrics.includes(series.metric)) {
             return
         }
 
