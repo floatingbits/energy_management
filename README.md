@@ -33,7 +33,8 @@ diffuse radiation model, shadowing in off-peak-times
 - uncertainty modeling results in asset power forecasts and dashboard charts
 - Asset power prediction error metrics for version 1 of physical model: 37% relative MAE (from 25% to 58% depending on 
 actual asset). Further investigations derived from errors correlating with assets' metadata
-- Observability Dashboards with Grafana and Prometheus: Starting with SW-Engineering/Tests+Coverage 
+- Observability Dashboards with Grafana and Prometheus: Starting with SW-Engineering/Tests+Coverage
+- Simple/naive portfolio power aggregation WITHOUT reflecting de-correlated prediction errors
 
 ![Showing a map, a panel for asset details and a chart that contains weather forecast information](./docs/images/energy_dashboard.png "Screenshot of Energy Management Dashboard")
 
