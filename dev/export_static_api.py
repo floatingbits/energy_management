@@ -34,9 +34,14 @@ def main():
     for portfolio in portfolios:
 
 
+
+        export_json(
+            f"{FORECAST_API_BASE_URL}/portfolio-forecasts/{portfolio['id']}",
+            OUTPUT_DIR / "portfolio-forecasts" / f"{portfolio['id']}.json",
+        )
+
         assets_response = requests.get(f"{ASSET_API_BASE_URL}/portfolios/{portfolio['id']}/assets")
         assets_response.raise_for_status()
-
         assets = assets_response.json()
         print(assets)
         export_json(
