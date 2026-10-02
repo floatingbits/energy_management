@@ -16,3 +16,6 @@ class EnergyObservationRequest:
 
     # start of the observation window; None fetches the latest available series
     start: datetime | None = None
+
+    # end of the observation window; None fetches up to the latest available data
+    end: datetime | None = None

@@ -18,6 +18,10 @@ from app.energy.observation.router import (
     router as energy_market_observation_router,
 )
 
+from app.energy.price_forecast.router import (
+    router as energy_price_forecast_router,
+)
+
 
 app = FastAPI(
     title="Forecast Service",
@@ -57,6 +61,11 @@ app.include_router(
 
 app.include_router(
     energy_market_observation_router,
+    prefix="/api/v1"
+)
+
+app.include_router(
+    energy_price_forecast_router,
     prefix="/api/v1"
 )
 
