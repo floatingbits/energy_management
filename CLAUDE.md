@@ -30,6 +30,8 @@ portfolio forecast (done via simple aggregation)
 - Inspect existing patterns before introducing new ones.
 - Leave system python untouched
 - The repository_root's venv is made for dev tasks, such as repository_root/dev/export_static_api.py
+- When working with dashboard-ui and npm: Do not consider the host's node_modules directory. It seems like an artifact of
+docker compose. Always work in the docker environment for npm and everything related to node_modules.
 
 ## Constraints
 
