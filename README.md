@@ -41,15 +41,18 @@ diffuse radiation model, shadowing in off-peak-times
 actual asset). Further investigations derived from errors correlating with assets' metadata
 - Observability Dashboards with Grafana and Prometheus: Starting with SW-Engineering/Tests+Coverage
 - Simple/naive portfolio power aggregation WITHOUT reflecting de-correlated prediction errors
+- energy price prediction: First prediction model using SARIMAX
 
 ![Showing a map, a panel for asset details and a chart that contains weather forecast information](./docs/images/energy_dashboard.png "Screenshot of Energy Management Dashboard")
 
 ## Next Steps
 
+- Trading decisions
 - Portfolio Aggregation reflecting error correlation of assets
 - Wind Asset prediction
 - Improving Prediction acccuracy of physical PV model (reflecting inverter types, bifaciality, improving diffuse model)
-- energy price prediction
+
+
 
 ## Architectural Decision Documentation
 
