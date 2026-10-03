@@ -2,13 +2,14 @@ FROM node:22-bookworm-slim
 
 WORKDIR /app
 
-COPY package*.json ./
+#COPY package*.json ./
 
 
+COPY . .
 
 RUN npm install && chown -R 1000:1000 /app/node_modules
 
-COPY . .
+
 
 RUN chown -R 1000:1000 /app/dist
 

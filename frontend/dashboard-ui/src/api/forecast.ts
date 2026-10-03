@@ -30,7 +30,7 @@ interface TimeSeriesTimeBase {
     resolution_seconds: number;
     slots: number;
 }
-interface Forecast {
+export interface Forecast {
 
     time_series_time_base: TimeSeriesTimeBase
 

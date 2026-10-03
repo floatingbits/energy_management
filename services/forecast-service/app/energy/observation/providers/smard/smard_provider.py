@@ -56,12 +56,76 @@ class SmardProvider(EnergyObservationProvider):
         resolution: str,
     ) -> ProviderObservationSeries:
         index = self.client.get_index(filter_id, request.region, resolution)
-        timestamp = self.series_start(index, request.start)
+        if request.start is None:
+            return self.fetch_latest_series(index, filter_id, variable, request, resolution)
+        return self.fetch_window_series(index, filter_id, variable, request, resolution)
+
+    def fetch_latest_series(
+        self,
+        index: list[int],
+        filter_id: str,
+        variable: ForecastMetric,
+        request: EnergyObservationRequest,
+        resolution: str,
+    ) -> ProviderObservationSeries:
+        timestamp = index[-1]
         raw = self.client.get_timeseries(filter_id, request.region, resolution, timestamp)
         values = [value for _, value in raw]
         return ProviderObservationSeries(
             variable_name=str(variable),
             start=datetime.fromtimestamp(timestamp / 1000, timezone.utc),
+            resolution=SMARD_RESOLUTIONS[resolution],
+            values=values,
+        )
+
+    def fetch_window_series(
+        self,
+        index: list[int],
+        filter_id: str,
+        variable: ForecastMetric,
+        request: EnergyObservationRequest,
+        resolution: str,
+    ) -> ProviderObservationSeries:
+        """Fetch and concatenate all SMARD series chunks covering the
+        requested window.
+
+        SMARD serves each series in fixed chunks; all chunks from the last
+        one starting at or before the requested start up to (exclusive) the
+        requested end are fetched. Values before start and after end are
+        not trimmed — the readers align on their grid. Without an end
+        only the chunk covering the start is fetched.
+        """
+        if request.start is None:
+            raise ValueError(
+                "A start must be given to fetch a window; None fetches the latest series"
+            )
+        start_ms = int(request.start.timestamp() * 1000)
+        end_ms = (
+            int(request.end.timestamp() * 1000)
+            if request.end is not None
+            else None
+        )
+        candidates = [ts for ts in index if ts <= start_ms]
+        if not candidates:
+            raise ValueError(
+                f"No SMARD series start at or before {request.start.isoformat()}"
+            )
+        first = candidates[-1]
+        timestamps = [
+            ts for ts in index
+            if first <= ts and (end_ms is None or ts < end_ms)
+        ]
+        if not timestamps:
+            timestamps = [first]
+        values = []
+        for timestamp in timestamps:
+            raw = self.client.get_timeseries(
+                filter_id, request.region, resolution, timestamp,
+            )
+            values.extend(value for _, value in raw)
+        return ProviderObservationSeries(
+            variable_name=str(variable),
+            start=datetime.fromtimestamp(timestamps[0] / 1000, timezone.utc),
             resolution=SMARD_RESOLUTIONS[resolution],
             values=values,
         )
@@ -73,19 +137,3 @@ class SmardProvider(EnergyObservationProvider):
         raise ValueError(
             f"Resolution {resolution} is not available in SMARD, choose one of {list(SMARD_RESOLUTIONS)}"
         )
-
-    def series_start(self, index: list[int], start: datetime | None) -> int:
-        """Return the timeseries start point covering the requested observation window.
-
-        None means the latest available series. Otherwise the latest start point in
-        the index that is earlier than or equal to the requested start is used.
-        """
-        if start is None:
-            return index[-1]
-        start_ms = int(start.timestamp() * 1000)
-        candidates = [ts for ts in index if ts <= start_ms]
-        if not candidates:
-            raise ValueError(
-                f"No SMARD series start at or before {start.isoformat()}"
-            )
-        return candidates[-1]

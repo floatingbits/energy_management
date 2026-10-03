@@ -8,7 +8,8 @@
     "status": "ACTIVE",
     "id": 4,
     "created_at": "2026-09-01T12:13:09.179188Z",
-    "updated_at": "2026-09-01T12:13:09.179191Z",
+    "updated_at": "2026-09-17T10:09:44.902865Z",
+    "revision": 3,
     "configuration": {
       "panel_area_m2": 4831.0,
       "efficiency": 0.207,

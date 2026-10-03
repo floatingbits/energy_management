@@ -31,12 +31,27 @@ def main():
         f"{ASSET_API_BASE_URL}/portfolios",
         OUTPUT_DIR / "portfolios.json",
     )
+
+    markets = ['DE-LU']
+
+    for market in markets:
+        export_json(
+            f"{FORECAST_API_BASE_URL}/energy-market-forecasts/?market={market}",
+            OUTPUT_DIR / "energy-market-forecasts" / f"market_{market}.json",
+        )
+
+
     for portfolio in portfolios:
 
 
+
+        export_json(
+            f"{FORECAST_API_BASE_URL}/portfolio-forecasts/{portfolio['id']}",
+            OUTPUT_DIR / "portfolio-forecasts" / f"{portfolio['id']}.json",
+        )
+
         assets_response = requests.get(f"{ASSET_API_BASE_URL}/portfolios/{portfolio['id']}/assets")
         assets_response.raise_for_status()
-
         assets = assets_response.json()
         print(assets)
         export_json(
