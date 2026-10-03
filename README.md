@@ -4,6 +4,12 @@
 Exploration project to get an idea of the scope of a software engineer with machine learning tasks
 in the field of direct marketing of renewable energies.
 
+## Approach
+The goal is to set up a system with all its components from mere asset management to trading decisions, so that the whole scope can be explored first. 
+This includes all necessary processes that would be needed in a production environment, including validation and observability.
+
+While scalability and production-grade metrics are always in the back of my head, the actual performance and technical accuracy of the individual components will only be considered in a second step. Beforehand, I will focus on solid foundations to provide the necessary flexibility to swap preliminary and naive implementations for better ones. 
+
 ## Description
 This project is supposed to simulate all the relevant aspects of an energy management platform:
 
