@@ -31,6 +31,16 @@ def main():
         f"{ASSET_API_BASE_URL}/portfolios",
         OUTPUT_DIR / "portfolios.json",
     )
+
+    markets = ['DE-LU']
+
+    for market in markets:
+        export_json(
+            f"{FORECAST_API_BASE_URL}/energy-market-forecasts/?market={market}",
+            OUTPUT_DIR / "energy-market-forecasts" / f"market_{market}.json",
+        )
+
+
     for portfolio in portfolios:
 
 

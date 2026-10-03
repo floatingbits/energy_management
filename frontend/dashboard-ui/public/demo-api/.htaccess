@@ -9,3 +9,7 @@ RewriteRule ^portfolio-forecasts/([0-9]+)/?$ portfolio-forecasts/$1.json [L]
 
 RewriteCond %{QUERY_STRING} ^(?:.*&)?latitude=([^&]+)(?:&[^&]*)*&longitude=([^&]+)(?:&|$)
 RewriteRule ^weather-forecasts/$ weather-forecasts/%1_%2.json [END]
+
+RewriteCond %{QUERY_STRING} ^(?:.*&)?market=([^&]+)(?:&|$)
+RewriteRule ^energy-market-forecasts/$ energy-market-forecasts/market_%1.json [END]
+
