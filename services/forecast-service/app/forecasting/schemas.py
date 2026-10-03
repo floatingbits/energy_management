@@ -1,6 +1,7 @@
 import json
 
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
@@ -41,6 +42,20 @@ class TimeSeriesValueResponse(BaseModel):
     )
 
 
+class TimeSeriesTimeBaseResponse(BaseModel):
+    id: int
+
+    start: datetime
+    resolution_seconds: int
+    slots: int
+
+    created_at: datetime
+
+    model_config = ConfigDict(
+        from_attributes=True
+    )
+
+
 class TimeSeriesResponse(BaseModel):
     """
     Eine Serie mit ihrer Wert-Definition (z. B.
@@ -54,19 +69,28 @@ class TimeSeriesResponse(BaseModel):
 
     values: list[TimeSeriesValueResponse]
 
-    model_config = ConfigDict(
-        from_attributes=True
-    )
+    # Optional: nur Repositories, die die zugrunde liegende Gruppe
+    # mitladen (z. B. Forecast-Basis-Standorte), geben eine Basis mit.
+    time_series_time_base: Optional["TimeSeriesTimeBaseResponse"] = None
 
-
-class TimeSeriesTimeBaseResponse(BaseModel):
-    id: int
-
-    start: datetime
-    resolution_seconds: int
-    slots: int
-
-    created_at: datetime
+    @model_validator(mode="before")
+    @classmethod
+    def _time_base_from_group(cls, data):
+        """Accept a TimeSeries model (from_attributes mode). The time
+        base lives on the parent group; expose it from there when the
+        group was eagerly loaded (Forecast-Basis references)."""
+        group = getattr(data, "time_series_group", None)
+        if group is not None and not hasattr(data, "time_series_time_base"):
+            try:
+                base = group.time_series_time_base
+            except AttributeError:
+                return data
+            if base is not None:
+                try:
+                    data.time_series_time_base = base
+                except Exception:
+                    return data
+        return data
 
     model_config = ConfigDict(
         from_attributes=True

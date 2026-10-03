@@ -1,23 +1,51 @@
+<script lang="ts">
+/**
+ * Pre-built chart series for views that assemble their data from
+ * other sources than a stored forecast group (e.g. the market view
+ * joining forecast and its basis runs). Carries its own timestamps
+ * and the metric that resolves the unit.
+ */
+export interface ChartEntry {
+    label: string;
+    /** The metric resolving the unit and label. */
+    metric: string;
+    /** [timestamp, value] pairs; nulls break the line. */
+    data: [timestamp: string, value: number | null][];
+    dashed?: boolean;
+}
+
+export default {};
+</script>
+
 <script setup lang="ts">
 
 import { computed } from "vue";
 import VChart from "vue-echarts";
 
 import type { WeatherForecast, AssetForecast, PortfolioForecast, TimeSeries } from "../api/forecast";
-import type { EnergyPriceForecast } from "../api/energy-market";
+import type { EnergyMarketForecast } from "../api/energy-market";
 import { decodeSeries, type DecodedSeries, type QuantileSeries, type ScalarSeries } from "../api/time-series-decode";
 import type { Asset } from "../api/asset";
 import type { Portfolio } from "../api/portfolio";
 
 const props = defineProps<{
-    forecast: WeatherForecast|AssetForecast|PortfolioForecast|EnergyPriceForecast,
+    /** Omitted when the chart is driven by `entries` instead. */
+    forecast?: WeatherForecast|AssetForecast|PortfolioForecast|EnergyMarketForecast,
     forecastType: string,
     asset?: Asset | null,
     portfolio?: Portfolio | null,
     /** Metrics to keep; all series are shown by default. */
-    metrics?: string[]
+    metrics?: string[],
+    /** Entry-driven mode; renders the given series as lines. */
+    entries?: ChartEntry[],
+    /** Chart title override for entry-driven mode. */
+    title?: string
 }>();
 const chartTitle = computed(() => {
+
+    if (props.title) {
+        return props.title;
+    }
 
     if (props.asset) {
         return `${props.asset.name} - ${props.forecastType} Forecast`;
@@ -27,7 +55,7 @@ const chartTitle = computed(() => {
         return `${props.portfolio.name} - Portfolio Forecast`;
     }
 
-    if ("market" in props.forecast) {
+    if (props.forecast && "market" in props.forecast) {
         return `${props.forecastType}-${props.forecast.market}`;
     }
 
@@ -38,6 +66,10 @@ const chartTitle = computed(() => {
 function createTimestamp(
     slotIndex: number
 ): string {
+
+    if (!props.forecast) {
+        throw new Error("No forecast prop to create slot timestamps from");
+    }
 
     const start = new Date(
         props.forecast.forecast.time_series_time_base.start
@@ -280,11 +312,40 @@ const strategyRegistry: Record<string, StrategyFn> = {
     scalar: scalarLineStrategy
 };
 
+/**
+ * Entry-driven rendering: one opaque line per entry; dashed
+ * entries carry the observation-phase line style.
+ */
+function entryStrategy(
+    entry: ChartEntry,
+    chartSeries: any[]
+): void {
+
+    chartSeries.push({
+        name: entry.label,
+        type: "line",
+        data: entry.data.map(pair => [
+            pair[0],
+            pair[1],
+            entry.metric
+        ]),
+        symbol: "none",
+        lineStyle: entry.dashed
+            ? { type: "dashed", opacity: 1 }
+            : { opacity: 1 },
+        connectNulls: false,
+        areaStyle: { opacity: 0 }
+    });
+}
+
 const option = computed(() => {
 
     const chartSeries = [];
 
-    props.forecast.forecast.time_series.forEach(series => {
+    if (props.entries) {
+        props.entries.forEach(entry => entryStrategy(entry, chartSeries));
+    } else {
+    props.forecast?.forecast.time_series.forEach(series => {
         // For the time being filter only series relevant to pv asset prediction
         const metrics = props.metrics ?? [
             'direct_normal_irradiance', 'diffuse_irradiance', 'active_power'
@@ -302,6 +363,7 @@ const option = computed(() => {
         }
 
     });
+    }
 
 
     return {

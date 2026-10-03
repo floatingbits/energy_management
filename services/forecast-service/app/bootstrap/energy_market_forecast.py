@@ -1,21 +1,19 @@
-from datetime import timedelta
-
 from app.bootstrap.energy_observation import create_smard_provider
 from app.bootstrap.weather import create_weather_service
 from app.database import SessionLocal
-from app.energy.price_forecast.core.market_forecaster import (
-    MarketPriceForecaster,
+from app.energy.market_forecast.core.market_forecaster import (
+    MarketForecastDispatcher,
 )
-from app.energy.price_forecast.service import (
-    EnergyPriceForecastService,
+from app.energy.market_forecast.service import (
+    EnergyMarketForecastService,
 )
-from app.energy.price_forecast.sarimax.config import SarimaxConfig
-from app.energy.price_forecast.sarimax.forecaster import (
-    SarimaxPriceForecaster,
+from app.energy.market_forecast.sarimax.config import SarimaxConfig
+from app.energy.market_forecast.sarimax.forecaster import (
+    SarimaxForecaster,
 )
 from app.forecasting.enums import ForecastMetric
-from app.repositories.energy_price_forecast_repository import (
-    EnergyPriceForecastRepository,
+from app.repositories.energy_market_forecast_repository import (
+    EnergyMarketForecastRepository,
 )
 from app.timeseries.providers.energy import EnergyTimeSeriesProvider
 from app.timeseries.providers.weather import WeatherTimeSeriesProvider
@@ -55,6 +53,13 @@ EXOGENOUS_VARIABLES: list[ForecastMetric] = [
     ForecastMetric.GLOBAL_SOLAR_IRRADIANCE,
 ]
 
+# Variables whose market forecast is implemented by the composed
+# forecaster. Extends when a variable can be served as model input
+# (observation or own forecast) and gets its own forecaster.
+FORECASTED_VARIABLES: list[ForecastMetric] = [
+    ForecastMetric.DAY_AHEAD_ELECTRICITY_PRICE,
+]
+
 
 def create_energy_time_series_provider(
     metric: ForecastMetric,
@@ -78,9 +83,9 @@ def create_weather_time_series_provider(
     )
 
 
-def create_market_price_forecaster(market: str):
-    """Compose the market-bound data providers and the SARIMAX model
-    wrapper for one market."""
+def create_market_forecaster(market: str, variable: ForecastMetric):
+    """Compose the market-variable-bound data providers and the SARIMAX
+    model wrapper for one market and variable."""
     sarimax_config = SarimaxConfig()
     exogenous_providers = {
         (variable + "-" + str(i)): create_weather_time_series_provider(
@@ -89,14 +94,13 @@ def create_market_price_forecaster(market: str):
         )
         for variable in EXOGENOUS_VARIABLES
             for i,location in enumerate(MARKET_LOCATIONS[market][str(variable)])
-
-
     }
 
-    return SarimaxPriceForecaster(
+    return SarimaxForecaster(
         market=market,
-        price_provider=create_energy_time_series_provider(
-            metric=ForecastMetric.DAY_AHEAD_ELECTRICITY_PRICE,
+        variable=variable,
+        endogenous_provider=create_energy_time_series_provider(
+            metric=variable,
             market=market,
         ),
         exogenous_providers=exogenous_providers,
@@ -104,23 +108,24 @@ def create_market_price_forecaster(market: str):
     )
 
 
-def create_price_forecaster() -> MarketPriceForecaster:
-    return MarketPriceForecaster(
+def create_forecaster() -> MarketForecastDispatcher:
+    return MarketForecastDispatcher(
         forecasters={
-            market: create_market_price_forecaster(market)
+            (market, variable): create_market_forecaster(market, variable)
             for market in MARKET_LOCATIONS
+            for variable in FORECASTED_VARIABLES
         }
     )
 
 
-def create_energy_price_forecast_repository():
-    return EnergyPriceForecastRepository(
+def create_energy_market_forecast_repository():
+    return EnergyMarketForecastRepository(
         SessionLocal(),
     )
 
 
-def create_energy_price_forecast_service():
-    return EnergyPriceForecastService(
-        forecaster=create_price_forecaster(),
-        repository=create_energy_price_forecast_repository(),
+def create_energy_market_forecast_service():
+    return EnergyMarketForecastService(
+        forecaster=create_forecaster(),
+        repository=create_energy_market_forecast_repository(),
     )

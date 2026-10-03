@@ -3,9 +3,10 @@ from datetime import timedelta
 import numpy as np
 import pytest
 
-from app.energy.price_forecast.sarimax.config import SarimaxConfig
-from app.energy.price_forecast.sarimax.forecaster import (
-    SarimaxPriceForecaster,
+from app.energy.market_forecast.core.domain import BasisRole
+from app.energy.market_forecast.sarimax.config import SarimaxConfig
+from app.energy.market_forecast.sarimax.forecaster import (
+    SarimaxForecaster,
     PROVIDER_NAME,
 )
 from app.forecasting.enums import ForecastMetric
@@ -56,35 +57,80 @@ def sarimax_config(**overrides) -> SarimaxConfig:
     return SarimaxConfig(**base)
 
 
-def test_forecast_fills_grid_with_prices():
-    price_provider = FakeTimeSeriesProvider()
-    forecaster = SarimaxPriceForecaster(
+def make_forecaster(exogenous: dict | None = None) -> SarimaxForecaster:
+    return SarimaxForecaster(
         market="DE-LU",
-        price_provider=price_provider,
+        variable=METRIC,
+        endogenous_provider=FakeTimeSeriesProvider(),
+        exogenous_providers=exogenous or {},
         config=sarimax_config(),
     )
+
+
+def test_forecast_fills_grid_with_prices():
+    forecaster = make_forecaster()
 
     forecast = forecaster.forecast(market="DE-LU", horizon=timedelta(hours=24))
 
     assert forecast.market == "DE-LU"
     assert forecast.provider == PROVIDER_NAME
+    assert forecast.variable == METRIC
     assert forecast.run.resolution == SLOT
     assert forecast.run.slots == 24
     prices = [value.values[0] for value in forecast.time_series[0].values]
     assert len(prices) == 24
     assert all(price is not None and np.isfinite(price) for price in prices)
 
-    past = price_provider.observed_requests[0]
+    past = forecaster.endogenous_provider.observed_requests[0]
     assert past.slots == 7 * 24
     assert isinstance(past, TimeRange)
 
 
-def test_forecast_pulls_past_and_future_from_exogenous_providers():
-    price_provider = FakeTimeSeriesProvider()
+def test_forecast_carries_its_basis_runs():
     exog_provider = FakeTimeSeriesProvider()
-    forecaster = SarimaxPriceForecaster(
+    forecaster = SarimaxForecaster(
         market="DE-LU",
-        price_provider=price_provider,
+        variable=METRIC,
+        endogenous_provider=FakeTimeSeriesProvider(),
+        exogenous_providers={
+            "temperature-0": exog_provider,
+            "temperature-1": FakeTimeSeriesProvider(),
+        },
+        config=sarimax_config(),
+    )
+
+    forecast = forecaster.forecast(market="DE-LU", horizon=timedelta(hours=6))
+
+    # one endogenous run plus one past and one future run per
+    # exogenous provider
+    assert len(forecast.basis) == 5
+    endogenous = [
+        item for item in forecast.basis
+        if item.role == BasisRole.ENDOGENOUS
+    ]
+    assert len(endogenous) == 1
+    assert endogenous[0].name == str(METRIC)
+    assert endogenous[0].run.series.metric == METRIC
+    assert endogenous[0].run.base.slots == 7 * 24
+
+    exogenous_fit = [
+        item for item in forecast.basis
+        if item.role == BasisRole.EXOGENOUS and item.metadata["phase"] == "fit"
+    ]
+    exogenous_predict = [
+        item for item in forecast.basis
+        if item.role == BasisRole.EXOGENOUS and item.metadata["phase"] == "predict"
+    ]
+    assert [item.name for item in exogenous_fit] == ["temperature-0", "temperature-1"]
+    assert all(item.run.base.slots == 6 for item in exogenous_predict)
+
+
+def test_forecast_pulls_past_and_future_from_exogenous_providers():
+    exog_provider = FakeTimeSeriesProvider()
+    forecaster = SarimaxForecaster(
+        market="DE-LU",
+        variable=METRIC,
+        endogenous_provider=FakeTimeSeriesProvider(),
         exogenous_providers={
             ForecastMetric.TEMPERATURE: exog_provider,
             ForecastMetric.TOTAL_ENERGY_CONSUMPTION: FakeTimeSeriesProvider(),
@@ -100,21 +146,25 @@ def test_forecast_pulls_past_and_future_from_exogenous_providers():
     assert exog_provider.forecast_requests[0].slots == 6
 
 
-def test_forecast_validates_market_binding():
-    forecaster = SarimaxPriceForecaster(
-        market="DE-LU",
-        price_provider=FakeTimeSeriesProvider(),
-        config=sarimax_config(),
-    )
+def test_forecast_validates_market_and_variable_binding():
+    forecaster = make_forecaster()
 
     with pytest.raises(ValueError, match="market"):
         forecaster.forecast(market="FR", horizon=timedelta(hours=24))
 
+    with pytest.raises(ValueError, match="market"):
+        forecaster.forecast(
+            market="DE-LU",
+            horizon=timedelta(hours=24),
+            variable=ForecastMetric.ELECTRICITY_PRICE,
+        )
+
 
 def test_forecast_rejects_short_history():
-    forecaster = SarimaxPriceForecaster(
+    forecaster = SarimaxForecaster(
         market="DE-LU",
-        price_provider=FakeTimeSeriesProvider(),
+        variable=METRIC,
+        endogenous_provider=FakeTimeSeriesProvider(),
         config=sarimax_config(history=timedelta(hours=12)),
     )
 

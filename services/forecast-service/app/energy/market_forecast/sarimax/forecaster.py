@@ -4,20 +4,25 @@ from datetime import datetime, timedelta, timezone
 import numpy as np
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 
-from app.energy.price_forecast.core.domain import EnergyPriceForecast
-from app.energy.price_forecast.core.forecaster import PriceForecaster
-from app.energy.price_forecast.sarimax.config import SarimaxConfig
+from app.energy.market_forecast.core.domain import (
+    BasisRole,
+    EnergyMarketForecast,
+    ForecastBasis,
+)
+from app.energy.market_forecast.core.forecaster import EnergyMarketForecaster
+from app.forecasting.enums import ForecastMetric
+from app.energy.market_forecast.sarimax.config import SarimaxConfig
 from app.forecasting.domain.time_series import TimeSeries
 from app.forecasting.domain.time_series_time_base import TimeSeriesTimeBase
 from app.forecasting.domain.time_series_value import TimeSeriesValue
 from app.forecasting.encoding.definitions import ScalarDefinition
-from app.timeseries.domain import TimeRange
+from app.timeseries.domain import TimeRange, TimeSeriesRun
 from app.timeseries.provider import TimeSeriesProvider
 
 PROVIDER_NAME = "sarimax"
 
 
-class SarimaxPriceForecaster(PriceForecaster):
+class SarimaxForecaster(EnergyMarketForecaster):
     """A thin SARIMAX model wrapper.
 
     It gathers the endogenous past from one provider and, for every
@@ -26,20 +31,23 @@ class SarimaxPriceForecaster(PriceForecaster):
     requested span. Everything beyond that — data sources, window
     policies, non-temporal context (market, location) — is handled by
     the factory composing the providers and by the providers
-    themselves. The providers are market- and location-bound, so the
-    forecaster is bound to exactly the market passed at composition
-    time; the market argument of forecast is validated against it.
+    themselves. The providers are market-, location- and
+    variable-bound, so the forecaster is bound to exactly the market
+    and variable passed at composition time; the forecast method
+    validates both arguments against them.
     """
 
     def __init__(
         self,
         market: str,
-        price_provider: TimeSeriesProvider,
+        variable: ForecastMetric,
+        endogenous_provider: TimeSeriesProvider,
         exogenous_providers: dict | None = None,
         config: SarimaxConfig = None,
     ):
         self.market = market
-        self.price_provider = price_provider
+        self.variable = variable
+        self.endogenous_provider = endogenous_provider
         self.exogenous_providers = exogenous_providers or {}
         self.config = config or SarimaxConfig()
 
@@ -48,11 +56,14 @@ class SarimaxPriceForecaster(PriceForecaster):
         market: str,
         horizon: timedelta,
         resolution: timedelta | None = None,
-    ) -> EnergyPriceForecast:
-        if market != self.market:
+        variable: ForecastMetric = None,
+    ) -> EnergyMarketForecast:
+        variable = variable or self.variable
+        if market != self.market or variable != self.variable:
             raise ValueError(
-                f"This forecaster is composed for market {self.market}, "
-                f"not for market {market}"
+                f"This forecaster is composed for market {self.market} "
+                f"and variable {self.variable}, "
+                f"not for market {market} and variable {variable}"
             )
         resolution = resolution or self.config.resolution
 
@@ -76,7 +87,7 @@ class SarimaxPriceForecaster(PriceForecaster):
             resolution=resolution,
         )
 
-        endog_run = self.price_provider.get_observed(past)
+        endog_run = self.endogenous_provider.get_observed(past)
         endog = np.asarray(endog_run.series.values, dtype="float64")
         if len(endog) < self._features_needed():
             raise ValueError(
@@ -84,10 +95,18 @@ class SarimaxPriceForecaster(PriceForecaster):
                 f"for market {market}, got {len(endog)}"
             )
 
-        past_exog, future_exog = self._exog_matrix(past, future)
+        exogenous, past_exog, future_exog = self._exog_matrix(past, future)
 
         return self._predict(
-            endog, past_exog, future_exog, market, now, resolution, slots,
+            endog,
+            past_exog,
+            future_exog,
+            endog_run,
+            exogenous,
+            market,
+            now,
+            resolution,
+            slots,
             metric=endog_run.series.metric,
         )
 
@@ -98,17 +117,22 @@ class SarimaxPriceForecaster(PriceForecaster):
         self,
         past: TimeRange,
         future: TimeRange,
-    ) -> tuple[np.ndarray | None, np.ndarray | None]:
+    ) -> tuple[list[tuple[str, TimeSeriesRun, TimeSeriesRun]],
+               np.ndarray | None, np.ndarray | None]:
+        """Gather past and future columns per exogenous provider."""
+        exogenous = []
         past_columns = []
         future_columns = []
-        for provider in self.exogenous_providers.values():
+        for name, provider in self.exogenous_providers.items():
             past_run = provider.get_observed(past)
             future_run = provider.get_forecast(future)
+            exogenous.append((name, past_run, future_run))
             past_columns.append(np.asarray(past_run.series.values, dtype="float64"))
             future_columns.append(
                 np.asarray(future_run.series.values, dtype="float64")
             )
         return (
+            exogenous,
             np.column_stack(past_columns) if past_columns else None,
             np.column_stack(future_columns) if future_columns else None,
         )
@@ -121,12 +145,14 @@ class SarimaxPriceForecaster(PriceForecaster):
         endog: np.ndarray,
         past_exog: np.ndarray | None,
         future_exog: np.ndarray | None,
+        endog_run: TimeSeriesRun,
+        exogenous: list[tuple[str, TimeSeriesRun, TimeSeriesRun]],
         market: str,
         now: datetime,
         resolution: timedelta,
         slots: int,
         metric,
-    ) -> EnergyPriceForecast:
+    ) -> EnergyMarketForecast:
         """Fit SARIMAX on the training window and predict the future slots."""
         model = SARIMAX(
             endog,
@@ -140,7 +166,30 @@ class SarimaxPriceForecaster(PriceForecaster):
         ).predicted_mean
         predicted = np.asarray(predicted, dtype="float64").ravel()
 
-        return EnergyPriceForecast(
+        basis = [
+            ForecastBasis(
+                run=endog_run,
+                role=BasisRole.ENDOGENOUS,
+                name=str(self.variable),
+            ),
+        ]
+        for name, past_run, future_run in exogenous:
+            basis.extend([
+                ForecastBasis(
+                    run=past_run,
+                    role=BasisRole.EXOGENOUS,
+                    name=name,
+                    metadata={"phase": "fit"},
+                ),
+                ForecastBasis(
+                    run=future_run,
+                    role=BasisRole.EXOGENOUS,
+                    name=name,
+                    metadata={"phase": "predict"},
+                ),
+            ])
+
+        return EnergyMarketForecast(
             market=market,
             provider=PROVIDER_NAME,
             run=TimeSeriesTimeBase(
@@ -155,6 +204,7 @@ class SarimaxPriceForecaster(PriceForecaster):
                     value_definition=ScalarDefinition(),
                 )
             ],
+            basis=basis,
         )
 
     def _features_needed(self) -> int:

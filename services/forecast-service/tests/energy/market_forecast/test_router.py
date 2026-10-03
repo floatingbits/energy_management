@@ -8,17 +8,17 @@ from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.pool import StaticPool
 
 import app.forecasting.models  # noqa: F401 - register forecasting tables
-import app.energy.price_forecast.models  # noqa: F401 - register price forecast table
+import app.energy.market_forecast.models  # noqa: F401 - register price forecast table
 from app.database import Base, get_db
-from app.energy.price_forecast.core.domain import EnergyPriceForecast
-from app.energy.price_forecast.router import router
+from app.energy.market_forecast.core.domain import EnergyMarketForecast
+from app.energy.market_forecast.router import router
 from app.forecasting.domain.time_series import TimeSeries
 from app.forecasting.domain.time_series_time_base import TimeSeriesTimeBase
 from app.forecasting.domain.time_series_value import TimeSeriesValue
 from app.forecasting.encoding.definitions import ScalarDefinition
 from app.forecasting.enums import ForecastMetric
-from app.repositories.energy_price_forecast_repository import (
-    EnergyPriceForecastRepository,
+from app.repositories.energy_market_forecast_repository import (
+    EnergyMarketForecastRepository,
 )
 
 
@@ -49,8 +49,8 @@ def client(db_session: Session) -> TestClient:
     return TestClient(app)
 
 
-def price_forecast() -> EnergyPriceForecast:
-    return EnergyPriceForecast(
+def market_forecast() -> EnergyMarketForecast:
+    return EnergyMarketForecast(
         market="DE-LU",
         provider="sarimax",
         run=TimeSeriesTimeBase(
@@ -71,12 +71,12 @@ def price_forecast() -> EnergyPriceForecast:
     )
 
 
-def test_get_price_forecasts_returns_stored_forecasts(db_session, client):
-    repository = EnergyPriceForecastRepository(db_session)
+def test_get_market_forecasts_returns_stored_forecasts(db_session, client):
+    repository = EnergyMarketForecastRepository(db_session)
 
-    repository.save(price_forecast())
+    repository.save(market_forecast())
 
-    response = client.get("/energy-price-forecasts/")
+    response = client.get("/energy-market-forecasts/")
 
     assert response.status_code == 200
     body = response.json()
@@ -94,7 +94,7 @@ def test_get_price_forecasts_returns_stored_forecasts(db_session, client):
     ]
 
 
-def test_get_price_forecast_by_unknown_id_returns_404(client):
-    response = client.get("/energy-price-forecasts/999")
+def test_get_market_forecast_by_unknown_id_returns_404(client):
+    response = client.get("/energy-market-forecasts/999")
 
     assert response.status_code == 404
