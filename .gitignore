@@ -1,7 +1,7 @@
 .idea
 
 .env
-
+node_modules
 .cache.sqlite
 .coverage
 data/real_pv/br-pvgen
