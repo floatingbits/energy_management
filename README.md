@@ -1,7 +1,7 @@
 # Energy Management
 
 ## Purpose
-Exploration project to get an idea of the scope of a software engineer with machine learning tasks
+This is an exploration project. I want to get an idea of the scope of a software engineer with machine learning tasks
 in the field of direct marketing of renewable energies.
 
 ## Approach
@@ -13,7 +13,7 @@ While scalability and production-grade metrics are always in the back of my head
 ## Description
 This project is supposed to simulate all the relevant aspects of an energy management platform:
 
-- Forecasts (Energy pricing and production)
+- Forecasting of time series (Energy pricing and production)
 - Optimization (risk optimized trading recommendations)
 - Event driven architecture
 - Independent microservices (simulated in a mono repo)
