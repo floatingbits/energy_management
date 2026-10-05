@@ -39,6 +39,14 @@ services:
     networks:
       - observability
 
+  dependency-analyzer:
+    build:
+      context: ./dependency-analyzer
+    volumes:
+      - ../services/asset-service:/projects/asset-service:ro
+      - ../services/forecast-service:/projects/forecast-service:ro
+      - ./dependency-artifacts:/artifacts
+
 volumes:
   prometheus-data:
   grafana-data:
