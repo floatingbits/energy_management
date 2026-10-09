@@ -38,6 +38,8 @@ services:
       - prometheus
     networks:
       - observability
+    environment:
+      GF_PLUGINS_PREINSTALL: "grafana-graphviz-panel,yesoreyeram-infinity-datasource"
 
   dependency-analyzer:
     build:
@@ -46,6 +48,9 @@ services:
       - ../services/asset-service:/projects/asset-service:ro
       - ../services/forecast-service:/projects/forecast-service:ro
       - ./dependency-artifacts:/artifacts
+    restart: unless-stopped
+    networks:
+      - observability
 
 volumes:
   prometheus-data:
