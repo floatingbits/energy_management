@@ -1,0 +1,4 @@
+pydeps
+pydot
+fastapi
+uvicorn[standard]
