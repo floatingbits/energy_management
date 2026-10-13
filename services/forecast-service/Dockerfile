@@ -19,6 +19,10 @@ COPY packages/event-contracts /tmp/event-contracts
 
 RUN pip install /tmp/event-contracts
 
+COPY packages/em-timeseries /tmp/em-timeseries
+
+RUN pip install /tmp/em-timeseries
+
 # For prod, where no volume is mounted and all is included in image
 COPY ${SERVICE_PATH}/app ./app
 

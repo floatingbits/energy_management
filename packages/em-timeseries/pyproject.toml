@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "em-timeseries"
+version = "0.1.0"
+description = "Shared, semantics-agnostic time series structures for the Energy Trading Platform"
+requires-python = ">=3.12"
+
+# pandas is imported lazily by em_timeseries.grid.interpolate_missing;
+# services that use it already depend on it.

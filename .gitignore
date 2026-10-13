@@ -18,3 +18,5 @@ frontend/dashboard-ui/dist
 test-artifacts/*/*
 !test-artifacts/*/.gitkeep
 
+packages/*/build
+
