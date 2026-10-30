@@ -42,15 +42,15 @@ actual asset). Further investigations derived from errors correlating with asset
 - Observability Dashboards with Grafana and Prometheus: Starting with SW-Engineering/Tests+Coverage
 - Simple/naive portfolio power aggregation WITHOUT reflecting de-correlated prediction errors
 - energy price prediction: First prediction model using SARIMAX
+- first (naive/dummy) version of day-ahead market trading decision to complete the data flow end-to-end.
 
 ![Showing a map, a panel for asset details and a chart that contains weather forecast information](./docs/images/energy_dashboard.png "Screenshot of Energy Management Dashboard")
 
 ## Next Steps
 
-- Trading decisions
-- Portfolio Aggregation reflecting error correlation of assets
-- Wind Asset prediction
-- Improving Prediction acccuracy of physical PV model (reflecting inverter types, bifaciality, improving diffuse model)
+- Establishing a robust system of requirements and process triggers to achieve reliable, up-to-date data flows (predictions to decisions)
+- Improving the quality of forecasts (pv, portfolio, wind) and decisions (day-ahead), along with validation mechanisms and quantitative metrics
+- Improving observability for development (CI automation, dependency visualization, and code flow) and operation (logging)
 
 
 
