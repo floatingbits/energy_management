@@ -24,7 +24,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Start environment
-        run: docker compose -f compose.demo-export.yml up -d --build
+        run: docker compose -f compose.base.yml -f compose.demo-export.yml up -d --build
 
       - name: Set up DB schema and fixtures
         run: ./dev/set_up.sh
