@@ -40,7 +40,7 @@ jobs:
         run: python dev/export_static_api.py
 
       - name: Build UI
-        run: python dev/build_ui.py
+        run: ./dev/build_ui.sh
 
       - name: Deploy snapshot
         run: ./dev/deploy_to_demo.sh
