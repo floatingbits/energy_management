@@ -18,7 +18,7 @@ from app.weather.uncertainty.predictor_model import UncertaintyEstimatorPredicto
 
 def create_location_resolver():
     return WeatherLocationResolver(
-        grid_size=0.1
+        grid_size=0.2
     )
 
 def create_uncertainty_estimator():
