@@ -1,38 +1,434 @@
 [
   {
-    "name": "PV Park Berlin",
+    "name": "BR-PV PS_001",
     "asset_type": "solar",
     "installed_power_kw": 5000.0,
-    "latitude": 52.5,
-    "longitude": 13.04,
+    "latitude": -21.6,
+    "longitude": -47.2,
     "status": "ACTIVE",
-    "id": 3,
-    "created_at": "2026-08-09T08:13:01.731603Z",
-    "updated_at": "2026-09-17T10:09:23.321364Z",
-    "revision": 3,
+    "id": 1,
+    "created_at": "2026-10-31T10:29:49.762882Z",
+    "updated_at": "2026-10-31T10:29:49.762885Z",
+    "revision": 0,
     "configuration": {
-      "panel_area_m2": 25000.0,
-      "efficiency": 0.2,
-      "tilt_deg": 30.0,
-      "azimuth_deg": 180.0
+      "panel_area_m2": 24154.59,
+      "efficiency": 0.207,
+      "tilt_deg": 21.6,
+      "azimuth_deg": 0.0
     }
   },
   {
-    "name": "PV Dach Hamburg",
+    "name": "BR-PV PS_002",
     "asset_type": "solar",
-    "installed_power_kw": 12.0,
-    "latitude": 53.5,
-    "longitude": 10.0,
+    "installed_power_kw": 1000.0,
+    "latitude": -22.5,
+    "longitude": -43.6,
     "status": "ACTIVE",
-    "id": 1,
-    "created_at": "2026-08-04T18:37:49.049069Z",
-    "updated_at": "2026-09-17T10:10:56.764218Z",
-    "revision": 14,
+    "id": 2,
+    "created_at": "2026-10-31T10:29:49.787791Z",
+    "updated_at": "2026-10-31T10:29:49.787794Z",
+    "revision": 0,
     "configuration": {
-      "panel_area_m2": 55.0,
-      "efficiency": 0.21,
-      "tilt_deg": 35.0,
-      "azimuth_deg": 180.0
+      "panel_area_m2": 4830.92,
+      "efficiency": 0.207,
+      "tilt_deg": 22.5,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_003",
+    "asset_type": "solar",
+    "installed_power_kw": 1000.0,
+    "latitude": -22.5,
+    "longitude": -43.6,
+    "status": "ACTIVE",
+    "id": 3,
+    "created_at": "2026-10-31T10:29:49.802137Z",
+    "updated_at": "2026-10-31T10:29:49.802139Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 4830.92,
+      "efficiency": 0.207,
+      "tilt_deg": 22.5,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_004",
+    "asset_type": "solar",
+    "installed_power_kw": 2000.0,
+    "latitude": -23.4,
+    "longitude": -47.1,
+    "status": "ACTIVE",
+    "id": 4,
+    "created_at": "2026-10-31T10:29:49.817554Z",
+    "updated_at": "2026-10-31T10:29:49.817557Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 9478.67,
+      "efficiency": 0.211,
+      "tilt_deg": 23.4,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_005",
+    "asset_type": "solar",
+    "installed_power_kw": 2000.0,
+    "latitude": -17.1,
+    "longitude": -48.3,
+    "status": "ACTIVE",
+    "id": 5,
+    "created_at": "2026-10-31T10:29:49.832119Z",
+    "updated_at": "2026-10-31T10:29:49.832121Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 9661.84,
+      "efficiency": 0.207,
+      "tilt_deg": 17.1,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_006",
+    "asset_type": "solar",
+    "installed_power_kw": 4000.0,
+    "latitude": -22.9,
+    "longitude": -47.3,
+    "status": "ACTIVE",
+    "id": 6,
+    "created_at": "2026-10-31T10:29:49.848153Z",
+    "updated_at": "2026-10-31T10:29:49.848155Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 18957.35,
+      "efficiency": 0.211,
+      "tilt_deg": 22.9,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_007",
+    "asset_type": "solar",
+    "installed_power_kw": 1000.0,
+    "latitude": -22.5,
+    "longitude": -43.6,
+    "status": "ACTIVE",
+    "id": 7,
+    "created_at": "2026-10-31T10:29:49.862475Z",
+    "updated_at": "2026-10-31T10:29:49.862477Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 4716.98,
+      "efficiency": 0.212,
+      "tilt_deg": 22.5,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_008",
+    "asset_type": "solar",
+    "installed_power_kw": 4000.0,
+    "latitude": -21.6,
+    "longitude": -50.1,
+    "status": "ACTIVE",
+    "id": 8,
+    "created_at": "2026-10-31T10:29:49.878481Z",
+    "updated_at": "2026-10-31T10:29:49.878485Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 19138.76,
+      "efficiency": 0.209,
+      "tilt_deg": 21.6,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_009",
+    "asset_type": "solar",
+    "installed_power_kw": 1000.0,
+    "latitude": -21.6,
+    "longitude": -50.1,
+    "status": "ACTIVE",
+    "id": 9,
+    "created_at": "2026-10-31T10:29:49.892512Z",
+    "updated_at": "2026-10-31T10:29:49.892514Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 4739.34,
+      "efficiency": 0.211,
+      "tilt_deg": 21.6,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_010",
+    "asset_type": "solar",
+    "installed_power_kw": 3000.0,
+    "latitude": -23.4,
+    "longitude": -47.1,
+    "status": "ACTIVE",
+    "id": 10,
+    "created_at": "2026-10-31T10:29:49.908659Z",
+    "updated_at": "2026-10-31T10:29:49.908662Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 14150.94,
+      "efficiency": 0.212,
+      "tilt_deg": 23.4,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_011",
+    "asset_type": "solar",
+    "installed_power_kw": 3000.0,
+    "latitude": -21.6,
+    "longitude": -50.1,
+    "status": "ACTIVE",
+    "id": 11,
+    "created_at": "2026-10-31T10:29:49.926686Z",
+    "updated_at": "2026-10-31T10:29:49.926691Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 14150.94,
+      "efficiency": 0.212,
+      "tilt_deg": 21.6,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_012",
+    "asset_type": "solar",
+    "installed_power_kw": 5000.0,
+    "latitude": -17.1,
+    "longitude": -53.3,
+    "status": "ACTIVE",
+    "id": 12,
+    "created_at": "2026-10-31T10:29:49.948054Z",
+    "updated_at": "2026-10-31T10:29:49.948057Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 23923.44,
+      "efficiency": 0.209,
+      "tilt_deg": 17.1,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_013",
+    "asset_type": "solar",
+    "installed_power_kw": 1000.0,
+    "latitude": -21.6,
+    "longitude": -47.2,
+    "status": "ACTIVE",
+    "id": 13,
+    "created_at": "2026-10-31T10:29:49.963487Z",
+    "updated_at": "2026-10-31T10:29:49.963489Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 4830.92,
+      "efficiency": 0.207,
+      "tilt_deg": 21.6,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_015",
+    "asset_type": "solar",
+    "installed_power_kw": 2550.0,
+    "latitude": -17.1,
+    "longitude": -47.3,
+    "status": "ACTIVE",
+    "id": 14,
+    "created_at": "2026-10-31T10:29:49.981081Z",
+    "updated_at": "2026-10-31T10:29:49.981085Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 12318.84,
+      "efficiency": 0.207,
+      "tilt_deg": 17.1,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_028",
+    "asset_type": "solar",
+    "installed_power_kw": 1000.0,
+    "latitude": -21.6,
+    "longitude": -47.2,
+    "status": "ACTIVE",
+    "id": 15,
+    "created_at": "2026-10-31T10:29:49.997303Z",
+    "updated_at": "2026-10-31T10:29:49.997307Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 4464.29,
+      "efficiency": 0.224,
+      "tilt_deg": 21.6,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_033",
+    "asset_type": "solar",
+    "installed_power_kw": 3000.0,
+    "latitude": -21.6,
+    "longitude": -47.2,
+    "status": "ACTIVE",
+    "id": 16,
+    "created_at": "2026-10-31T10:29:50.013306Z",
+    "updated_at": "2026-10-31T10:29:50.013309Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 13698.63,
+      "efficiency": 0.219,
+      "tilt_deg": 21.6,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_034",
+    "asset_type": "solar",
+    "installed_power_kw": 4000.0,
+    "latitude": -21.6,
+    "longitude": -50.1,
+    "status": "ACTIVE",
+    "id": 17,
+    "created_at": "2026-10-31T10:29:50.032409Z",
+    "updated_at": "2026-10-31T10:29:50.032412Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 19704.43,
+      "efficiency": 0.203,
+      "tilt_deg": 21.6,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_035",
+    "asset_type": "solar",
+    "installed_power_kw": 4000.0,
+    "latitude": -21.6,
+    "longitude": -47.2,
+    "status": "ACTIVE",
+    "id": 18,
+    "created_at": "2026-10-31T10:29:50.048867Z",
+    "updated_at": "2026-10-31T10:29:50.048871Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 18867.92,
+      "efficiency": 0.212,
+      "tilt_deg": 21.6,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_036",
+    "asset_type": "solar",
+    "installed_power_kw": 1900.0,
+    "latitude": -19.8,
+    "longitude": -50.2,
+    "status": "ACTIVE",
+    "id": 19,
+    "created_at": "2026-10-31T10:29:50.064668Z",
+    "updated_at": "2026-10-31T10:29:50.064671Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 8962.26,
+      "efficiency": 0.212,
+      "tilt_deg": 19.8,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_037",
+    "asset_type": "solar",
+    "installed_power_kw": 2000.0,
+    "latitude": -22.5,
+    "longitude": -44.9,
+    "status": "ACTIVE",
+    "id": 20,
+    "created_at": "2026-10-31T10:29:50.082259Z",
+    "updated_at": "2026-10-31T10:29:50.082262Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 9478.67,
+      "efficiency": 0.211,
+      "tilt_deg": 22.5,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_038",
+    "asset_type": "solar",
+    "installed_power_kw": 2000.0,
+    "latitude": -21.6,
+    "longitude": -50.1,
+    "status": "ACTIVE",
+    "id": 21,
+    "created_at": "2026-10-31T10:29:50.098255Z",
+    "updated_at": "2026-10-31T10:29:50.098258Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 9433.96,
+      "efficiency": 0.212,
+      "tilt_deg": 21.6,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_039",
+    "asset_type": "solar",
+    "installed_power_kw": 4000.0,
+    "latitude": -23.4,
+    "longitude": -47.1,
+    "status": "ACTIVE",
+    "id": 22,
+    "created_at": "2026-10-31T10:29:50.114769Z",
+    "updated_at": "2026-10-31T10:29:50.114772Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 18867.92,
+      "efficiency": 0.212,
+      "tilt_deg": 23.4,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_040",
+    "asset_type": "solar",
+    "installed_power_kw": 1000.0,
+    "latitude": -23.4,
+    "longitude": -50.2,
+    "status": "ACTIVE",
+    "id": 23,
+    "created_at": "2026-10-31T10:29:50.132579Z",
+    "updated_at": "2026-10-31T10:29:50.132582Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 4784.69,
+      "efficiency": 0.209,
+      "tilt_deg": 23.4,
+      "azimuth_deg": 0.0
+    }
+  },
+  {
+    "name": "BR-PV PS_041",
+    "asset_type": "solar",
+    "installed_power_kw": 1700.0,
+    "latitude": -20.0,
+    "longitude": -47.3,
+    "status": "ACTIVE",
+    "id": 24,
+    "created_at": "2026-10-31T10:29:50.147815Z",
+    "updated_at": "2026-10-31T10:29:50.147819Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 8212.56,
+      "efficiency": 0.207,
+      "tilt_deg": 20.0,
+      "azimuth_deg": 0.0
     }
   }
 ]
