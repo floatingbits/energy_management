@@ -1,13 +1,4 @@
 services:
-  asset-db:
-    ports: !reset []
-
-  forecast-db:
-    ports: !reset []
-
-  trading-db:
-    ports: !reset []
-
   rabbitmq:
     ports: !reset []
 
