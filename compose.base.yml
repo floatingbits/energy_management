@@ -216,30 +216,30 @@ services:
   # Exchange Service
   #######################################################
 
-  exchange-service:
-    build:
-      context: .
-      dockerfile: services/exchange-service/Dockerfile
-      args:
-        SERVICE_PATH: services/exchange-service
-
-    depends_on:
-      exchange-db:
-        condition: service_started
-      rabbitmq:
-        condition: service_healthy
-
-    environment:
-      RABBITMQ_HOST: rabbitmq
-
-    ports:
-      - "8004:8000"
-
-    volumes:
-      - ./services/exchange-service:/app
-
-    networks:
-      - energy-net
+#  exchange-service:
+#    build:
+#      context: .
+#      dockerfile: services/exchange-service/Dockerfile
+#      args:
+#        SERVICE_PATH: services/exchange-service
+#
+#    depends_on:
+#      exchange-db:
+#        condition: service_started
+#      rabbitmq:
+#        condition: service_healthy
+#
+#    environment:
+#      RABBITMQ_HOST: rabbitmq
+#
+#    ports:
+#      - "8004:8000"
+#
+#    volumes:
+#      - ./services/exchange-service:/app
+#
+#    networks:
+#      - energy-net
   #######################################################
   # Event Consumer Service
   #######################################################

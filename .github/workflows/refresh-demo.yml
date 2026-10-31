@@ -1,9 +1,9 @@
 name: Update Demo Data
 
 on:
-  schedule:
-    - cron: '0 5 * * *'
-    - cron: '0 17 * * *'
+  #schedule:
+  #  - cron: '0 5 * * *'
+  #  - cron: '0 17 * * *'
 
   workflow_dispatch:
 
@@ -23,8 +23,11 @@ jobs:
       - name: Install python dependencies for local scripts
         run: pip install -r requirements.txt
 
+      - name: Make ui dist dir for compatibility
+        run: mkdir frontend/dashboard-ui/dist
+
       - name: Start environment
-        run: docker compose -f compose.demo-export.yml up -d --build
+        run: docker compose -f compose.base.yml -f compose.demo-export.yml up -d --build
 
       - name: Set up DB schema and fixtures
         run: ./dev/set_up.sh
@@ -37,7 +40,7 @@ jobs:
         run: python dev/export_static_api.py
 
       - name: Build UI
-        run: python dev/build_ui.py
+        run: ./dev/build_ui.sh
 
       - name: Deploy snapshot
         run: ./dev/deploy_to_demo.sh

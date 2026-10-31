@@ -1,6 +1,3 @@
-include:
-  - compose.base.yml
-
 services:
   asset-db:
     ports: !reset []
@@ -15,6 +12,6 @@ services:
     ports: !reset []
 
   dashboard-ui:
-    ports: !reset [ ]
+    ports: !reset []
 
 
