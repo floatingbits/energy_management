@@ -1,16 +1,16 @@
 [
   {
-    "id": 1,
-    "name": "PV Portfolio DE",
-    "description": "Test Portfolio with PV-Assets in DE",
-    "created_at": "2026-09-01T11:58:27.228481Z",
-    "updated_at": "2026-09-01T11:58:27.228486Z"
+    "id": 2,
+    "name": "Demo PV Portfolio Germany",
+    "description": "PV only assets in Germany",
+    "created_at": "2026-10-31T10:29:50.164336Z",
+    "updated_at": "2026-10-31T10:29:50.193310Z"
   },
   {
-    "id": 2,
-    "name": "PV Portfolio BR",
-    "description": "Test Portfolio with PV-Assets in BR, corresponding to real assets from BR PVGEN dataset",
-    "created_at": "2026-09-01T11:59:31.510723Z",
-    "updated_at": "2026-09-01T11:59:31.510728Z"
+    "id": 1,
+    "name": "BR-PV Real Brazilian Assets",
+    "description": "Assets from the 'BR-PV' dataset on zenodo. Locations are estimated based on federal state information and the matching of weather data: recorded weather at the asset's location vs historical weather report.",
+    "created_at": "2026-10-31T10:29:49.745559Z",
+    "updated_at": "2026-10-31T10:29:50.160591Z"
   }
 ]

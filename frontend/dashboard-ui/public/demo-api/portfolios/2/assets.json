@@ -1,20 +1,38 @@
 [
   {
-    "name": "BR PVGEN PS_002",
+    "name": "PV Park Berlin",
     "asset_type": "solar",
-    "installed_power_kw": 1000.0,
-    "latitude": -22.5,
-    "longitude": -43.6,
+    "installed_power_kw": 5000.0,
+    "latitude": 52.5,
+    "longitude": 13.04,
     "status": "ACTIVE",
-    "id": 4,
-    "created_at": "2026-09-01T12:13:09.179188Z",
-    "updated_at": "2026-09-17T10:09:44.902865Z",
-    "revision": 3,
+    "id": 25,
+    "created_at": "2026-10-31T10:29:50.167197Z",
+    "updated_at": "2026-10-31T10:29:50.167200Z",
+    "revision": 0,
     "configuration": {
-      "panel_area_m2": 4831.0,
-      "efficiency": 0.207,
-      "tilt_deg": 22.5,
-      "azimuth_deg": 0.0
+      "panel_area_m2": 25000.0,
+      "efficiency": 0.2,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 180.0
+    }
+  },
+  {
+    "name": "PV Dach Hamburg",
+    "asset_type": "solar",
+    "installed_power_kw": 12.0,
+    "latitude": 53.5,
+    "longitude": 10.0,
+    "status": "ACTIVE",
+    "id": 26,
+    "created_at": "2026-10-31T10:29:50.182742Z",
+    "updated_at": "2026-10-31T10:29:50.182744Z",
+    "revision": 0,
+    "configuration": {
+      "panel_area_m2": 55.0,
+      "efficiency": 0.21,
+      "tilt_deg": 35.0,
+      "azimuth_deg": 180.0
     }
   }
 ]

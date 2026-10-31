@@ -1,4 +1,3 @@
-docker compose up -d
 docker compose exec asset-service alembic upgrade head
 docker compose exec forecast-service alembic upgrade head
 docker compose exec trading-service alembic upgrade head
